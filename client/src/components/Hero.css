@@ -1,0 +1,303 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.hero {
+  
+  width: 100%;
+
+  min-height: calc(100vh - 52px);
+  height: 100%;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+
+  position:relative;
+ padding-top: 300px;
+  
+}
+
+
+/* Text area */
+.hero-content {
+  width: 100%;
+  text-align: center;
+
+  padding: 0 20px 90px;
+
+  color: white;
+}
+.iphone-content{
+  position: absolute;
+  top:0;
+ 
+}
+
+/* Main title */
+.hero-content h1 {
+  margin: 0;
+
+  font-size: clamp(42px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+/* Description */
+.hero-content p {
+  margin: 12px 0 28px;
+
+  font-size: clamp(20px, 2.5vw, 32px);
+  font-weight: 500;
+  line-height: 1.25;
+}
+.iphone-content p{
+  padding-top: 20px;
+  margin: 12px 0 28px;
+  font-size: clamp(20px, 2.5vw, 32px);
+  font-weight: bold;
+  line-height: 1.45;
+  color: black;
+  
+}
+.iphone-content h4{
+  font-size:30px;
+  color:#1d1d1f;
+  
+}
+
+/* Button */
+.hero- {
+  border: none;
+
+  background: white;
+  color: #1d1d1f;
+
+  padding: 16px 32px;
+
+  border-radius: 30px;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+.hero-button:hover {
+  background: #e8e8e8;
+}
+.iphone-btn{
+  background-color:rgb(40, 93, 229);
+  color:white;
+   padding: 13px 25px;
+    font-size: 16px;
+    border-radius: 30px;
+    margin-right: 15px;
+  
+}
+.iphone-gtb{
+  background-color:#e8e8e8;
+  color:blue;
+  padding: 13px 25px;
+    font-size: 16px;
+    border-radius: 30px;
+    margin-right: 15px;
+    border: 1px solid blue;
+}
+.iphone-gtb:hover{
+  background-color:rgb(40, 93, 229);
+  color:white;
+}
+.hero-button {
+    padding: 13px 25px;
+    font-size: 16px;
+    border-radius: 30px;
+    font-size: larger;
+  }
+/* ======================= */
+/* College Section */
+/* ======================= */
+
+.college-content {
+  animation: collegeText 1s ease-out forwards;
+}
+
+.college-content h1 {
+  color: #1d1d1f;
+}
+
+.college-content p {
+  color: #1d1d1f;
+}
+
+.college-content .hero-button {
+  background-color: #0077ed;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.college-content .hero-button:hover {
+  background-color: #006edb;
+  transform: scale(1.05);
+}
+
+
+/* ======================= */
+/* College Animation */
+/* ======================= */
+
+@keyframes collegeText {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ======================= */
+/* Animated College Image */
+/* ======================= */
+
+.college-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero:has(.college-content) {
+  animation: collegeHero 1.2s ease-out;
+}
+
+@keyframes collegeHero {
+  from {
+    background-size: 105%;
+  }
+
+  to {
+    background-size: 100%;
+  }
+}
+
+
+/* ======================= */
+/* Tablet */
+/* ======================= */
+
+@media (max-width: 991.98px) {
+
+  .college-content {
+    padding-bottom: 70px;
+  }
+
+  .college-content h1 {
+    font-size: clamp(38px, 7vw, 60px);
+  }
+
+  .college-content p {
+    font-size: clamp(18px, 3vw, 26px);
+  }
+}
+
+
+/* ======================= */
+/* Mobile */
+/* ======================= */
+
+@media (max-width: 575.98px) {
+
+  .college-content {
+    padding: 0 20px 50px;
+  }
+
+  .college-content h1 {
+    font-size: 40px;
+  }
+
+  .college-content p {
+    font-size: 19px;
+    line-height: 1.35;
+  }
+
+  .college-content p br {
+    display: none;
+  }
+
+  .college-content .hero-button {
+    padding: 13px 25px;
+    font-size: 16px;
+  }
+}
+
+/* ======================= */
+/* Tablet */
+/* ======================= */
+
+@media (max-width: 991.98px) {
+
+  .hero {
+    min-height: calc(100vh - 52px);
+
+    background-position: center;
+  }
+
+  .hero-content {
+    padding-bottom: 70px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(38px, 7vw, 60px);
+  }
+
+  .hero-content p {
+    font-size:button clamp(18px, 3vw, 26px);
+  }
+}
+
+
+/* ======================= */
+/* Mobile */
+/* ======================= */
+
+@media (max-width: 575.98px) {
+
+  .hero {
+    min-height: calc(100vh - 52px);
+
+    background-position: center;
+  }
+
+  .hero-content {
+    padding: 0 20px 50px;
+  }
+
+  .hero-content h1 {
+    font-size: 40px;
+  }
+
+  .hero-content p {
+    font-size: 19px;
+    line-height: 1.35;
+  }
+
+  .hero-button {
+    padding: 13px 25px;
+    font-size: 16px;
+  }
+}

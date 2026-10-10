@@ -1,0 +1,361 @@
+/* =========================================
+   ENTERTAINMENT SECTION
+========================================= */
+
+.entertainment {
+  width: 100%;
+  background: #f5f5f7;
+  padding: 90px 0 70px;
+  overflow: hidden;
+}
+
+/* =========================================
+   TITLE
+========================================= */
+
+.entertainment-title {
+  text-align: center;
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  color: #1d1d1f;
+  margin: 0 0 55px;
+}
+
+/* =========================================
+   CAROUSEL
+========================================= */
+
+.entertainment-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0 25px;
+}
+
+/* =========================================
+   TRACK
+========================================= */
+
+.entertainment-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  /*
+    IMPORTANT:
+    Long, smooth movement.
+  */
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+
+  will-change: transform;
+}
+
+/* =========================================
+   CARD
+========================================= */
+
+.entertainment-card {
+  flex: 0 0 70vw;
+  max-width: 1200px;
+
+  aspect-ratio: 16 / 9;
+
+  border-radius: 28px;
+  overflow: hidden;
+
+  background: #ddd;
+
+  transform: scale(0.94);
+
+  opacity: 0.7;
+
+  transition:
+    transform 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 1.2s ease,
+    box-shadow 1.2s ease;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================
+   ACTIVE CARD
+========================================= */
+
+.entertainment-card.active {
+  transform: scale(1);
+
+  opacity: 1;
+
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   CARD LINK
+========================================= */
+
+.entertainment-card a {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  text-decoration: none;
+}
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.entertainment-card img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Slight Apple-like zoom on active card */
+
+.entertainment-card.active img {
+  transform: scale(1.01);
+}
+
+/* =========================================
+   HOVER
+========================================= */
+
+.entertainment-card:hover img {
+  transform: scale(1.025);
+}
+
+/* =========================================
+   NAVIGATION BUTTONS
+========================================= */
+
+.carousel-button {
+  position: absolute;
+
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 52px;
+  height: 52px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  color: #1d1d1f;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+
+  cursor: pointer;
+
+  z-index: 10;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* =========================================
+   BUTTON POSITION
+========================================= */
+
+.carousel-prev {
+  left: 25px;
+}
+
+.carousel-next {
+  right: 25px;
+}
+
+/* =========================================
+   BUTTON HOVER
+========================================= */
+
+.carousel-button:hover {
+  transform: translateY(-50%) scale(1.08);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* =========================================
+   BUTTON ACTIVE
+========================================= */
+
+.carousel-button:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+/* =========================================
+   DOTS
+========================================= */
+
+.carousel-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-top: 28px;
+}
+
+/* =========================================
+   DOT
+========================================= */
+
+.carousel-dots button {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #86868b;
+
+  opacity: 0.45;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+}
+
+/* =========================================
+   ACTIVE DOT
+========================================= */
+
+.carousel-dots button.active-dot {
+  transform: scale(1.35);
+
+  opacity: 1;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .entertainment {
+    padding: 70px 0 55px;
+  }
+
+  .entertainment-title {
+    margin-bottom: 40px;
+  }
+
+  .entertainment-card {
+    flex-basis: 78vw;
+
+    border-radius: 22px;
+  }
+
+  .carousel-button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .carousel-prev {
+    left: 15px;
+  }
+
+  .carousel-next {
+    right: 15px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .entertainment {
+    padding: 55px 0 45px;
+  }
+
+  .entertainment-title {
+    font-size: 38px;
+
+    padding: 0 20px;
+
+    margin-bottom: 30px;
+  }
+
+  .entertainment-track {
+    gap: 16px;
+  }
+
+  .entertainment-card {
+    flex-basis: 88vw;
+
+    border-radius: 18px;
+
+    transform: scale(0.95);
+  }
+
+  .entertainment-card.active {
+    transform: scale(1);
+  }
+
+  .carousel-button {
+    width: 40px;
+    height: 40px;
+
+    font-size: 16px;
+  }
+
+  .carousel-prev {
+    left: 10px;
+  }
+
+  .carousel-next {
+    right: 10px;
+  }
+
+  .carousel-dots {
+    margin-top: 20px;
+  }
+}
+
+/* =========================================
+   REDUCE MOTION ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .entertainment-track,
+  .entertainment-card,
+  .entertainment-card img,
+  .carousel-button,
+  .carousel-dots button {
+    transition: none;
+  }
+}

@@ -1,0 +1,471 @@
+/* =========================================
+   RESET
+========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+
+/* =========================================
+   MAIN FOOTER
+========================================= */
+
+.apple-footer {
+  width: 100%;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-family: Arial, Helvetica, sans-serif;
+
+  padding: 24px 20px 30px;
+}
+
+
+/* =========================================
+   LEGAL NOTES
+========================================= */
+
+.footer-notes {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+  padding-bottom: 25px;
+
+  border-bottom: 1px solid #d2d2d7;
+}
+
+.footer-notes p {
+  margin: 0 0 12px;
+
+  color: #6e6e73;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.footer-notes p:last-child {
+  margin-bottom: 0;
+}
+
+.footer-notes a {
+  color: #424245;
+  text-decoration: none;
+}
+
+.footer-notes a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   FIVE MAIN COLUMNS
+========================================= */
+
+.footer-links {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 30px auto 0;
+
+  display: grid;
+
+  /* EXACTLY 5 COLUMNS */
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  /* Horizontal distance */
+  column-gap: 45px;
+
+  /* IMPORTANT */
+  align-items: start;
+}
+
+
+/* =========================================
+   COLUMN
+========================================= */
+
+.footer-group {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  /*
+    Controls the space between sections
+    inside the same column.
+  */
+  gap: 32px;
+
+  align-items: flex-start;
+}
+
+
+/* =========================================
+   FOOTER SECTION
+========================================= */
+
+.footer-column {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  height: auto;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.footer-column h3 {
+  margin: 0 0 13px;
+  padding: 0;
+
+  color: #1d1d1f;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  line-height: 1.25;
+}
+
+
+/* =========================================
+   LIST
+========================================= */
+
+.footer-column ul {
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+}
+
+
+/* =========================================
+   LIST ITEM
+========================================= */
+
+.footer-column li {
+  margin: 0 0 12px;
+  padding: 0;
+}
+
+
+/* =========================================
+   LINK
+========================================= */
+
+.footer-column a {
+  display: inline-block;
+
+  color: #424245;
+
+  font-size: 13px;
+  font-weight: 400;
+
+  line-height: 1.3;
+
+  text-decoration: none;
+}
+
+.footer-column a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   MORE WAYS TO SHOP
+========================================= */
+
+.footer-shop {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 25px auto 0;
+
+  padding: 20px 0;
+
+  border-top: 1px solid #d2d2d7;
+  border-bottom: 1px solid #d2d2d7;
+}
+
+.footer-shop p {
+  margin: 0;
+
+  color: #6e6e73;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.footer-shop a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+
+/* =========================================
+   FOOTER BOTTOM
+========================================= */
+
+.footer-bottom {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 18px auto 0;
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+/* =========================================
+   COPYRIGHT
+========================================= */
+
+.copyright {
+  color: #6e6e73;
+
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   BOTTOM LINKS
+========================================= */
+
+.footer-bottom-links {
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+}
+
+.footer-bottom-links a {
+  color: #6e6e73;
+
+  font-size: 13px;
+
+  text-decoration: none;
+}
+
+.footer-bottom-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom-links span {
+  color: #d2d2d7;
+}
+
+
+/* =========================================
+   COUNTRY
+========================================= */
+
+.footer-country {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 12px auto 0;
+
+  text-align: right;
+}
+
+.footer-country a {
+  color: #6e6e73;
+
+  font-size: 13px;
+
+  text-decoration: none;
+}
+
+
+/* =========================================
+   LARGE DESKTOP
+========================================= */
+
+@media (min-width: 1400px) {
+
+  .apple-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .footer-links {
+    max-width: 1450px;
+
+    column-gap: 55px;
+  }
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .apple-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .footer-links {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    column-gap: 35px;
+    row-gap: 40px;
+  }
+
+  .footer-column h3 {
+    font-size: 16px;
+  }
+
+  .footer-column a {
+    font-size: 16px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .apple-footer {
+    padding: 25px 20px;
+  }
+
+
+  /* One column on mobile */
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+
+    margin-top: 20px;
+  }
+
+
+  /* Column */
+
+  .footer-group {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+  }
+
+
+  /* Section */
+
+  .footer-column {
+    width: 100%;
+
+    padding-bottom: 25px;
+  }
+
+
+  /* Title */
+
+  .footer-column h3 {
+    margin: 0 0 10px;
+
+    font-size: 15px;
+  }
+
+
+  /* Links */
+
+  .footer-column li {
+    margin-bottom: 8px;
+  }
+
+  .footer-column a {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+
+  /* Shop */
+
+  .footer-shop {
+    margin-top: 5px;
+    padding: 18px 0;
+  }
+
+
+  /* Bottom */
+
+  .footer-bottom {
+    display: block;
+
+    margin-top: 18px;
+  }
+
+  .copyright {
+    white-space: normal;
+
+    margin-bottom: 15px;
+  }
+
+
+  .footer-bottom-links {
+    gap: 7px;
+  }
+
+
+  /* Country */
+
+  .footer-country {
+    text-align: left;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .apple-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .footer-column h3 {
+    font-size: 14px;
+  }
+
+  .footer-column a {
+    font-size: 13px;
+  }
+}

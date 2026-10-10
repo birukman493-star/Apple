@@ -1,0 +1,1183 @@
+/* =================================================
+   GLOBAL
+================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* =================================================
+   STORE PAGE
+================================================= */
+
+.store-page {
+  width: 100%;
+  background: #fff;
+  color: #1d1d1f;
+  padding-left: 40px;
+}
+
+
+/* =================================================
+   MAIN HEADER
+================================================= */
+
+.store-header {
+  padding: 80px 8% 60px;
+}
+
+.store-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.store-header h1 {
+  font-size: 64px;
+  font-weight: 700;
+  margin: 0 0 25px;
+  letter-spacing: -2px;
+}
+
+.store-header h2 {
+  max-width: 700px;
+  font-size: 25px;
+  line-height: 1.15;
+  font-weight: 600;
+  margin: 0 0 30px;
+  letter-spacing: -1px;
+}
+
+.store-header-text {
+  display: flex;
+  flex-direction: column;
+  float: right;
+  margin-left: 700px;
+}
+
+.store-links {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.store-links a {
+  color: #06c;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.store-links a:hover {
+  text-decoration: underline;
+}
+
+
+/* =================================================
+   PRODUCT CATEGORIES
+================================================= */
+
+.store-products {
+  padding: 20px 8% 100px;
+}
+
+.store-products-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 30px;
+}
+
+.store-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  color: #1d1d1f;
+  text-decoration: none;
+  text-align: center;
+}
+
+.store-product-icon {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+}
+
+.store-product span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.store-product:hover span {
+  text-decoration: underline;
+}
+
+
+/* =================================================
+   LATEST
+================================================= */
+
+.latest-carousel {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 0 20px 30px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.latest-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.latest-card {
+  flex: 0 0 380px;
+  scroll-snap-align: start;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+}
+
+
+/* =================================================
+   ACCESSORIES
+================================================= */
+
+.accessories-section {
+  padding: 80px 0 100px;
+  background: #f5f5f7;
+}
+
+.accessories-header {
+  max-width: 1200px;
+  margin: 0 auto 35px;
+  padding: 0 30px;
+}
+
+.accessories-header h2 {
+  font-size: 48px;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  font-weight: 600;
+  margin: 0;
+  color: #1d1d1f;
+}
+
+.accessories-header h2 span {
+  color: #6e6e73;
+}
+
+.accessories-carousel {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 10px 30px 35px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.accessories-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.accessories-intro-card,
+.accessories-card {
+  flex: 0 0 380px;
+  height: 500px;
+  border-radius: 24px;
+  background: #fff;
+  scroll-snap-align: start;
+}
+
+.accessories-intro-card {
+  display: flex;
+  align-items: center;
+  padding: 45px;
+}
+
+.accessories-intro-content h3 {
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: #1d1d1f;
+  margin: 0 0 20px;
+}
+
+.accessories-intro-content p {
+  font-size: 19px;
+  line-height: 1.4;
+  color: #6e6e73;
+  margin: 0;
+}
+
+.accessories-card {
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.accessories-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.accessories-card-image {
+  width: 100%;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
+  overflow: hidden;
+}
+
+.accessories-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.accessories-card-content {
+  padding: 25px 28px;
+}
+
+.accessories-badge {
+  font-size: 14px;
+  color: #bf4800;
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+.accessories-card-content h3 {
+  font-size: 21px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0 0 20px;
+}
+
+.accessories-price {
+  font-size: 17px;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.accessories-message {
+  padding: 40px 30px;
+  text-align: center;
+  color: #6e6e73;
+  font-size: 17px;
+}
+
+
+/* =================================================
+   COMMON STORE SECTION
+================================================= */
+
+.help-section,
+.store-difference,
+.store-sound,
+.store-experience,
+.store-savings {
+  width: 100%;
+  background: #f5f5f7;
+  overflow: hidden;
+}
+
+
+/* =================================================
+   COMMON SECTION HEADER
+================================================= */
+
+.help-header,
+.store-difference-header,
+.store-sound-header,
+.store-experience-header,
+.store-savings-header {
+  padding: 0 7.5%;
+  margin-bottom: 35px;
+}
+
+.help-header h2,
+.store-difference-header h2,
+.store-sound-header h2,
+.store-experience-header h2,
+.store-savings-header h2 {
+  margin: 0;
+  font-size: clamp(36px, 4vw, 56px);
+  line-height: 1.08;
+  letter-spacing: -2px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.help-header h2 span,
+.store-difference-header h2 span,
+.store-sound-header h2 span,
+.store-experience-header h2 span,
+.store-savings-header h2 span {
+  color: #6e6e73;
+}
+
+
+/* =================================================
+   COMMON CAROUSEL
+================================================= */
+
+.help-carousel,
+.difference-carousel,
+.sound-carousel,
+.experience-carousel,
+.savings-carousel {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  padding: 0 7.5% 20px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.help-carousel::-webkit-scrollbar,
+.difference-carousel::-webkit-scrollbar,
+.sound-carousel::-webkit-scrollbar,
+.experience-carousel::-webkit-scrollbar,
+.savings-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* =================================================
+   HELP SECTION
+================================================= */
+
+.help-section {
+  padding: 70px 0 80px;
+}
+
+.help-header {
+  padding: 0 7%;
+}
+
+.help-carousel {
+  gap: 24px;
+  padding: 0 7% 20px;
+}
+
+.help-message {
+  padding: 40px 7%;
+  font-size: 20px;
+  color: #6e6e73;
+}
+
+.help-card {
+  position: relative;
+  flex: 0 0 690px;
+  height: 710px;
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+.help-card-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px;
+}
+
+.help-label {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.help-card h3 {
+  margin: 0;
+  max-width: 600px;
+  font-size: clamp(32px, 3vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  color: #1d1d1f;
+}
+
+.help-description {
+  max-width: 550px;
+  margin: 14px 0 0;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #1d1d1f;
+}
+
+.help-card-image {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* =================================================
+   APPLE STORE DIFFERENCE
+================================================= */
+
+.store-difference {
+  padding: 70px 0 90px;
+}
+
+.difference-card {
+  position: relative;
+  flex: 0 0 450px;
+  height: 345px;
+  background: #fff;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  scroll-snap-align: start;
+}
+
+.difference-card-large {
+  flex: 0 0 580px;
+  height: 720px;
+}
+
+.difference-content {
+  position: relative;
+  z-index: 2;
+  padding: 42px;
+}
+
+.difference-card-large .difference-content {
+  padding: 42px;
+}
+
+.difference-icon {
+  position: relative;
+  z-index: 3;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  margin: 42px 0 0 42px;
+}
+
+.difference-label {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #bf4800;
+}
+
+.difference-card h3 {
+  margin: 0;
+  max-width: 430px;
+  font-size: 34px;
+  line-height: 1.12;
+  letter-spacing: -1.2px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.difference-card-large h3 {
+  font-size: 38px;
+}
+
+.difference-description {
+  margin: 16px 0 0;
+  max-width: 430px;
+  font-size: 21px;
+  line-height: 1.35;
+  color: #1d1d1f;
+}
+
+.difference-image {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.difference-card-large .difference-image {
+  width: 88%;
+  bottom: 20px;
+}
+
+.difference-message {
+  padding: 40px 7.5%;
+  font-size: 20px;
+  color: #6e6e73;
+}
+
+
+/* =================================================
+   LOUD AND CLEAR
+================================================= */
+
+.store-sound {
+  padding: 70px 0 90px;
+}
+
+.sound-card {
+  position: relative;
+  flex: 0 0 450px;
+  height: 710px;
+  background: #fff;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  scroll-snap-align: start;
+}
+
+.sound-card-large {
+  flex: 0 0 565px;
+}
+
+.sound-content {
+  position: relative;
+  z-index: 2;
+  padding: 42px;
+}
+
+.sound-label {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #bf4800;
+}
+
+.sound-card h3 {
+  margin: 0;
+  max-width: 400px;
+  font-size: 30px;
+  line-height: 1.12;
+  letter-spacing: -1px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.sound-card-large h3 {
+  font-size: 38px;
+  max-width: 430px;
+}
+
+.sound-description {
+  margin: 16px 0 0;
+  max-width: 440px;
+  font-size: 20px;
+  line-height: 1.35;
+  color: #1d1d1f;
+}
+
+.sound-image {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 85px;
+  transform: translateX(-50%);
+  width: 85%;
+  height: auto;
+  object-fit: contain;
+}
+
+.sound-card-large .sound-image {
+  width: 94%;
+  bottom: 40px;
+}
+
+.sound-badge {
+  position: absolute;
+  z-index: 3;
+  left: 42px;
+  bottom: 105px;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #bf4800;
+}
+
+.sound-price {
+  position: absolute;
+  z-index: 3;
+  left: 42px;
+  bottom: 42px;
+  margin: 0;
+  font-size: 18px;
+  color: #1d1d1f;
+}
+
+.sound-message {
+  padding: 40px 7.5%;
+  font-size: 20px;
+  color: #6e6e73;
+}
+
+
+/* =================================================
+   APPLE EXPERIENCE
+================================================= */
+
+.store-experience {
+  padding: 70px 0 90px;
+}
+
+.experience-card {
+  position: relative;
+  flex: 0 0 645px;
+  height: 700px;
+  background: #fff;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  scroll-snap-align: start;
+}
+
+.experience-content {
+  position: relative;
+  z-index: 2;
+  padding: 42px;
+}
+
+.experience-label {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #6e6e73;
+}
+
+.experience-card h3 {
+  margin: 0;
+  max-width: 580px;
+  font-size: 38px;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.experience-description {
+  margin: 16px 0 0;
+  max-width: 520px;
+  font-size: 20px;
+  line-height: 1.35;
+  color: #1d1d1f;
+}
+
+.experience-image {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.experience-message {
+  padding: 40px 7.5%;
+  font-size: 20px;
+  color: #6e6e73;
+}
+
+
+/* =================================================
+   SAVINGS AND OFFERS
+================================================= */
+
+.store-savings {
+  padding: 70px 0 90px;
+}
+
+.savings-card {
+  position: relative;
+  flex: 0 0 545px;
+  height: 700px;
+  background: #fff;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  scroll-snap-align: start;
+}
+
+.savings-content {
+  position: relative;
+  z-index: 2;
+  padding: 42px;
+}
+
+.savings-label {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #55555a;
+}
+
+.savings-card h3 {
+  margin: 0;
+  max-width: 470px;
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: -1.2px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.savings-description {
+  margin: 16px 0 0;
+  max-width: 470px;
+  font-size: 19px;
+  line-height: 1.35;
+  color: #1d1d1f;
+}
+
+.savings-image {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.savings-message {
+  padding: 40px 7.5%;
+  font-size: 20px;
+  color: #6e6e73;
+}
+
+
+/* =================================================
+   QUICK LINKS
+================================================= */
+
+.quick-link {
+  padding-left: 80px !important;
+}
+
+.quick-link-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #000;
+  text-decoration: none;
+  border-radius: 30px;
+  margin: 0 10px 10px 0;
+  border: 1px solid #000;
+}
+
+.quick-link-button:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+
+/* =================================================
+   TABLET
+================================================= */
+
+@media (max-width: 992px) {
+
+  .store-header {
+    padding: 60px 6% 50px;
+  }
+
+  .store-header h1 {
+    font-size: 52px;
+  }
+
+  .store-header h2 {
+    font-size: 28px;
+  }
+
+  .store-products {
+    padding: 20px 6% 80px;
+  }
+
+  .store-products-container {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px 20px;
+  }
+}
+
+
+/* =================================================
+   TABLET - ACCESSORIES
+================================================= */
+
+@media (max-width: 768px) {
+
+  .accessories-section {
+    padding: 60px 0 70px;
+  }
+
+  .accessories-header {
+    padding: 0 20px;
+    margin-bottom: 25px;
+  }
+
+  .accessories-header h2 {
+    font-size: 34px;
+    letter-spacing: -1px;
+  }
+
+  .accessories-carousel {
+    gap: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .accessories-intro-card,
+  .accessories-card {
+    flex: 0 0 300px;
+    height: 430px;
+  }
+
+  .accessories-card-image {
+    height: 260px;
+  }
+
+  .accessories-intro-card {
+    padding: 30px;
+  }
+
+  .accessories-intro-content h3 {
+    font-size: 27px;
+  }
+
+  .accessories-card-content {
+    padding: 20px;
+  }
+
+  .accessories-card-content h3 {
+    font-size: 18px;
+  }
+}
+
+
+/* =================================================
+   TABLET - COMMON STORE SECTIONS
+================================================= */
+
+@media (max-width: 991.98px) {
+
+  .help-section,
+  .store-difference,
+  .store-sound,
+  .store-experience,
+  .store-savings {
+    padding: 55px 0 70px;
+  }
+
+  .help-header,
+  .store-difference-header,
+  .store-sound-header,
+  .store-experience-header,
+  .store-savings-header {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .help-carousel,
+  .difference-carousel,
+  .sound-carousel,
+  .experience-carousel,
+  .savings-carousel {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .help-card {
+    flex: 0 0 600px;
+    height: 650px;
+  }
+
+  .help-card-content {
+    padding: 32px;
+  }
+
+  .difference-card {
+    flex: 0 0 400px;
+    height: 320px;
+  }
+
+  .difference-card-large {
+    flex: 0 0 520px;
+    height: 620px;
+  }
+
+  .difference-content {
+    padding: 32px;
+  }
+
+  .difference-icon {
+    margin-left: 32px;
+    margin-top: 32px;
+  }
+
+  .sound-card {
+    flex: 0 0 400px;
+    height: 650px;
+  }
+
+  .sound-card-large {
+    flex: 0 0 500px;
+  }
+
+  .sound-content {
+    padding: 32px;
+  }
+
+  .sound-badge {
+    left: 32px;
+  }
+
+  .sound-price {
+    left: 32px;
+  }
+
+  .experience-card {
+    flex: 0 0 560px;
+    height: 620px;
+  }
+
+  .experience-content {
+    padding: 32px;
+  }
+
+  .savings-card {
+    flex: 0 0 500px;
+    height: 630px;
+  }
+
+  .savings-content {
+    padding: 32px;
+  }
+}
+
+
+/* =================================================
+   MOBILE
+================================================= */
+
+@media (max-width: 576px) {
+
+  .store-header {
+    padding: 45px 20px 40px;
+  }
+
+  .store-header h1 {
+    font-size: 42px;
+    letter-spacing: -1px;
+  }
+
+  .store-header h2 {
+    font-size: 24px;
+  }
+
+  .store-links {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .store-products {
+    padding: 20px 20px 60px;
+  }
+
+  .store-products-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px 15px;
+  }
+
+  .store-product-icon {
+    width: 80px;
+    height: 80px;
+    font-size: 40px;
+  }
+
+  .store-product span {
+    font-size: 14px;
+  }
+}
+
+
+/* =================================================
+   MOBILE - HELP
+================================================= */
+
+@media (max-width: 575.98px) {
+
+  .help-section,
+  .store-difference,
+  .store-sound,
+  .store-experience,
+  .store-savings {
+    padding: 45px 0 55px;
+  }
+
+  .help-header,
+  .store-difference-header,
+  .store-sound-header,
+  .store-experience-header,
+  .store-savings-header {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .help-header h2,
+  .store-difference-header h2,
+  .store-sound-header h2,
+  .store-experience-header h2,
+  .store-savings-header h2 {
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+
+  .help-carousel,
+  .difference-carousel,
+  .sound-carousel,
+  .experience-carousel,
+  .savings-carousel {
+    gap: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .help-card {
+    flex: 0 0 85vw;
+    height: 580px;
+    border-radius: 20px;
+  }
+
+  .help-card-content {
+    padding: 25px;
+  }
+
+  .help-card h3 {
+    font-size: 30px;
+  }
+
+  .help-description {
+    font-size: 17px;
+  }
+
+  .difference-card,
+  .difference-card-large {
+    flex: 0 0 84vw;
+  }
+
+  .difference-card {
+    height: 300px;
+    border-radius: 22px;
+  }
+
+  .difference-card-large {
+    height: 560px;
+  }
+
+  .difference-content,
+  .difference-card-large .difference-content {
+    padding: 25px;
+  }
+
+  .difference-icon {
+    width: 44px;
+    height: 44px;
+    margin: 25px 0 0 25px;
+  }
+
+  .difference-card h3 {
+    font-size: 29px;
+  }
+
+  .difference-card-large h3 {
+    font-size: 32px;
+  }
+
+  .difference-description {
+    font-size: 18px;
+  }
+
+  .sound-card,
+  .sound-card-large {
+    flex: 0 0 84vw;
+    height: 580px;
+    border-radius: 22px;
+  }
+
+  .sound-content {
+    padding: 25px;
+  }
+
+  .sound-card h3 {
+    font-size: 28px;
+  }
+
+  .sound-card-large h3 {
+    font-size: 31px;
+  }
+
+  .sound-description {
+    font-size: 17px;
+  }
+
+  .sound-badge {
+    left: 25px;
+    bottom: 85px;
+  }
+
+  .sound-price {
+    left: 25px;
+    bottom: 30px;
+  }
+
+  .experience-card {
+    flex: 0 0 84vw;
+    height: 560px;
+    border-radius: 22px;
+  }
+
+  .experience-content {
+    padding: 25px;
+  }
+
+  .experience-card h3 {
+    font-size: 30px;
+  }
+
+  .experience-description {
+    font-size: 17px;
+  }
+
+  .savings-card {
+    flex: 0 0 84vw;
+    height: 560px;
+    border-radius: 22px;
+  }
+
+  .savings-content {
+    padding: 25px;
+  }
+
+  .savings-card h3 {
+    font-size: 29px;
+  }
+
+  .savings-description {
+    font-size: 17px;
+  }
+}

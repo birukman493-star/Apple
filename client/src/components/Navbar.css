@@ -1,0 +1,837 @@
+*{
+  box-sizing: border-box;
+  box-shadow: none;
+}
+.apple-navbar {
+  width: 100%;
+  background: rgba(250, 250, 252, 0.96);
+  border-top: 1px solid #333;
+  position: relative;
+  z-index: 1000;
+  position: fixed;
+}
+
+/* Main navbar */
+.navbar-container {
+  height: 52px;
+  max-width: 1024px;
+  margin: auto;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+}
+
+/* Apple logo */
+.apple-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #1d1d1f;
+}
+
+.apple-logo img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* Desktop navigation */
+.nav-links {
+  flex: 1;
+  margin: 0 28px;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-links a {
+  color: #1d1d1f;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.nav-links a:hover {
+  color: #666;
+}
+
+/* Search + bag */
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.icon-button,
+.mobile-menu {
+  border: none;
+  background: transparent;
+  color: #1d1d1f;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.icon-button {
+  font-size: 19px;
+}
+
+.mobile-menu {
+  font-size: 20px;
+}
+
+/* Mobile menu */
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  background: #fafafc;
+  padding: 10px 24px 20px;
+}
+
+.mobile-nav-open {
+  display: flex;
+}
+
+.mobile-nav a {
+  padding: 13px 0;
+  color: #1d1d1f;
+  text-decoration: none;
+  font-size: 17px;
+  border: none;
+}
+
+.mobile-nav a:hover {
+  color: #666;
+}
+
+
+/* ================================= */
+/* Mobile / tablet */
+/* ================================= */
+
+@media (max-width: 991.98px) {
+
+  .navbar-container {
+    justify-content: flex-start;
+  }
+
+  /* Apple logo → LEFT */
+  .apple-logo {
+    order: 1;
+  }
+
+  /* Search + bag → RIGHT */
+  .nav-icons {
+    order: 2;
+    margin-left: auto;
+  }
+
+  /* Menu → LAST / FAR RIGHT */
+  .mobile-menu {
+    order: 3;
+    margin-left: 20px;
+  }
+}
+
+/* =============================== */
+/* Navbar */
+/* =============================== */
+
+.apple-navbar {
+  width: 100%;
+  height: 52px;
+
+  background: #fafafc;
+
+  position: relative;
+  z-index: 1000;
+
+  border-top: 1px solid #333;
+}
+
+
+/* =============================== */
+/* Main container */
+/* =============================== */
+
+.navbar-container {
+  height: 52px;
+
+  max-width: 1024px;
+
+  margin: auto;
+
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+}
+
+
+/* =============================== */
+/* Apple Logo */
+/* =============================== */
+
+.apple-logo {
+  display: flex;
+  align-items: center;
+
+  text-decoration: none;
+
+  color: #1d1d1f;
+}
+
+.apple-logo img {
+  width: 22px;
+  height: 22px;
+
+  display: block;
+}
+
+
+/* =============================== */
+/* Desktop Navigation */
+/* =============================== */
+
+.nav-links {
+  flex: 1;
+
+  margin: 0 28px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-links > a,
+.nav-item-store > a {
+  color: #1d1d1f;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  white-space: nowrap;
+}
+
+.nav-links > a:hover,
+.nav-item-store > a:hover {
+  color: #666;
+}
+
+
+/* =============================== */
+/* Store */
+/* =============================== */
+
+.nav-item-store {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  position: static;
+}
+
+.store-mega-menu {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(-10px);
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s ease;
+
+  z-index: 9999;
+}
+
+.store-mega-menu.store-menu-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.store-menu-container {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+
+  padding: 36px 0 70px;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  column-gap: 70px;
+}
+
+.store-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.store-label {
+  color: #6e6e73;
+  font-size: 10px;
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+.store-column-large a {
+  color: #1d1d1f;
+  text-decoration: none;
+
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 1.7;
+
+  transition: color 0.25s ease,
+              transform 0.25s ease;
+}
+
+.store-column:not(.store-column-large) a {
+  color: #1d1d1f;
+  text-decoration: none;
+
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 2.05;
+
+  transition: color 0.25s ease,
+              transform 0.25s ease;
+}
+
+.store-column a:hover {
+  color: #6e6e73;
+  transform: translateX(2px);
+}
+.store-extra-links {
+  margin-top: 20px;
+}
+
+.store-extra-links a {
+  font-size: 16px !important;
+  line-height: 2.05 !important;
+  font-weight: 600 !important;
+}
+
+/* =============================== */
+/* Column Titles */
+/* =============================== */
+
+.store-label {
+  color: #1d1d1f;
+  font-size: 14px;
+  font-weight: 100;
+  margin-bottom: 24px;
+}
+
+
+/* =============================== */
+/* Large Links */
+/* =============================== */
+
+.store-column-large a {
+  color: #1d1d1f;
+
+  text-decoration: none;
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+  line-height: 1.7;
+
+  transition: color 0.25s ease;
+}
+
+/* =============================== */
+/* Smaller Links */
+/* =============================== */
+
+.store-column:not(.store-column-large) a {
+  color: #1d1d1f;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 400;
+
+  line-height: 2.05;
+   
+  transition: color 0.25s ease;
+}
+
+
+/* =============================== */
+/* Hover */
+/* =============================== */
+
+.store-column a:hover {
+  color: #ffffff;
+}
+
+
+/* =============================== */
+/* Search + Bag */
+/* =============================== */
+
+.nav-icons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 22px;
+}
+
+.icon-button {
+  border: none;
+
+  background: transparent;
+
+  color: #1d1d1f;
+
+  padding: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  font-size: 19px;
+}
+
+
+/* =============================== */
+/* Mobile Button */
+/* =============================== */
+
+.mobile-menu {
+  border: none;
+
+  background: transparent;
+
+  color: #1d1d1f;
+
+  padding: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  font-size: 20px;
+}
+
+
+/* =============================== */
+/* Mobile Navigation */
+/* =============================== */
+
+.mobile-nav {
+  display: none;
+
+  flex-direction: column;
+
+  background: #fafafc;
+
+  padding: 10px 24px 20px;
+}
+
+.mobile-nav-open {
+  display: flex;
+}
+
+.mobile-nav a {
+  padding: 13px 0;
+
+  color: #1d1d1f;
+
+  text-decoration: none;
+
+  font-size: 17px;
+
+  border: none;
+}
+
+.mobile-nav a:hover {
+  color: #666;
+}
+
+
+/* =============================== */
+/* Mobile / Tablet */
+/* =============================== */
+
+@media (max-width: 991.98px) {
+
+  .navbar-container {
+    justify-content: flex-start;
+  }
+
+  /* Apple logo LEFT */
+  .apple-logo {
+    order: 1;
+  }
+
+  /* Search + Bag */
+  .nav-icons {
+    order: 2;
+
+    margin-left: auto;
+  }
+
+  /* ☰ LAST / RIGHT */
+  .mobile-menu {
+    order: 3;
+
+    margin-left: 20px;
+  }
+}
+
+/* =========================
+   SEARCH OVERLAY
+========================= */
+
+.search-overlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  width: 100%;
+
+  background: rgba(255, 255, 255, 0.98);
+
+  z-index: 1000;
+
+  border-top: 1px solid #f5f5f7;
+}
+
+
+/* =========================
+   SEARCH MENU
+========================= */
+
+.search-menu {
+  width: 100%;
+  max-width: 1024px;
+
+  margin: 0 auto;
+
+  padding: 40px 30px 45px;
+}
+
+
+/* =========================
+   SEARCH INPUT
+========================= */
+
+.search-input-container {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  height: 55px;
+
+  gap: 15px;
+
+  border-bottom: 1px solid #d2d2d7;
+}
+
+
+/* Search Icon */
+
+.search-input-container > i {
+  font-size: 22px;
+
+  color: #6e6e73;
+
+  flex-shrink: 0;
+}
+
+
+/* Input */
+
+.search-input-container input {
+  flex: 1;
+
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #1d1d1f;
+
+  font-size: 28px;
+  font-weight: 400;
+}
+
+
+/* Placeholder */
+
+.search-input-container input::placeholder {
+  color: #6e6e73;
+
+  opacity: 1;
+}
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.search-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35px;
+  height: 35px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #6e6e73;
+
+  cursor: pointer;
+
+  border-radius: 50%;
+
+  transition: background 0.2s ease,
+              color 0.2s ease;
+}
+
+
+.search-close:hover {
+  background: #e8e8ed;
+
+  color: #1d1d1f;
+}
+
+
+.search-close i {
+  font-size: 16px;
+}
+
+
+/* =========================
+   QUICK LINKS
+========================= */
+
+.search-quick-links {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-top: 32px;
+}
+
+
+/* Quick Links Title */
+
+.search-quick-links .store-label {
+  margin-bottom: 8px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  color: #6e6e73;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.02em;
+}
+
+
+/* Quick Links */
+
+.search-quick-links a {
+  display: block;
+
+  text-decoration: none;
+
+  color: #1d1d1f;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  transition: color 0.2s ease,
+              transform 0.2s ease;
+}
+
+
+.search-quick-links a:hover {
+  color: #06c;
+
+  transform: translateX(3px);
+}
+
+
+/* =========================
+   SEARCH BUTTON
+========================= */
+
+.nav-icons .icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  color: #1d1d1f;
+
+  text-decoration: none;
+}
+
+
+.nav-icons .icon-button i {
+  font-size: 17px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .search-menu {
+    padding: 30px 20px 35px;
+  }
+
+  .search-input-container {
+    height: 50px;
+  }
+
+  .search-input-container input {
+    font-size: 22px;
+  }
+
+  .search-input-container > i {
+    font-size: 19px;
+  }
+
+  .search-quick-links {
+    gap: 13px;
+
+    margin-top: 25px;
+  }
+
+  .search-quick-links a {
+    font-size: 14px;
+  }
+}
+/* =========================
+   BAG STATUS
+========================= */
+
+.bag-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  margin-bottom: 35px;
+}
+
+.bag-status .store-label {
+  margin-bottom: 18px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #6e6e73;
+
+  text-transform: uppercase;
+}
+
+.bag-status h3 {
+  margin: 0 0 8px;
+
+  font-size: 24px;
+  font-weight: 500;
+
+  color: #1d1d1f;
+}
+
+.bag-status p {
+  margin: 0;
+
+  font-size: 15px;
+
+  color: #6e6e73;
+}
+
+
+/* =========================
+   MY PROFILE
+========================= */
+
+.bag-profile {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 14px;
+}
+
+.bag-profile .store-label {
+  margin-bottom: 8px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #6e6e73;
+
+  text-transform: uppercase;
+}
+
+.bag-profile a {
+  text-decoration: none;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #1d1d1f;
+
+  transition: color 0.2s ease,
+              transform 0.2s ease;
+}
+
+.bag-profile a:hover {
+  color: #06c;
+
+  transform: translateX(3px);
+}

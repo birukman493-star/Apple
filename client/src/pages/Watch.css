@@ -1,0 +1,1575 @@
+/* =========================
+   WATCH PAGE
+========================= */
+
+.watch-page {
+  width: 100%;
+  background: #fff;
+  color: #1d1d1f;
+  overflow: hidden;
+}
+
+
+/* =========================
+   PROMOTIONAL BANNER
+========================= */
+
+.watch-promo {
+  width: 100%;
+  min-height: 74px;
+  background: #f5f5f7;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 16px 24px;
+  text-align: center;
+}
+
+.watch-promo p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.watch-promo a {
+  color: #06c;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.watch-promo a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   PRODUCT SECTION
+========================= */
+
+.watch-product-section {
+  width: 100%;
+  min-height: 600px;
+  padding-top: 135px;
+  padding-bottom: 75px;
+  position: relative;
+}
+
+
+/* =========================
+   MAIN HEADING
+========================= */
+
+.watch-main-title {
+  max-width: 1600px;
+  margin: 0 auto 90px;
+
+  padding: 0 6.3%;
+
+  font-size: clamp(64px, 6.2vw, 112px);
+  font-weight: 600;
+  letter-spacing: -4px;
+  line-height: 1.05;
+
+  color: #1d1d1f;
+}
+
+
+/* =========================
+   CAROUSEL WRAPPER
+========================= */
+
+.watch-carousel-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+
+/* =========================
+   HORIZONTAL CAROUSEL
+========================= */
+
+.watch-carousel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 28px;
+
+  width: 100%;
+  padding: 0 6.3%;
+
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.watch-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* =========================
+   PRODUCT ITEM
+========================= */
+
+.watch-product-item {
+  flex: 0 0 125px;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: #1d1d1f;
+  text-align: center;
+  text-decoration: none;
+}
+
+
+/* =========================
+   PRODUCT IMAGE
+========================= */
+
+.watch-product-image {
+  width: 100%;
+  height: 90px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+}
+
+.watch-product-image img {
+  display: block;
+
+  width: 100%;
+  height: 85px;
+
+  object-fit: contain;
+
+  transition: transform 0.25s ease;
+}
+
+.watch-product-item:hover .watch-product-image img {
+  transform: scale(1.06);
+}
+
+
+/* =========================
+   PRODUCT NAME
+========================= */
+
+.watch-product-name {
+  max-width: 140px;
+
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.25;
+
+  text-align: center;
+}
+
+
+/* =========================
+   NEW BADGE
+========================= */
+
+.watch-product-badge {
+  margin-top: 8px;
+
+  color: #bf4800;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   NEXT ARROW
+========================= */
+
+.watch-carousel-next {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 80px;
+  height: 160px;
+
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+
+  color: #6e6e73;
+  font-size: 40px;
+  font-weight: 300;
+
+  cursor: pointer;
+
+  box-shadow: -10px 0 20px rgba(255, 255, 255, 0.8);
+
+  transition: color 0.2s ease;
+}
+
+.watch-carousel-next:hover {
+  color: #1d1d1f;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 991.98px) {
+  .watch-product-section {
+    padding-top: 100px;
+  }
+
+  .watch-main-title {
+    padding: 0 5%;
+    margin-bottom: 75px;
+    letter-spacing: -2px;
+  }
+
+  .watch-carousel {
+    justify-content: flex-start;
+    gap: 30px;
+    padding: 0 5%;
+  }
+
+  .watch-product-item {
+    flex-basis: 115px;
+  }
+
+  .watch-product-name {
+    font-size: 17px;
+  }
+
+  .watch-promo p {
+    font-size: 15px;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 575.98px) {
+  .watch-promo {
+    padding: 12px 18px;
+  }
+
+  .watch-promo p {
+    font-size: 13px;
+  }
+
+  .watch-product-section {
+    padding-top: 75px;
+    padding-bottom: 45px;
+  }
+
+  .watch-main-title {
+    font-size: 52px;
+    letter-spacing: -2px;
+    padding: 0 24px;
+    margin-bottom: 55px;
+  }
+
+  .watch-carousel {
+    gap: 24px;
+    padding: 0 24px;
+  }
+
+  .watch-product-item {
+    flex-basis: 100px;
+  }
+
+  .watch-product-image {
+    height: 75px;
+  }
+
+  .watch-product-image img {
+    height: 70px;
+  }
+
+  .watch-product-name {
+    font-size: 15px;
+  }
+
+  .watch-product-badge {
+    font-size: 12px;
+  }
+
+  .watch-carousel-next {
+    width: 38px;
+    height: 130px;
+    font-size: 32px;
+  }
+}
+
+/* ========================================
+WATCH PAGE
+======================================== */
+
+.watch-page {
+width: 100%;
+min-height: 100vh;
+background: #fff;
+color: #1d1d1f;
+font-family: Arial, Helvetica, sans-serif;
+overflow: hidden;
+}
+
+.watch-page a {
+text-decoration: none;
+}
+
+/* ========================================
+WATCH PRODUCT NAVIGATION
+======================================== */
+
+.watch-product-section {
+width: 100%;
+padding: 30px 0 35px;
+background: #fff;
+text-align: center;
+}
+
+.watch-main-title {
+margin: 0 0 30px;
+font-size: 38px;
+font-weight: 600;
+letter-spacing: -1.5px;
+color: #1d1d1f;
+}
+
+.watch-carousel-wrapper {
+position: relative;
+width: 100%;
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 45px;
+}
+
+.watch-carousel {
+display: flex;
+align-items: flex-start;
+gap: 35px;
+overflow-x: auto;
+scroll-behavior: smooth;
+scrollbar-width: none;
+padding: 5px 5px 15px;
+}
+
+.watch-carousel::-webkit-scrollbar {
+display: none;
+}
+
+.watch-product-item {
+flex: 0 0 100px;
+display: flex;
+flex-direction: column;
+align-items: center;
+color: #1d1d1f;
+transition: opacity 0.2s ease;
+}
+
+.watch-product-item:hover {
+opacity: 0.75;
+}
+
+.watch-product-image {
+width: 90px;
+height: 90px;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-bottom: 12px;
+}
+
+.watch-product-image img {
+display: block;
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+
+.watch-product-name {
+max-width: 115px;
+font-size: 12px;
+line-height: 1.4;
+font-weight: 500;
+text-align: center;
+white-space: normal;
+}
+
+.watch-product-badge {
+margin-top: 7px;
+color: #bf4800;
+font-size: 10px;
+line-height: 1.3;
+}
+
+.watch-carousel-next {
+position: absolute;
+z-index: 2;
+top: 25px;
+right: 8px;
+width: 38px;
+height: 38px;
+display: flex;
+align-items: center;
+justify-content: center;
+border: none;
+border-radius: 50%;
+background: #e8e8ed;
+color: #333336;
+font-size: 30px;
+cursor: pointer;
+transition: background 0.2s ease;
+}
+
+.watch-carousel-next:hover {
+background: #d2d2d7;
+}
+
+/* ========================================
+EXPLORE THE LINEUP
+======================================== */
+
+.watch-lineup-section {
+width: 100%;
+padding: 70px 6% 90px;
+background: #f5f5f7;
+}
+
+.watch-lineup-heading {
+max-width: 1200px;
+margin: 0 auto 45px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+}
+
+.watch-lineup-heading h2 {
+margin: 0;
+color: #1d1d1f;
+font-size: clamp(30px, 4vw, 48px);
+line-height: 1.1;
+font-weight: 600;
+letter-spacing: -1.8px;
+}
+
+.watch-compare-link {
+flex-shrink: 0;
+color: #06c;
+font-size: 14px;
+transition: color 0.2s ease;
+}
+
+.watch-compare-link:hover,
+.watch-lineup-learn:hover {
+text-decoration: underline;
+}
+
+.watch-compare-link span {
+font-size: 20px;
+margin-left: 3px;
+}
+
+/* ========================================
+PRODUCT GRID
+======================================== */
+
+.watch-lineup-grid {
+max-width: 1200px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: repeat(3, minmax(0, 1fr));
+gap: 25px;
+}
+
+.watch-lineup-card {
+min-width: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 30px 24px 28px;
+background: #fff;
+border-radius: 22px;
+text-align: center;
+transition:
+transform 0.25s ease,
+box-shadow 0.25s ease;
+}
+
+.watch-lineup-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 12px 35px rgba(0, 0, 0, 0.07);
+}
+
+/* Product image */
+
+.watch-lineup-image-link {
+display: block;
+width: 100%;
+}
+
+.watch-lineup-image {
+width: 100%;
+height: 250px;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-bottom: 20px;
+}
+
+.watch-lineup-image img {
+display: block;
+max-width: 100%;
+width: 100%;
+height: 100%;
+object-fit: contain;
+transition: transform 0.3s ease;
+}
+
+.watch-lineup-card:hover .watch-lineup-image img {
+transform: scale(1.035);
+}
+
+/* Colors */
+
+.watch-lineup-colors {
+min-height: 24px;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 9px;
+margin-bottom: 20px;
+flex-wrap: wrap;
+}
+
+.watch-lineup-color {
+display: inline-block;
+width: 14px;
+height: 14px;
+border-radius: 50%;
+border: 1px solid rgba(0, 0, 0, 0.13);
+box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+/* Product details */
+
+.watch-lineup-details {
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+flex: 1;
+}
+
+.watch-lineup-badge {
+min-height: 16px;
+margin-bottom: 10px;
+color: #bf4800;
+font-size: 12px;
+}
+
+.watch-lineup-details h3 {
+margin: 0 0 12px;
+color: #1d1d1f;
+font-size: 26px;
+line-height: 1.2;
+font-weight: 600;
+letter-spacing: -0.7px;
+}
+
+.watch-lineup-description {
+max-width: 280px;
+min-height: 42px;
+margin: 0 0 20px;
+color: #515154;
+font-size: 14px;
+line-height: 1.5;
+}
+
+.watch-lineup-pricing {
+min-height: 48px;
+margin-bottom: 22px;
+}
+
+.watch-lineup-pricing p {
+margin: 4px 0;
+color: #1d1d1f;
+font-size: 14px;
+line-height: 1.5;
+}
+
+/* Buttons */
+
+.watch-lineup-actions {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 22px;
+margin-top: auto;
+}
+
+.watch-lineup-learn {
+color: #06c;
+font-size: 14px;
+}
+
+.watch-lineup-buy {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 5px;
+min-height: 34px;
+padding: 0 15px;
+border-radius: 20px;
+background: #0071e3;
+color: #fff;
+font-size: 14px;
+transition: background 0.2s ease;
+}
+
+.watch-lineup-buy:hover {
+background: #0077ed;
+}
+
+.watch-lineup-buy span {
+font-size: 18px;
+line-height: 1;
+}
+
+/* Loading, error and empty states */
+
+.watch-lineup-status {
+max-width: 1200px;
+margin: 35px auto;
+color: #6e6e73;
+font-size: 16px;
+text-align: center;
+}
+
+/* ========================================
+TABLET
+======================================== */
+
+@media (max-width: 992px) {
+.watch-lineup-section {
+padding: 55px 4% 70px;
+}
+
+.watch-lineup-grid {
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 20px;
+}
+
+.watch-lineup-image {
+height: 220px;
+}
+
+.watch-carousel {
+gap: 25px;
+}
+}
+
+/* ========================================
+MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+.watch-product-section {
+padding: 25px 0;
+}
+
+.watch-main-title {
+margin-bottom: 22px;
+font-size: 30px;
+}
+
+.watch-carousel-wrapper {
+padding: 0 15px;
+}
+
+.watch-carousel {
+gap: 20px;
+}
+
+.watch-product-item {
+flex-basis: 82px;
+}
+
+.watch-product-image {
+width: 75px;
+height: 75px;
+}
+
+.watch-product-name {
+font-size: 11px;
+}
+
+.watch-carousel-next {
+right: 3px;
+width: 30px;
+height: 30px;
+font-size: 24px;
+}
+
+.watch-lineup-section {
+padding: 42px 18px 55px;
+}
+
+.watch-lineup-heading {
+align-items: flex-start;
+flex-direction: column;
+gap: 15px;
+margin-bottom: 28px;
+}
+
+.watch-lineup-heading h2 {
+font-size: 32px;
+letter-spacing: -1px;
+}
+
+.watch-lineup-grid {
+grid-template-columns: 1fr;
+gap: 20px;
+}
+
+.watch-lineup-card {
+padding: 25px 20px;
+border-radius: 18px;
+}
+
+.watch-lineup-image {
+height: 230px;
+margin-bottom: 15px;
+}
+
+.watch-lineup-details h3 {
+font-size: 24px;
+}
+
+.watch-lineup-description {
+min-height: 0;
+}
+
+.watch-lineup-pricing {
+min-height: 0;
+}
+}
+
+/* ========================================
+WHY SHOP APPLE WATCH
+======================================== */
+
+.watch-shopping-section {
+width: 100%;
+padding: 75px 0 60px;
+background: #f5f5f7;
+color: #1d1d1f;
+overflow: hidden;
+}
+
+.watch-shopping-heading {
+max-width: 1600px;
+margin: 0 auto 55px;
+padding: 0 6.3%;
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 30px;
+}
+
+.watch-shopping-heading h2 {
+margin: 0;
+font-size: clamp(36px, 4.2vw, 68px);
+line-height: 1.12;
+font-weight: 600;
+letter-spacing: -2.5px;
+}
+
+.watch-shopping-shop-link {
+flex-shrink: 0;
+margin-bottom: 10px;
+color: #06c;
+font-size: 17px;
+white-space: nowrap;
+}
+
+.watch-shopping-shop-link:hover,
+.watch-shopping-card-link:hover {
+text-decoration: underline;
+}
+
+.watch-shopping-shop-link span,
+.watch-shopping-card-link span {
+font-size: 21px;
+}
+
+/* Horizontal carousel */
+
+.watch-shopping-carousel-wrapper {
+position: relative;
+width: 100%;
+}
+
+.watch-shopping-carousel {
+display: flex;
+gap: 28px;
+overflow-x: auto;
+overflow-y: hidden;
+padding: 0 6.3% 20px;
+scroll-behavior: smooth;
+scroll-snap-type: x mandatory;
+scrollbar-width: none;
+-webkit-overflow-scrolling: touch;
+}
+
+.watch-shopping-carousel::-webkit-scrollbar {
+display: none;
+}
+
+/* Cards */
+
+.watch-shopping-card {
+flex: 0 0 540px;
+min-width: 0;
+min-height: 590px;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+background: #fff;
+border-radius: 28px;
+scroll-snap-align: start;
+transition: box-shadow 0.25s ease;
+}
+
+.watch-shopping-card:hover {
+box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+}
+
+.watch-shopping-card-content {
+padding: 45px 48px 15px;
+}
+
+.watch-shopping-eyebrow {
+margin: 0 0 15px;
+font-size: 21px;
+font-weight: 500;
+}
+
+.watch-shopping-card-content h3 {
+max-width: 400px;
+margin: 0 0 18px;
+font-size: 38px;
+line-height: 1.2;
+font-weight: 600;
+letter-spacing: -1.3px;
+}
+
+.watch-shopping-description {
+max-width: 440px;
+margin: 0;
+color: #333336;
+font-size: 19px;
+line-height: 1.4;
+}
+
+.watch-shopping-card-link {
+display: inline-block;
+margin-top: 18px;
+color: #06c;
+font-size: 16px;
+}
+
+/* Images */
+
+.watch-shopping-image {
+display: flex;
+align-items: flex-end;
+justify-content: center;
+flex: 1;
+min-height: 230px;
+margin-top: 15px;
+overflow: hidden;
+}
+
+.watch-shopping-image img {
+display: block;
+width: 100%;
+height: 100%;
+max-height: 310px;
+object-fit: contain;
+object-position: center bottom;
+}
+
+/* Horizontal scroll buttons */
+
+.watch-shopping-controls {
+display: flex;
+justify-content: flex-end;
+gap: 12px;
+max-width: 1600px;
+margin: 18px auto 0;
+padding: 0 6.3%;
+}
+
+.watch-shopping-controls button {
+width: 42px;
+height: 42px;
+border: none;
+border-radius: 50%;
+background: #e2e2e7;
+color: #55555a;
+font-size: 30px;
+line-height: 1;
+cursor: pointer;
+transition: background 0.2s ease;
+}
+
+.watch-shopping-controls button:hover {
+background: #d2d2d7;
+}
+
+.watch-shopping-status {
+padding: 30px 6.3%;
+color: #6e6e73;
+text-align: center;
+}
+
+/* ========================================
+TABLET
+======================================== */
+
+@media (max-width: 900px) {
+.watch-shopping-section {
+padding-top: 55px;
+}
+
+.watch-shopping-heading {
+align-items: flex-start;
+flex-direction: column;
+gap: 20px;
+margin-bottom: 35px;
+}
+
+.watch-shopping-heading h2 {
+font-size: 44px;
+letter-spacing: -1.5px;
+}
+
+.watch-shopping-card {
+flex-basis: 440px;
+min-height: 540px;
+}
+
+.watch-shopping-card-content {
+padding: 35px 32px 15px;
+}
+
+.watch-shopping-card-content h3 {
+font-size: 32px;
+}
+
+.watch-shopping-description {
+font-size: 17px;
+}
+}
+
+/* ========================================
+MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+.watch-shopping-section {
+padding: 42px 0 40px;
+}
+
+.watch-shopping-heading {
+padding: 0 22px;
+margin-bottom: 30px;
+}
+
+.watch-shopping-heading h2 {
+font-size: 34px;
+letter-spacing: -1px;
+}
+
+.watch-shopping-shop-link {
+font-size: 15px;
+margin-bottom: 0;
+}
+
+.watch-shopping-carousel {
+gap: 16px;
+padding: 0 22px 15px;
+}
+
+.watch-shopping-card {
+flex-basis: 85%;
+min-height: 480px;
+border-radius: 22px;
+}
+
+.watch-shopping-card-content {
+padding: 28px 24px 10px;
+}
+
+.watch-shopping-eyebrow {
+font-size: 17px;
+}
+
+.watch-shopping-card-content h3 {
+font-size: 28px;
+letter-spacing: -0.7px;
+}
+
+.watch-shopping-description {
+font-size: 16px;
+}
+
+.watch-shopping-image {
+min-height: 180px;
+}
+
+.watch-shopping-image img {
+max-height: 240px;
+}
+
+.watch-shopping-controls {
+padding: 0 22px;
+}
+
+.watch-shopping-controls button {
+width: 36px;
+height: 36px;
+font-size: 25px;
+}
+}
+
+/* ========================================
+APPLE WATCH ESSENTIALS
+======================================== */
+
+.watch-essentials-section {
+width: 100%;
+padding: 65px 0 55px;
+background: #fff;
+color: #1d1d1f;
+overflow: hidden;
+}
+
+.watch-essentials-heading {
+max-width: 1650px;
+margin: 0 auto 65px;
+padding: 0 6%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 25px;
+}
+
+.watch-essentials-heading h2 {
+margin: 0;
+font-size: clamp(38px, 4.2vw, 68px);
+line-height: 1.08;
+font-weight: 600;
+letter-spacing: -2.5px;
+}
+
+.watch-essentials-all-link {
+flex-shrink: 0;
+color: #06c;
+font-size: 17px;
+white-space: nowrap;
+}
+
+.watch-essentials-all-link:hover,
+.watch-essential-link:hover {
+text-decoration: underline;
+}
+
+/* Horizontal carousel */
+
+.watch-essentials-carousel {
+display: flex;
+gap: 28px;
+overflow-x: auto;
+overflow-y: hidden;
+padding: 0 5.7% 20px;
+scroll-snap-type: x mandatory;
+scroll-behavior: smooth;
+scrollbar-width: none;
+-webkit-overflow-scrolling: touch;
+}
+
+.watch-essentials-carousel::-webkit-scrollbar {
+display: none;
+}
+
+/* Essential cards */
+
+.watch-essential-card {
+flex: 0 0 90%;
+max-width: 1600px;
+min-width: 0;
+min-height: 600px;
+display: flex;
+align-items: stretch;
+overflow: hidden;
+border-radius: 38px;
+background: #f5f5f7;
+scroll-snap-align: start;
+}
+
+.watch-essential-content {
+flex: 0 0 39%;
+align-self: center;
+padding: 45px 0 45px 7%;
+position: relative;
+z-index: 1;
+}
+
+.watch-essential-eyebrow {
+margin: 0 0 12px;
+font-size: 23px;
+font-weight: 500;
+}
+
+.watch-essential-content h3 {
+max-width: 440px;
+margin: 0 0 18px;
+font-size: clamp(32px, 3vw, 48px);
+line-height: 1.12;
+font-weight: 600;
+letter-spacing: -1.5px;
+}
+
+.watch-essential-description {
+max-width: 440px;
+margin: 0 0 20px;
+color: #333336;
+font-size: 20px;
+line-height: 1.4;
+}
+
+.watch-essential-link {
+display: inline-block;
+color: #06c;
+font-size: 19px;
+}
+
+.watch-essential-link span {
+font-size: 23px;
+}
+
+/* Large image */
+
+.watch-essential-image {
+flex: 1;
+min-width: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+}
+
+.watch-essential-image img {
+display: block;
+width: 100%;
+height: 100%;
+max-height: 680px;
+object-fit: contain;
+object-position: center;
+}
+
+/* Carousel arrows */
+
+.watch-essentials-controls {
+max-width: 1650px;
+margin: 20px auto 0;
+padding: 0 6%;
+display: flex;
+justify-content: flex-end;
+gap: 12px;
+}
+
+.watch-essentials-controls button {
+width: 42px;
+height: 42px;
+border: none;
+border-radius: 50%;
+background: #e5e5ea;
+color: #444;
+font-size: 30px;
+line-height: 1;
+cursor: pointer;
+transition: background 0.2s ease;
+}
+
+.watch-essentials-controls button:hover {
+background: #d2d2d7;
+}
+
+.watch-essentials-status {
+padding: 30px 6%;
+color: #6e6e73;
+text-align: center;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+.watch-essentials-section {
+padding-top: 50px;
+}
+
+.watch-essentials-heading {
+align-items: flex-start;
+flex-direction: column;
+margin-bottom: 35px;
+}
+
+.watch-essentials-heading h2 {
+letter-spacing: -1.5px;
+}
+
+.watch-essential-card {
+flex-basis: 90%;
+min-height: 480px;
+border-radius: 28px;
+}
+
+.watch-essential-content {
+flex-basis: 43%;
+padding-left: 5%;
+}
+
+.watch-essential-eyebrow {
+font-size: 18px;
+}
+
+.watch-essential-description {
+font-size: 16px;
+}
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+.watch-essentials-section {
+padding: 40px 0;
+}
+
+.watch-essentials-heading {
+padding: 0 22px;
+margin-bottom: 28px;
+gap: 18px;
+}
+
+.watch-essentials-heading h2 {
+font-size: 36px;
+letter-spacing: -1px;
+}
+
+.watch-essentials-all-link {
+font-size: 15px;
+}
+
+.watch-essentials-carousel {
+gap: 16px;
+padding: 0 22px 15px;
+}
+
+.watch-essential-card {
+flex: 0 0 88%;
+min-height: 540px;
+flex-direction: column;
+border-radius: 24px;
+}
+
+.watch-essential-content {
+flex: 0 0 auto;
+padding: 30px 25px 10px;
+}
+
+.watch-essential-eyebrow {
+font-size: 18px;
+}
+
+.watch-essential-content h3 {
+font-size: 32px;
+letter-spacing: -0.8px;
+}
+
+.watch-essential-description {
+font-size: 16px;
+}
+
+.watch-essential-link {
+font-size: 16px;
+}
+
+.watch-essential-image {
+flex: 1;
+min-height: 220px;
+}
+
+.watch-essential-image img {
+max-height: 280px;
+}
+
+.watch-essentials-controls {
+padding: 0 22px;
+}
+
+.watch-essentials-controls button {
+width: 36px;
+height: 36px;
+font-size: 25px;
+}
+}
+
+/* =========================================
+   MADE FOR EACH OTHER
+========================================= */
+
+.watch-made-section {
+  width: 100%;
+  padding: 120px 0;
+  background: #f5f5f7;
+  overflow: hidden;
+}
+
+.watch-made-container {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 35% 65%;
+  align-items: center;
+  gap: 60px;
+}
+
+/* =========================================
+   LEFT
+========================================= */
+
+.watch-made-left h2 {
+  font-size: 56px;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  font-weight: 600;
+  margin-bottom: 60px;
+  color: #1d1d1f;
+}
+
+.watch-accordion {
+  width: 100%;
+  max-width: 500px;
+}
+
+.watch-accordion-item {
+  width: 100%;
+  min-height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 0;
+
+  border: none;
+  border-bottom: 1px solid #d2d2d7;
+
+  background: transparent;
+
+  font-size: 21px;
+  font-weight: 500;
+  color: #1d1d1f;
+
+  cursor: pointer;
+  text-align: left;
+}
+
+.watch-accordion-item:hover {
+  color: #555;
+}
+
+.watch-accordion-icon {
+  font-size: 28px;
+  font-weight: 300;
+  margin-left: 20px;
+}
+
+.watch-accordion-content {
+  padding: 20px 35px 25px 0;
+}
+
+.watch-accordion-content p {
+  margin: 0;
+
+  font-size: 17px;
+  line-height: 1.6;
+  color: #6e6e73;
+}
+
+/* =========================================
+   RIGHT IMAGE
+========================================= */
+
+.watch-made-right {
+  width: 100%;
+}
+
+.watch-fitness-image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 28px;
+}
+
+.watch-fitness-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* =========================================
+   WORKOUT METRICS
+========================================= */
+
+.watch-metrics {
+  position: absolute;
+
+  top: 30px;
+  left: 30px;
+
+  display: flex;
+  gap: 12px;
+
+  padding: 14px 18px;
+
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(15px);
+
+  border-radius: 16px;
+
+  color: white;
+}
+
+.watch-metrics div {
+  display: flex;
+  flex-direction: column;
+  min-width: 95px;
+}
+
+.watch-metrics span {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.watch-metrics strong {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 992px) {
+
+  .watch-made-section {
+    padding: 90px 0;
+  }
+
+  .watch-made-container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .watch-made-left h2 {
+    font-size: 48px;
+  }
+
+  .watch-accordion {
+    max-width: 100%;
+  }
+
+  .watch-made-right {
+    width: 100%;
+  }
+
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .watch-made-section {
+    padding: 70px 0;
+  }
+
+  .watch-made-container {
+    width: 90%;
+  }
+
+  .watch-made-left h2 {
+    font-size: 38px;
+    margin-bottom: 40px;
+  }
+
+  .watch-accordion-item {
+    font-size: 17px;
+    min-height: 60px;
+  }
+
+  .watch-accordion-content p {
+    font-size: 15px;
+  }
+
+  .watch-fitness-image {
+    border-radius: 20px;
+  }
+
+  .watch-metrics {
+    top: 12px;
+    left: 12px;
+
+    gap: 8px;
+    padding: 9px 10px;
+
+    border-radius: 10px;
+  }
+
+  .watch-metrics div {
+    min-width: 60px;
+  }
+
+  .watch-metrics span {
+    font-size: 7px;
+  }
+
+  .watch-metrics strong {
+    font-size: 13px;
+  }
+
+}

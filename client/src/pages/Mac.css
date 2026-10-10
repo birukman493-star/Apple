@@ -1,0 +1,1943 @@
+
+* {
+  box-sizing: border-box;
+}
+
+.mac-nav-section {
+  width: 100%;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  padding: 55px 0 35px;
+  overflow: hidden;
+  margin-top:50px;
+}
+
+.mac-nav-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 44px;
+}
+
+.mac-nav-container h1 {
+  margin: 0 0 40px;
+  font-size: 86px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -2px;
+}
+
+
+/* =========================
+   NAVIGATION WRAPPER
+========================= */
+
+.mac-nav-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.mac-nav-list {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding: 5px 5px 15px;
+
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+}
+
+.mac-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* =========================
+   ITEM
+========================= */
+
+.mac-nav-item {
+  flex: 0 0 auto;
+
+  width: 105px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  color: #1d1d1f;
+  text-decoration: none;
+
+  transition: opacity 0.2s ease;
+}
+
+.mac-nav-item:hover {
+  color: #1d1d1f;
+  text-decoration: none;
+  opacity: 0.7;
+}
+
+
+/* =========================
+   IMAGE
+========================= */
+
+.mac-nav-image {
+  width: 100px;
+  height: 78px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  margin-bottom: 12px;
+}
+
+.mac-nav-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.mac-nav-title {
+  width: 100%;
+
+  font-size: 12px;
+  line-height: 1.25;
+
+  font-weight: 500;
+
+  white-space: normal;
+}
+
+
+/* =========================
+   BADGE
+========================= */
+
+.mac-nav-badge {
+  margin-top: 5px;
+
+  font-size: 10px;
+  line-height: 1;
+
+  color: #bf4800;
+}
+
+.mac-nav-badge-space {
+  height: 10px;
+  margin-top: 5px;
+}
+
+
+/* =========================
+   ARROW
+========================= */
+
+.mac-nav-arrow {
+  flex: 0 0 auto;
+
+  width: 36px;
+  height: 36px;
+
+  margin-left: 8px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.mac-nav-arrow:hover {
+  background: rgba(0, 0, 0, 0.14);
+  transform: translateX(2px);
+}
+
+.mac-nav-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .mac-nav-container {
+    padding: 0 20px;
+  }
+
+  .mac-nav-container h1 {
+    font-size: 48px;
+  }
+
+  .mac-nav-list {
+    gap: 28px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .mac-nav-section {
+    padding: 40px 0 25px;
+  }
+
+  .mac-nav-container {
+    padding: 0 16px;
+  }
+
+  .mac-nav-container h1 {
+    font-size: 42px;
+    margin-bottom: 30px;
+  }
+
+  .mac-nav-list {
+    gap: 24px;
+    padding-bottom: 12px;
+  }
+
+  .mac-nav-item {
+    width: 92px;
+  }
+
+  .mac-nav-image {
+    width: 88px;
+    height: 68px;
+  }
+
+  .mac-nav-title {
+    font-size: 11px;
+  }
+
+  .mac-nav-arrow {
+    display: none;
+  }
+}
+
+/* ==================================================
+   EXPLORE THE LINEUP
+================================================== */
+
+.mac-lineup {
+  width: 100%;
+  background: #f5f5f7;
+  padding-top: 80px;
+  padding-left: 0;
+  /* border: 1px solid red; */
+}
+
+.lineup-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 10px;
+    /* border: 1px solid red; */
+
+}
+
+
+/* =========================
+   Heading
+========================= */
+
+.lineup-container  h2 {
+ margin-top: 200px;
+ padding:20px;
+  /* text-align: center; */
+
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 700;
+
+  color: #1d1d1f;
+    /* border: 1px solid red; */
+
+}
+
+
+/* =========================
+   Tabs
+========================= */
+
+.lineup-tabs {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 60px;
+
+  overflow-x: auto;
+  padding-left: 30px;
+}
+
+.lineup-tabs button {
+  border: none;
+
+  padding: 10px 20px;
+
+  border-radius: 25px;
+
+  background: #e8e8ed;
+
+  color: #1d1d1f;
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+.lineup-tabs button.active {
+  background: #1d1d1f;
+  color: white;
+}
+
+
+/* =========================
+   Products
+========================= */
+
+.lineup-products {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 50px 30px;
+}
+
+
+/* =========================
+   Product Card
+========================= */
+
+.lineup-product {
+  text-align: center;
+
+  min-width: 0;
+}
+
+
+/* =========================
+   Product Image
+========================= */
+
+.product-image {
+  width: 100%;
+  height: 280px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  transition: transform 0.3s ease;
+}
+
+.lineup-product:hover .product-image img {
+  transform: scale(1.04);
+}
+
+
+/* =========================
+   Color Dots
+========================= */
+
+.color-dots {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-bottom: 18px;
+}
+
+.color-dots span {
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: #8e8e93;
+
+  border: 1px solid #777;
+}
+
+.color-dots span:nth-child(2) {
+  background: #d6d6d6;
+}
+
+.color-dots span:nth-child(3) {
+  background: #b8a18b;
+}
+
+.color-dots span:nth-child(4) {
+  background: #777;
+}
+
+
+/* =========================
+   Badge
+========================= */
+
+.product-badge {
+  color: #bf4800;
+
+  font-size: 14px;
+
+  margin-bottom: 5px;
+}
+
+
+/* =========================
+   Title
+========================= */
+
+.lineup-product h3 {
+  margin: 0 0 12px;
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+  color: #1d1d1f;
+}
+
+
+/* =========================
+   Description
+========================= */
+
+.product-description {
+  min-height: 48px;
+
+  margin: 0 0 15px;
+
+  font-size: 16px;
+
+  line-height: 1.4;
+
+  color: #6e6e73;
+}
+
+
+/* =========================
+   Price
+========================= */
+
+.product-price {
+  min-height: 70px;
+
+  margin: 0 0 20px;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  color: #1d1d1f;
+}
+
+
+/* =========================
+   Buttons
+========================= */
+
+.product-buttons {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+.product-buttons .learn-more {
+  border: none;
+
+  background: #0071e3;
+
+  color: white;
+
+  padding: 10px 18px;
+
+  border-radius: 22px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.product-buttons .learn-more:hover {
+  background: #0077ed;
+}
+
+.product-buttons a {
+  color: #0071e3;
+
+  text-decoration: none;
+
+  font-size: 15px;
+}
+
+.product-buttons a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   Loading
+========================= */
+
+.lineup-loading {
+  text-align: center;
+
+  font-size: 18px;
+
+  color: #6e6e73;
+
+  padding: 50px 0;
+}
+
+
+/* ==================================================
+   TABLET
+================================================== */
+
+@media (max-width: 991.98px) {
+
+  .lineup-products {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 60px 25px;
+  }
+
+  .product-image {
+    height: 250px;
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 575.98px) {
+
+  .mac-lineup {
+    padding: 55px 0;
+  }
+
+  .lineup-container {
+    padding: 0 20px;
+  }
+
+  .lineup-container > h2 {
+    font-size: 38px;
+
+    margin-bottom: 25px;
+  }
+
+  .lineup-tabs {
+    justify-content: flex-start;
+
+    margin-bottom: 45px;
+
+    padding-bottom: 5px;
+  }
+
+  .lineup-products {
+    grid-template-columns: 1fr;
+
+    gap: 70px;
+  }
+
+  .product-image {
+    height: 250px;
+  }
+
+  .lineup-product h3 {
+    font-size: 23px;
+  }
+
+}
+.lineup-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.lineup-tabs button {
+  border: none;
+  background: #e8e8ed;
+  color: #1d1d1f;
+  padding: 12px 22px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* Hover only */
+.lineup-tabs button:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* Currently selected button */
+.lineup-tabs button.active {
+  background: #000;
+  color: #fff;
+}
+/* =================================
+   WHY APPLE IS THE BEST PLACE TO SHOP MAC
+================================= */
+
+.mac-shop-section {
+  width: 100%;
+  padding: 100px 0;
+  background: #f5f5f7;
+  overflow: hidden;
+}
+
+.mac-shop-header {
+  max-width: 1200px;
+  margin: 0 auto 50px;
+  padding: 0 40px;
+}
+
+.mac-shop-header h2 {
+  margin: 0;
+  font-size: 48px;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+/* =================================
+   HORIZONTAL SCROLL AREA
+================================= */
+
+.mac-shop-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: none;
+
+  scroll-behavior: smooth;
+}
+
+.mac-shop-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* =================================
+   CARD TRACK
+================================= */
+
+.mac-shop-track {
+  display: flex;
+  gap: 24px;
+
+  width: max-content;
+
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+/* =================================
+   CARD
+================================= */
+
+.mac-shop-card {
+  flex: 0 0 420px;
+
+  background: #fff;
+  border-radius: 28px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* =================================
+   IMAGE
+================================= */
+
+.mac-shop-image {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.mac-shop-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.6s ease;
+}
+
+.mac-shop-card:hover .mac-shop-image img {
+  transform: scale(1.03);
+}
+
+/* =================================
+   CONTENT
+================================= */
+
+.mac-shop-content {
+  padding: 32px;
+}
+
+.mac-shop-content h3 {
+  margin: 0 0 16px;
+
+  font-size: 28px;
+  line-height: 1.15;
+
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+.mac-shop-content p {
+  margin: 0;
+
+  font-size: 17px;
+  line-height: 1.45;
+
+  color: #6e6e73;
+}
+
+/* =================================
+   TABLET
+================================= */
+
+@media (max-width: 900px) {
+
+  .mac-shop-section {
+    padding: 80px 0;
+  }
+
+  .mac-shop-header {
+    padding: 0 24px;
+  }
+
+  .mac-shop-header h2 {
+    font-size: 38px;
+  }
+
+  .mac-shop-track {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .mac-shop-card {
+    flex-basis: 360px;
+  }
+
+}
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+
+  .mac-shop-section {
+    padding: 60px 0;
+  }
+
+  .mac-shop-header {
+    margin-bottom: 30px;
+    padding: 0 20px;
+  }
+
+  .mac-shop-header h2 {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+
+  .mac-shop-track {
+    gap: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .mac-shop-card {
+    flex-basis: 300px;
+    border-radius: 22px;
+  }
+
+  .mac-shop-image {
+    height: 220px;
+  }
+
+  .mac-shop-content {
+    padding: 24px;
+  }
+
+  .mac-shop-content h3 {
+    font-size: 23px;
+  }
+
+  .mac-shop-content p {
+    font-size: 16px;
+  }
+
+}
+
+/* =================================
+   GET TO KNOW MAC
+================================= */
+
+.get-to-know-mac {
+  width: 100%;
+  padding: 100px 0;
+  background: #f5f5f7;
+  overflow: hidden;
+}
+
+.get-to-know-header {
+  max-width: 1200px;
+  margin: 0 auto 50px;
+  padding: 0 40px;
+}
+
+.get-to-know-header h2 {
+  margin: 0;
+  color: #1d1d1f;
+  font-size: 48px;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  font-weight: 600;
+}
+
+/* =================================
+   HORIZONTAL SCROLL
+================================= */
+
+.get-to-know-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.get-to-know-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* =================================
+   CARD TRACK
+================================= */
+
+.get-to-know-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  padding: 0 40px;
+}
+
+/* =================================
+   CARD
+================================= */
+
+.get-to-know-card {
+  position: relative;
+  flex: 0 0 520px;
+  height: 600px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #000;
+}
+
+/* =================================
+   IMAGE
+================================= */
+
+.get-to-know-image {
+  width: 100%;
+  height: 100%;
+}
+
+.get-to-know-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* =================================
+   CONTENT OVER IMAGE
+================================= */
+
+.get-to-know-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 40px;
+
+  color: #fff;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.get-to-know-content h3 {
+  margin: 0 0 14px;
+
+  font-size: 30px;
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+.get-to-know-content p {
+  max-width: 430px;
+
+  margin: 0;
+
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+/* =================================
+   TABLET
+================================= */
+
+@media (max-width: 900px) {
+
+  .get-to-know-mac {
+    padding: 80px 0;
+  }
+
+  .get-to-know-header {
+    padding: 0 24px;
+  }
+
+  .get-to-know-header h2 {
+    font-size: 40px;
+  }
+
+  .get-to-know-track {
+    padding: 0 24px;
+  }
+
+  .get-to-know-card {
+    flex-basis: 440px;
+    height: 540px;
+  }
+}
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+
+  .get-to-know-mac {
+    padding: 60px 0;
+  }
+
+  .get-to-know-header {
+    margin-bottom: 30px;
+    padding: 0 20px;
+  }
+
+  .get-to-know-header h2 {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+
+  .get-to-know-track {
+    gap: 16px;
+    padding: 0 20px;
+  }
+
+  .get-to-know-card {
+    flex-basis: 320px;
+    height: 450px;
+    border-radius: 22px;
+  }
+
+  .get-to-know-content {
+    padding: 25px;
+  }
+
+  .get-to-know-content h3 {
+    font-size: 24px;
+  }
+
+  .get-to-know-content p {
+    font-size: 15px;
+  }
+}
+/* =================================
+   HELP ME CHOOSE
+================================= */
+
+.mac-help-section {
+  width: 100%;
+  padding: 100px 40px;
+  background: #f5f5f7;
+  overflow: hidden;
+}
+
+.mac-help-card {
+  position: relative;
+
+  max-width: 1200px;
+  min-height: 600px;
+
+  margin: 0 auto;
+
+  border-radius: 30px;
+  overflow: hidden;
+
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+}
+
+/* =================================
+   CONTENT
+================================= */
+
+.mac-help-content {
+  position: relative;
+  z-index: 2;
+
+  width: 45%;
+
+  padding: 70px;
+}
+
+.mac-help-content h2 {
+  margin: 0 0 20px;
+
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -2px;
+
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+.mac-help-content p {
+  max-width: 400px;
+
+  margin: 0 0 30px;
+
+  font-size: 20px;
+  line-height: 1.45;
+
+  color: #6e6e73;
+}
+
+/* =================================
+   BUTTON
+================================= */
+
+.mac-help-button {
+  display: inline-block;
+
+  padding: 12px 22px;
+
+  border-radius: 25px;
+
+  background: #0071e3;
+  color: #fff;
+
+  text-decoration: none;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  transition: background 0.2s ease;
+}
+
+.mac-help-button:hover {
+  background: #0077ed;
+  color: #fff;
+}
+
+/* =================================
+   IMAGE
+================================= */
+
+.mac-help-image {
+  width: 55%;
+  height: 600px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mac-help-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+/* =================================
+   TABLET
+================================= */
+
+@media (max-width: 900px) {
+
+  .mac-help-section {
+    padding: 80px 24px;
+  }
+
+  .mac-help-card {
+    min-height: 500px;
+  }
+
+  .mac-help-content {
+    padding: 45px;
+  }
+
+  .mac-help-content h2 {
+    font-size: 42px;
+  }
+
+  .mac-help-content p {
+    font-size: 18px;
+  }
+
+  .mac-help-image {
+    height: 500px;
+  }
+}
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+
+  .mac-help-section {
+    padding: 60px 20px;
+  }
+
+  .mac-help-card {
+    min-height: auto;
+
+    flex-direction: column;
+  }
+
+  .mac-help-content {
+    width: 100%;
+    padding: 40px 30px 20px;
+  }
+
+  .mac-help-content h2 {
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+
+  .mac-help-content p {
+    font-size: 17px;
+  }
+
+  .mac-help-image {
+    width: 100%;
+    height: 300px;
+  }
+
+}
+/* =================================
+   SWITCH TO MAC
+================================= */
+
+.switch-mac-section {
+  width: 100%;
+  background: #f5f5f7;
+  padding: 80px 0 100px;
+}
+
+.switch-mac-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+
+/* ================================
+   SECTION TITLE
+================================ */
+
+.switch-mac-container > h2 {
+  margin: 0 0 65px;
+
+  font-size: clamp(48px, 5vw, 72px);
+
+  font-weight: 700;
+
+  line-height: 1.05;
+
+  color: #1d1d1f;
+}
+
+
+/* ================================
+   TWO CARDS
+================================ */
+
+.switch-mac-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 28px;
+}
+
+
+/* ================================
+   CARD
+================================ */
+
+.switch-mac-card {
+  background: #fff;
+
+  border-radius: 32px;
+
+  overflow: hidden;
+
+  min-height: 700px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  text-align: center;
+}
+
+
+/* ================================
+   CARD CONTENT
+================================ */
+
+.switch-mac-content {
+  padding: 80px 70px 35px;
+
+  max-width: 800px;
+
+  margin: 0 auto;
+}
+
+
+.switch-mac-content h3 {
+  margin: 0;
+
+  font-size: clamp(34px, 3vw, 48px);
+
+  font-weight: 700;
+
+  line-height: 1.08;
+
+  color: #1d1d1f;
+}
+
+
+.switch-mac-content p {
+  margin: 22px auto 25px;
+
+  max-width: 580px;
+
+  font-size: 22px;
+
+  line-height: 1.35;
+
+  color: #1d1d1f;
+}
+
+
+/* ================================
+   LINK
+================================ */
+
+.switch-mac-link {
+  display: inline-block;
+
+  color: #06c;
+
+  font-size: 21px;
+
+  text-decoration: none;
+}
+
+.switch-mac-link:hover {
+  text-decoration: underline;
+}
+
+
+/* ================================
+   IMAGE
+================================ */
+
+.switch-mac-image {
+  width: 100%;
+height: 250px;
+  margin-top: auto;
+
+  overflow: hidden;
+}
+
+
+.switch-mac-image img {
+  width: 100%;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: cover;
+  position:relative;
+  top:-300px;
+}
+/* =================================
+   MAC ESSENTIALS
+================================= */
+
+.mac-essentials-section {
+  width: 100%;
+
+  background: #f5f5f7;
+
+  padding: 80px 0 100px;
+}
+
+
+.mac-essentials-container {
+  width: 100%;
+
+  max-width: 1600px;
+
+  margin: 0 auto;
+
+  padding: 0 5%;
+}
+
+
+/* =================================
+   SECTION TITLE
+================================= */
+
+.mac-essentials-container > h2 {
+  margin: 0 0 65px;
+
+  color: #1d1d1f;
+
+  font-size: clamp(48px, 5vw, 72px);
+
+  font-weight: 700;
+
+  line-height: 1.05;
+}
+
+
+/* =================================
+   TWO CARDS
+================================= */
+
+.mac-essentials-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 28px;
+}
+
+
+/* =================================
+   CARD
+================================= */
+
+.mac-essential-card {
+  position: relative;
+
+  min-height: 700px;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  border-radius: 32px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  text-align: center;
+}
+
+
+/* =================================
+   CONTENT
+================================= */
+
+.mac-essential-content {
+  position: relative;
+
+  z-index: 2;
+
+  padding: 80px 50px 30px;
+}
+
+
+.mac-essential-content h3 {
+  margin: 0;
+
+  color: #1d1d1f;
+
+  font-size: clamp(34px, 3vw, 48px);
+
+  font-weight: 700;
+
+  line-height: 1.1;
+}
+
+
+.mac-essential-content p {
+  margin: 20px auto 24px;
+
+  max-width: 600px;
+
+  color: #1d1d1f;
+
+  font-size: 22px;
+
+  line-height: 1.35;
+}
+
+
+/* =================================
+   LINK
+================================= */
+
+.mac-essential-link {
+  color: #06c;
+
+  font-size: 21px;
+
+  text-decoration: none;
+}
+
+
+.mac-essential-link:hover {
+  text-decoration: underline;
+}
+
+
+/* =================================
+   IMAGE
+================================= */
+
+.mac-essential-image {
+  width: 100%;
+  /* height: 400px; */
+  margin-top: auto;
+
+  overflow: hidden;
+   position:relative;
+  top:-150px;
+}
+
+
+.mac-essential-image img {
+  width: 100%;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: cover;
+  /* position:relative; */
+  /* top:-200px; */
+}
+/* =========================================
+   UNLOCK THE WORLD OF APPLE
+========================================= */
+
+.apple-world-section {
+  width: 100%;
+
+  background: #fff;
+
+  padding: 90px 0 110px;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.apple-world-header {
+  width: 100%;
+
+  max-width: 1600px;
+
+  margin: 0 auto;
+
+  padding: 0 5% 65px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 40px;
+}
+
+
+.apple-world-header h2 {
+  margin: 0;
+
+  color: #1d1d1f;
+
+  font-size: clamp(45px, 5vw, 72px);
+
+  font-weight: 700;
+
+  line-height: 1.05;
+}
+
+
+.apple-world-header a {
+  color: #06c;
+
+  font-size: 21px;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+}
+
+
+.apple-world-header a:hover {
+  text-decoration: underline;
+}
+
+
+.apple-world-header a span {
+  font-size: 28px;
+
+  margin-left: 5px;
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.apple-world-card {
+  width: 90%;
+
+  max-width: 1600px;
+
+  min-height: 700px;
+
+  margin: 0 auto;
+
+  background: #f5f5f7;
+
+  border-radius: 35px;
+
+  overflow: hidden;
+
+  display: grid;
+
+  grid-template-columns: 45% 55%;
+
+  align-items: stretch;
+}
+
+
+/* =========================================
+   LEFT ACCORDION
+========================================= */
+
+.apple-world-accordion {
+  padding: 250px 80px 60px 100px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: flex-start;
+}
+
+
+.apple-world-item {
+  width: 100%;
+
+  border-bottom: 1px solid #d2d2d7;
+}
+
+
+.apple-world-button {
+  width: 100%;
+
+  border: none;
+
+  background: transparent;
+
+  padding: 30px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  color: #1d1d1f;
+
+  font-size: 29px;
+
+  font-weight: 600;
+}
+
+
+.apple-world-button:hover {
+  color: #06c;
+}
+
+
+.apple-world-arrow {
+  color: #86868b;
+
+  font-size: 42px;
+
+  line-height: 1;
+
+  font-weight: 400;
+
+  width: 45px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   EXPANDED CONTENT
+========================================= */
+
+.apple-world-content {
+  padding: 0 50px 30px 0;
+
+  animation: appleWorldOpen 0.3s ease;
+}
+
+
+.apple-world-content p {
+  margin: 0;
+
+  color: #1d1d1f;
+
+  font-size: 21px;
+
+  line-height: 1.45;
+
+  max-width: 500px;
+}
+
+
+@keyframes appleWorldOpen {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   RIGHT IMAGE
+========================================= */
+
+.apple-world-image {
+  width: 100%;
+
+  height: 100%;
+
+  min-height: 700px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: flex-end;
+
+  overflow: hidden;
+}
+
+
+.apple-world-image img {
+  width: 600px;
+
+  height: 400px;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  display: block;
+  position:relative;
+  top:-80px;
+}
+@media (max-width: 991.98px) {
+
+  .apple-world-section {
+    padding: 65px 0 80px;
+  }
+
+  .apple-world-header {
+    padding: 0 4% 45px;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 20px;
+  }
+
+  .apple-world-header a {
+    white-space: normal;
+
+    font-size: 19px;
+  }
+
+  .apple-world-card {
+    width: 92%;
+
+    grid-template-columns: 1fr;
+
+    min-height: auto;
+  }
+
+  .apple-world-accordion {
+    padding: 50px 50px 30px;
+  }
+
+  .apple-world-image {
+    min-height: 500px;
+
+    order: 2;
+  }
+
+}
+@media (max-width: 575.98px) {
+
+  .apple-world-section {
+    padding: 50px 0 60px;
+  }
+
+  .apple-world-header {
+    padding: 0 20px 35px;
+  }
+
+  .apple-world-header h2 {
+    font-size: 42px;
+  }
+
+  .apple-world-header a {
+    font-size: 17px;
+  }
+
+  .apple-world-card {
+    width: calc(100% - 40px);
+
+    border-radius: 24px;
+
+    grid-template-columns: 1fr;
+  }
+
+  .apple-world-accordion {
+    padding: 30px 25px 20px;
+  }
+
+  .apple-world-button {
+    padding: 25px 0;
+
+    font-size: 21px;
+  }
+
+  .apple-world-arrow {
+    font-size: 32px;
+
+    width: 35px;
+  }
+
+  .apple-world-content {
+    padding: 0 20px 25px 0;
+  }
+
+  .apple-world-content p {
+    font-size: 17px;
+  }
+
+  .apple-world-image {
+    min-height: 350px;
+  }
+
+}
+
+/* =========================================
+   MAC FOOTER NAVIGATION
+========================================= */
+
+.mac-footer-nav {
+  width: 100%;
+
+  background: #f5f5f7;
+
+  padding: 80px 0;
+}
+
+
+.mac-footer-container {
+  width: 90%;
+
+  max-width: 1600px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 80px;
+}
+
+
+/* =========================================
+   COLUMN
+========================================= */
+
+.mac-footer-column {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+}
+
+
+/* =========================================
+   COLUMN TITLE
+========================================= */
+
+.mac-footer-column h3 {
+  margin: 0 0 25px;
+
+  color: #1d1d1f;
+
+  font-size: 20px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   LINKS
+========================================= */
+
+.mac-footer-column a {
+  margin-bottom: 13px;
+
+  color: #424245;
+
+  font-size: 16px;
+
+  line-height: 1.4;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+
+.mac-footer-column a:hover {
+  color: #06c;
+
+  text-decoration: underline;
+}
