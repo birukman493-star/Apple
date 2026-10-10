@@ -1,0 +1,142 @@
+
+/* APPLE SUPPORT HERO SECTION */
+
+.apple-support-section {
+  width: 100%;
+  padding: 65px 24px 85px;
+  box-sizing: border-box;
+  background: #fff;
+  color: #1d1d1f;
+  text-align: center;
+}
+
+.support-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.support-apple-logo {
+  color: #1d1d1f;
+  display: block;
+}
+
+.apple-support-section h1 {
+  margin: 0;
+  font-size: clamp(38px, 5vw, 56px);
+  font-weight: 650;
+  letter-spacing: -1.8px;
+  line-height: 1.1;
+}
+
+.support-subtitle {
+  margin: 15px 0 55px;
+  font-size: 23px;
+  color: #6e6e73;
+  line-height: 1.4;
+}
+
+.support-category-grid {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 30px;
+  align-items: start;
+}
+
+.support-category-item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  color: #1d1d1f;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.support-category-item:hover {
+  transform: translateY(-4px);
+}
+
+.support-icon-wrap {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.support-icon-wrap img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.support-category-item span {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* TABLET */
+
+@media (max-width: 850px) {
+  .apple-support-section {
+    padding: 55px 24px 65px;
+  }
+
+  .support-category-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 35px 20px;
+  }
+
+  .support-subtitle {
+    margin-bottom: 40px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+  .apple-support-section {
+    padding: 40px 18px 50px;
+  }
+
+  .support-apple-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .apple-support-section h1 {
+    font-size: 36px;
+  }
+
+  .support-subtitle {
+    font-size: 18px;
+    margin: 12px 0 35px;
+  }
+
+  .support-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 15px;
+  }
+
+  .support-icon-wrap {
+    height: 85px;
+  }
+
+  .support-icon-wrap img {
+    max-height: 85px;
+  }
+
+  .support-category-item span {
+    font-size: 15px;
+  }
+}

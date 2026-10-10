@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import "./Accessories.css";
 
 import iphone from "../assets/iphone.png";
@@ -16,6 +17,15 @@ import make from '../assets/make.jpg'
 import make1 from '../assets/make1.jpg'
 import make2 from '../assets/make2.jpg'
 import make3 from '../assets/make3.jpg'
+import accessory1 from '../assets/accessories1.jpg'
+import accessory2 from '../assets/accessories2.jpg'
+import accessory3 from '../assets/accessories3.avif'
+import accessory4 from '../assets/accessories4.jpg'
+import accessory5 from '../assets/accessories5.jpg'
+import accessory6 from '../assets/accessories6.jpg'
+import accessory7 from '../assets/accessories7.jpg'
+import accessory8 from '../assets/accessories8.jpg'
+
 
 
 const categories = [
@@ -30,7 +40,98 @@ const categories = [
   { name: "Beats", imageSrc: beats },
 ];
 
+const caseProtectionProducts = [
+  {
+    id: 1,
+    title: "Find your color story.",
+    category: "iPhone Cases & Protection",
+    image: accessory1,
+    type: "feature",
+    link: "#",
+  },
+  {
+    id: 2,
+    title: "AirTag FineWoven Key Ring – Wildflower Blue",
+    category: "New",
+    price: "$35.00",
+    image: accessory6,
+    colors: ["#76684b", "#77515a", "#7894b9", "#393b43", "#555555"],
+  },
+  {
+    id: 3,
+    title: "Wrist Strap – Crisp Blue",
+    category: "New",
+    price: "$29.00 or $2.41/mo. for 12 mo.",
+    image: accessory3,
+    colors: ["#77515a", "#89816f", "#a9c4df", "#777777", "#a32975"],
+  },
+  {
+    id: 4,
+    title: "AirPods 5 with Wireless Charging Case",
+    category: "New",
+    price: "$149.00 or $24.83/mo. for 6 mo.",
+    image: accessory4,
+    colors: [],
+  },
+  {
+    id: 5,
+    title: "42mm Wildflower Blue Magnetic Link - S/M",
+    category: "New",
+    price: "$99.00 or $8.25/mo. for 12 mo.",
+    image: accessory5,
+    colors: ["#454545", "#77515a", "#7894b9", "#a28c70"],
+  },
+];
+const duoCaseItems = [
+  {
+    id: 1,
+    title: "iPhone Duo Case – Sand",
+    category: "New",
+    price: "$79.00 or $6.58/mo. for 12 mo.",
+    image: accessory2,
+  },
+  {
+    id: 2,
+    title: "iPhone Duo Folio with Kickstand – Taupe",
+    category: "New",
+    price: "$129.00 or $10.75/mo. for 12 mo.",
+    image: accessory7,
+  },
+];
+
+const accessoryBenefits = [
+  {
+    id: 1,
+    icon: "🚚",
+    title: "Fast delivery or pickup.",
+    description:
+      "Enjoy two-hour delivery from an Apple Store, free delivery, or easy pickup.",
+    details: "Choose an available delivery or pickup option at checkout.",
+  },
+  {
+    id: 2,
+    icon: "📦",
+    title: "Free and easy returns.",
+    description:
+      "Complete your return online or take it to an Apple Store.",
+    details: "Review the return options and eligibility for your order.",
+  },
+  {
+    id: 3,
+    icon: "▱",
+    title: "Shop with Apple Card.◊",
+    description:
+      "Get 3% Daily Cash back when you shop at Apple with Apple Card.",
+    details: "Eligibility and terms apply to Apple Card benefits.",
+  },
+];
+
+
+
 const Accessories = () => {
+  const [activeDuoSlide, setActiveDuoSlide] = useState(0);
+  const [expandedBenefit, setExpandedBenefit] = useState(null);
+
   const scrollRef = useRef(null);
 
   const scrollRight = () => {
@@ -384,151 +485,222 @@ const Accessories = () => {
         </div>
       </section>
 
-      {/* =========================================================
-    ACCESSORIES PRODUCT SHOWCASE
-========================================================= */}
+      {/* CASES AND PROTECTION SHOWCASE */}
 
-<section className="accessories-showcase">
-  <div className="accessories-grid">
+      <section className="case-protection-section">
+        <div className="case-protection-grid">
 
-    {/* LEFT — iPHONE CASES */}
-    <div className="accessories-card accessories-cases">
-      <div className="accessories-card-content">
-        <p className="accessories-eyebrow">
-          iPhone Cases & Protection
-        </p>
+          {caseProtectionProducts.map((product) => (
+            <article
+              key={product.id}
+              className={`case-protection-card ${product.type === "feature" ? "case-protection-feature" : ""
+                }`}
+            >
+              <a
+                href={product.link || "#"}
+                className="case-protection-image"
+                aria-label={product.title}
+              >
+                <img src={product.image} alt={product.title} />
+              </a>
 
-        <h2>Find your color story.</h2>
+              <div className="case-protection-info">
+                <span className={`case-protection-category ${product.type === "feature" ? "muted" : ""
+                  }`}>
+                  {product.category}
+                </span>
 
-        <button className="accessories-arrow-btn">
-          →
-        </button>
-      </div>
+                <h3>{product.title}</h3>
 
-      <div className="case-products">
-        <div className="case-item">
-          <img src="/case-magenta.png" alt="Magenta iPhone Case" />
+                {product.colors?.length > 0 && (
+                  <div className="case-protection-colors">
+                    {product.colors.map((color, index) => (
+                      <span
+                        key={index}
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {product.price && (
+                  <p className="case-protection-price">{product.price}</p>
+                )}
+              </div>
+
+              {product.type === "feature" && (
+                <a
+                  href={product.link || "#"}
+                  className="case-protection-arrow"
+                  aria-label="Explore iPhone cases"
+                >
+                  ›
+                </a>
+              )}
+            </article>
+          ))}
+
+        </div>
+      </section>
+
+
+      {/* IPHONE DUO CASE SHOWCASE */}
+
+      <section className="duo-showcase-section">
+        <div className="duo-showcase-grid">
+
+          {duoCaseItems.map((item) => (
+            <article className="duo-product-card" key={item.id}>
+              <div className="duo-product-image">
+                <img src={item.image} alt={item.title} />
+              </div>
+
+              <div className="duo-product-colors">
+                <span />
+                <span />
+              </div>
+
+              <div className="duo-product-info">
+                <span>{item.category}</span>
+                <h3>{item.title}</h3>
+                <p>{item.price}</p>
+              </div>
+            </article>
+          ))}
+
+          <article className="duo-feature-card">
+            <div className="duo-feature-heading">
+              <span>iPhone Cases &amp; Protection</span>
+              <h2>Snaps on. Stands up.</h2>
+            </div>
+
+            <div className="duo-feature-image">
+              <img
+                src={accessory8}
+                alt="iPhone case with built-in kickstand"
+              />
+            </div>
+
+            <button
+              type="button"
+              className="duo-feature-arrow duo-arrow-left"
+              aria-label="Previous image"
+              onClick={() =>
+                setActiveDuoSlide((prev) => (prev === 0 ? 1 : 0))
+              }
+            >
+              ‹
+            </button>
+
+            <button
+              type="button"
+              className="duo-feature-arrow duo-arrow-right"
+              aria-label="Next image"
+              onClick={() =>
+                setActiveDuoSlide((prev) => (prev === 0 ? 1 : 0))
+              }
+            >
+              ›
+            </button>
+          </article>
+
         </div>
 
-        <div className="case-item">
-          <img src="/case-light-blue.png" alt="Light Blue iPhone Case" />
+        <div className="duo-shop-all">
+          <a href="#">Shop all</a>
+        </div>
+      </section>
+
+
+      {/* ACCESSORIES BENEFITS SECTION */}
+
+      <section className="accessory-benefits-section">
+        <h2 className="accessory-benefits-heading">
+          Why Apple is the best place to buy accessories.
+        </h2>
+
+        <div className="accessory-benefits-grid">
+          {accessoryBenefits.map((item) => (
+            <article className="accessory-benefit-card" key={item.id}>
+              <div className="accessory-benefit-icon">
+                {item.icon}
+              </div>
+
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+
+              {expandedBenefit === item.id && (
+                <div className="accessory-benefit-details">
+                  {item.details}
+                </div>
+              )}
+
+              <button
+                type="button"
+                className="accessory-benefit-expand"
+                aria-label="Expand benefit details"
+                onClick={() =>
+                  setExpandedBenefit(
+                    expandedBenefit === item.id ? null : item.id
+                  )
+                }
+              >
+                {expandedBenefit === item.id ? "×" : "+"}
+              </button>
+            </article>
+          ))}
         </div>
 
-        <div className="case-item">
-          <img src="/case-burgundy.png" alt="Burgundy iPhone Case" />
+        <div className="accessory-benefits-controls">
+          <button type="button" aria-label="Previous">‹</button>
+          <button type="button" aria-label="Next">›</button>
         </div>
+      </section>
 
-        <div className="case-item">
-          <img src="/case-taupe.png" alt="Taupe iPhone Case" />
+
+      {/* ACCESSORIES FOOTER NAVIGATION */}
+       <h1>Accessories</h1>
+      <section className="accessories-footer-nav">
+        <div className="accessories-footer-container">
+
+          <div className="accessories-footer-column">
+            <h3>Shop by Product</h3>
+            <Link to="#">iPhone</Link>
+            <Link to="#">iPad</Link>
+            <Link to="#">Mac</Link>
+            <Link to="#">Apple Watch</Link>
+            <Link to="#">Apple Vision Pro</Link>
+            <Link to="#">AirPods</Link>
+            <Link to="#">TV &amp; Home</Link>
+            <Link to="#">AirTag</Link>
+            <Link to="#">Beats</Link>
+          </div>
+
+          <div className="accessories-footer-column">
+            <h3>Shop by Category</h3>
+            <Link to="#">Software</Link>
+            <Link to="#">Chargers &amp; Adapters</Link>
+            <Link to="#">Smart Home Accessories</Link>
+            <Link to="#">Health &amp; Fitness</Link>
+            <Link to="#">Office Accessories</Link>
+            <Link to="#">Cases &amp; Protection</Link>
+            <Link to="#">Hard Drives &amp; Storage</Link>
+            <Link to="#">Headphones &amp; Speakers</Link>
+            <Link to="#">Content Creation</Link>
+            <Link to="#">Mice &amp; Keyboards</Link>
+            <Link to="#">Gaming</Link>
+          </div>
+
+          <div className="accessories-footer-column">
+            <h3>Explore More Accessories</h3>
+            <Link to="#">College Essentials</Link>
+            <Link to="#">New Arrivals</Link>
+            <Link to="#">Made by Apple</Link>
+            <Link to="#">Accessibility</Link>
+          </div>
+
         </div>
-      </div>
-    </div>
-
-
-    {/* TOP MIDDLE — AIRTAG */}
-    <div className="accessories-card accessories-airtag">
-
-      <img
-        src="/airtag-finewoven-keyring-blue.jpg"
-        alt="AirTag FineWoven Key Ring Wildflower Blue"
-        className="accessories-product-image"
-      />
-
-      <div className="accessories-product-info">
-        <h3>AirTag FineWoven Key Ring</h3>
-
-        <p className="accessories-product-color">
-          Wildflower Blue
-        </p>
-
-        <p className="accessories-price">
-          $35.00
-        </p>
-      </div>
-
-    </div>
-
-
-    {/* TOP RIGHT — WRIST STRAP */}
-    <div className="accessories-card accessories-wrist">
-
-      <img
-        src="/wrist-strap-crisp-blue.jpg"
-        alt="Wrist Strap Crisp Blue"
-        className="accessories-product-image"
-      />
-
-      <div className="accessories-product-info">
-        <h3>Wrist Strap</h3>
-
-        <p className="accessories-product-color">
-          Crisp Blue
-        </p>
-
-        <p className="accessories-price">
-          $29.00
-        </p>
-
-        <div className="accessories-color-dots">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-
-    </div>
-
-
-    {/* BOTTOM MIDDLE — AIRPODS */}
-    <div className="accessories-card accessories-airpods">
-
-      <img
-        src="/airpods-5-wireless.jpg"
-        alt="AirPods 5 with Wireless Charging Case"
-        className="accessories-product-image"
-      />
-
-      <div className="accessories-product-info">
-        <h3>AirPods 5</h3>
-
-        <p className="accessories-product-color">
-          with Wireless Charging Case
-        </p>
-
-        <p className="accessories-price">
-          $149.00
-        </p>
-      </div>
-
-    </div>
-
-
-    {/* BOTTOM RIGHT — APPLE WATCH BAND */}
-    <div className="accessories-card accessories-watch-band">
-
-      <img
-        src="/watch-band-wildflower-blue.jpg"
-        alt="42mm Wildflower Blue Magnetic Link"
-        className="accessories-product-image"
-      />
-
-      <div className="accessories-product-info">
-        <h3>42mm Wildflower Blue Magnetic Link</h3>
-
-        <p className="accessories-product-color">
-          S/M
-        </p>
-
-        <p className="accessories-price">
-          $99.00
-        </p>
-      </div>
-
-    </div>
-
-  </div>
-</section>
+      </section>
 
     </>
   );
