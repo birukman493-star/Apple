@@ -1,0 +1,246 @@
+
+* {
+  box-sizing: border-box;
+}
+
+.apple-signin-page {
+  width: 100%;
+  min-height: 50vh;
+  background: #fff;
+  color: #1d1d1f;
+  padding: 55px 11.3% 40px;
+  font-family: Arial, Helvetica, sans-serif;
+  /* border: red solid; */
+}
+
+.signin-main-title {
+  margin: 0;
+  font-size: clamp(32px, 3.2vw, 58px);
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -1.8px;
+}
+
+.signin-content {
+  width: 100%;
+  max-width: 704px;
+  margin: 115px auto 0;
+  text-align: center;
+}
+
+.signin-content h2 {
+  margin: 0 0 60px;
+  font-size: 34px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+}
+
+.signin-form {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.signin-fields {
+  position: relative;
+  width: 100%;
+  border: 2px solid #0071e3;
+  border-radius: 18px;
+  background: #fff;
+  text-align: left;
+  transition: border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.signin-form-password .signin-fields {
+  border-color: #f5c542;
+  background: #fffef5;
+  border-radius: 18px;
+}
+
+.signin-field {
+  min-height: 78px;
+  padding: 10px 64px 7px 22px;
+}
+
+.signin-field label {
+  display: block;
+  margin-bottom: 3px;
+  color: #77777d;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.signin-field input {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #1d1d1f;
+  font-family: inherit;
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+.signin-password-field {
+  border-top: 1px solid #f5c542;
+}
+
+.signin-arrow {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #a1a1a6;
+  border-radius: 50%;
+  background: transparent;
+  color: #77777d;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.signin-arrow:hover {
+  border-color: #0071e3;
+  color: #0071e3;
+}
+
+.signin-remember {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 175px;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.signin-remember input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: #0071e3;
+  cursor: pointer;
+}
+
+.signin-bottom-links {
+  margin-top: 62px;
+  font-size: 20px;
+}
+
+.signin-bottom-links a {
+  color: #0071e3;
+  text-decoration: none;
+}
+
+.signin-bottom-links a:hover {
+  text-decoration: underline;
+}
+
+.signin-bottom-links p {
+  margin: 20px 0 0;
+  line-height: 1.5;
+}
+
+.signin-error {
+  margin: 12px 0 0;
+  color: #c41e3a;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  .apple-signin-page {
+    padding: 45px 6%;
+  }
+
+  .signin-content {
+    max-width: 650px;
+    margin-top: 100px;
+  }
+
+  .signin-content h2 {
+    margin-bottom: 50px;
+    font-size: 30px;
+  }
+
+  .signin-remember {
+    margin-top: 130px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .apple-signin-page {
+    min-height: 100vh;
+    padding: 35px 22px;
+  }
+
+  .signin-main-title {
+    font-size: 34px;
+    letter-spacing: -1px;
+  }
+
+  .signin-content {
+    margin-top: 75px;
+  }
+
+  .signin-content h2 {
+    margin-bottom: 38px;
+    font-size: 25px;
+  }
+
+  .signin-fields {
+    border-radius: 14px;
+  }
+
+  .signin-field {
+    min-height: 70px;
+    padding-left: 15px;
+    padding-right: 54px;
+  }
+
+  .signin-field label {
+    font-size: 14px;
+  }
+
+  .signin-field input {
+    font-size: 19px;
+  }
+
+  .signin-arrow {
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    font-size: 23px;
+  }
+
+  .signin-remember {
+    margin-top: 100px;
+    gap: 10px;
+    font-size: 18px;
+  }
+
+  .signin-remember input {
+    width: 19px;
+    height: 19px;
+  }
+
+  .signin-bottom-links {
+    margin-top: 45px;
+    font-size: 15px;
+  }
+
+  .signin-bottom-links p {
+    margin-top: 20px;
+  }
+}

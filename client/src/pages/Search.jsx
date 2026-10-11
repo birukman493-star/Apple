@@ -1,57 +1,231 @@
-import React from "react";
 
-const Search = () => {
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "./Search.css";
+
+function Search() {
+  const [query, setQuery] = useState("");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const searchQuery = query.trim();
+
+    if (!searchQuery) {
+      setProducts([]);
+      setSearched(false);
+      setError("");
+      setLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      setError("");
+      setSearched(true);
+
+      try {
+        const response = await fetch(
+          `/api/products/search?q=${encodeURIComponent(searchQuery)}`,
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Product search is unavailable.");
+        }
+
+        const data = await response.json();
+
+        setProducts(Array.isArray(data) ? data : data.products || []);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError("Unable to load local products. Try Apple's website below.");
+          setProducts([]);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }, 350);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query]);
+
+  const appleSearchUrl = `https://www.apple.com/search/?q=${encodeURIComponent(
+    query.trim()
+  )}`;
+
+  const categories = [
+    { name: "iPhone", image: "/iphone.png" },
+    { name: "Mac", image: "/mac.png" },
+    { name: "iPad", image: "/ipad.png" },
+    { name: "Watch", image: "/watch.png" },
+    { name: "Vision", image: "/vision.png" },
+    { name: "AirPods", image: "/airpods.png" },
+  ];
+
   return (
-   
-  <>
-     
-{/* APPLE SUPPORT HERO SECTION */}
+    <main className="apple-search-page">
+      <section className="apple-search-hero">
+        <h1>Search</h1>
+        <p>Find the Apple products you're looking for.</p>
 
-<section className="apple-support-section">
-  <div className="support-logo-container">
-    <svg
-      className="support-apple-logo"
-      viewBox="0 0 170 170"
-      width="48"
-      height="48"
-      aria-label="Apple"
-      role="img"
-    >
-      <path
-        fill="currentColor"
-        d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.05-2.5-6.89-7.05-11.53-13.65-7.14-10.15-12.63-21.36-16.48-33.63-3.85-12.27-5.78-24.13-5.78-35.58 0-15.01 3.86-27.48 11.58-37.41 7.72-9.93 17.52-14.95 29.41-15.06 4.79 0 10.14 1.2 16.05 3.6 5.91 2.41 9.87 3.61 11.89 3.61 1.74 0 5.86-1.28 10.37-3.85 4.51-2.56 9.57-3.8 13.18-3.71 11.39.43 20.89 4.3 28.5 11.62-10.4 6.33-15.54 15.34-15.42 27.03.11 9.4 3.73 17.38 10.86 23.94 7.13 6.57 15.7 9.94 25.72 10.12-2.12 6.42-4.88 13.58-8.28 21.49zM119.22 31.33c0-7.79 2.82-15.03 8.46-21.72 5.64-6.69 12.69-10.42 21.15-11.19.11 1.09.16 2.07.16 2.94 0 7.95-2.88 15.34-8.63 22.18-5.75 6.84-12.87 10.59-21.36 11.26-.54-1.2-1.92-2.37-4.14-3.51-2.22-1.14-3.95-1.84-5.19-2.1-1.24-.26-1.39-.37-1.39-.34z"
-      />
-    </svg>
-  </div>
+        <form
+          className="apple-search-form"
+          onSubmit={(e) => {
+            e.preventDefault();
 
-  <h1>Apple Support</h1>
-  <p className="support-subtitle">Need help? Start here.</p>
+            if (query.trim()) {
+              window.location.href = appleSearchUrl;
+            }
+          }}
+        >
+          <i className="bi bi-search" aria-hidden="true"></i>
 
-  <div className="support-category-grid">
-    {[
-      { name: "iPhone", image: "/iphone.png", link: "#" },
-      { name: "Mac", image: "/mac.png", link: "#" },
-      { name: "iPad", image: "/ipad.png", link: "#" },
-      { name: "Watch", image: "/watch.png", link: "#" },
-      { name: "Vision", image: "/vision.png", link: "#" },
-      { name: "AirPods", image: "/airpods.png", link: "#" },
-    ].map((item) => (
-      <a
-        href={item.link}
-        className="support-category-item"
-        key={item.name}
-      >
-        <div className="support-icon-wrap">
-          <img src={item.image} alt={item.name} />
-        </div>
-        <span>{item.name}</span>
-      </a>
-    ))}
-  </div>
-</section>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search apple.com"
+            aria-label="Search products"
+          />
 
-  </>
-  )
-};
+          {query && (
+            <button
+              type="button"
+              className="search-clear"
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </form>
+
+        {query.trim() && (
+          <a
+            className="apple-external-search"
+            href={appleSearchUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Search Apple's website for "{query.trim()}" ↗
+          </a>
+        )}
+      </section>
+
+      {query.trim() ? (
+        <section className="search-results">
+          <h2>Search results</h2>
+
+          {loading && <p>Searching products...</p>}
+
+          {!loading && error && (
+            <p className="search-error">{error}</p>
+          )}
+
+          {!loading && !error && searched && products.length === 0 && (
+            <p>
+              No matching products in your website's database.
+              Try searching Apple's website directly.
+            </p>
+          )}
+
+          {!loading && products.length > 0 && (
+            <div className="search-product-grid">
+              {products.map((product) => (
+                <article
+                  className="search-product-card"
+                  key={product.id}
+                >
+                  <img
+                    src={
+                      product.image
+                        ? product.image.startsWith("http")
+                          ? product.image
+                          : `/uploads/${product.image}`
+                        : "/product-placeholder.png"
+                    }
+                    alt={product.name}
+                    onError={(e) => {
+                      e.currentTarget.src = "/product-placeholder.png";
+                    }}
+                  />
+
+                  <h3>{product.name}</h3>
+
+                  {product.description && (
+                    <p>{product.description}</p>
+                  )}
+
+                  {product.price != null && (
+                    <p className="search-product-price">
+                      ${product.price}
+                    </p>
+                  )}
+
+                  <Link
+                    to={
+                      product.slug
+                        ? `/product/${product.slug}`
+                        : `/product/${product.id}`
+                    }
+                    className="search-learn-more"
+                  >
+                    Learn more →
+                  </Link>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      ) : (
+        <section className="search-browse-section">
+          <h2>Explore by product</h2>
+
+          <div className="support-category-grid">
+            {categories.map((item) => (
+              <button
+                type="button"
+                className="support-category-item"
+                key={item.name}
+                onClick={() => setQuery(item.name)}
+              >
+                <div className="support-icon-wrap">
+                  <img src={item.image} alt={item.name} />
+                </div>
+                <span>{item.name}</span>
+              </button>
+            ))}
+          </div>
+
+          <h2 className="search-quick-title">Quick Links</h2>
+
+          <div className="search-quick-links">
+            {["MacBook", "iPhone", "iPad", "AirPods", "Apple Watch"].map(
+              (name) => (
+                <button
+                  type="button"
+                  key={name}
+                  onClick={() => setQuery(name)}
+                >
+                  {name} →
+                </button>
+              )
+            )}
+          </div>
+        </section>
+      )}
+    </main>
+  );
+}
 
 export default Search;
