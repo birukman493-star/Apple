@@ -2,6 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
+const authRoutes = require("./Routes/auth");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const adminAuthRoutes = require("./Routes/adminAuth");
+const cookieParser = require("cookie-parser");
+
 
 // ==================================================
 // LOAD ENVIRONMENT VARIABLES FIRST
@@ -17,27 +23,39 @@ const setupDatabase = require("./setupDatabase");
 
 const app = express();
 
-// ==================================================
 // CONFIGURATION
-// ==================================================
-
 const PORT = process.env.PORT || 5000;
-
-// Database status
 let databaseReady = false;
 let databaseError = null;
 
-// ==================================================
 // MIDDLEWARE
-// ==================================================
-
-app.use(cors());
-
+// CORS must be configured before registering API routes.
 app.use(
-    express.json({
-        limit: "10mb"
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173"
+        ],
+        methods: [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS"
+        ],
+        allowedHeaders: [
+            "Content-Type",
+            "Authorization"
+        ],
+        credentials: true
     })
 );
+
+app.use(express.json({ limit: "10mb" }));
+app.use(cookieParser());
+// AUTHENTICATION ROUTES
+app.use("/api/auth", authRoutes);
 
 // ==================================================
 // REQUEST LOGGING
@@ -59,12 +77,49 @@ app.use((req, res, next) => {
 // authentication has not been configured yet.
 //
 // Public GET routes continue to work normally.
+app.use("/api/auth", authRoutes);
+app.use("/api/admin-auth", adminAuthRoutes);
 
 const requireAdmin = (req, res, next) => {
-    return res.status(501).json({
-        message: "Admin authentication is not configured yet."
+  try {
+    const token = req.cookies?.adminToken;
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Admin login required.",
+      });
+    }
+
+    if (!process.env.JWT_SECRET || !process.env.ADMIN_EMAIL) {
+      return res.status(500).json({
+        message: "Admin authentication is not configured.",
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: ["HS256"],
     });
+
+    if (
+      decoded.role !== "admin" ||
+      typeof decoded.email !== "string" ||
+      decoded.email.toLowerCase() !==
+        process.env.ADMIN_EMAIL.trim().toLowerCase()
+    ) {
+      return res.status(403).json({
+        message: "Admin access denied.",
+      });
+    }
+
+    req.admin = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Invalid or expired admin session.",
+    });
+  }
 };
+
 
 // ==================================================
 // DATABASE STATUS MIDDLEWARE
@@ -1543,6 +1598,7 @@ app.get(
 
 app.get(
     "/api/products",
+    requireAdmin,
     requireDatabase,
     async (req, res) => {
         try {
@@ -2056,6 +2112,7 @@ app.delete(
 
 app.delete(
     "/api/products/:id",
+    requireAdmin,
     requireDatabase,
     async (req, res) => {
         try {
@@ -2276,6 +2333,138 @@ app.put("/api/admin/airpods-nav/:id", requireAdmin, async (req, res) => {
     });
   }
 });
+
+
+/* ==========================================
+   ADMIN: UPDATE PRODUCT
+========================================== */
+
+app.put("/api/products/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      badge_text,
+      title,
+      description,
+      price_upfront,
+      price_monthly,
+      lease_monthly,
+      image_url,
+      category,
+      is_active,
+    } = req.body;
+
+    if (!Number.isInteger(Number(id)) || Number(id) < 1) {
+      return res.status(400).json({ message: "Invalid product ID." });
+    }
+
+    // Support partial updates, including active/inactive status changes.
+    const [existingRows] = await db.query(
+      "SELECT * FROM products WHERE id = ?",
+      [id]
+    );
+
+    if (existingRows.length === 0) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    const existing = existingRows[0];
+
+    const nextTitle = title ?? existing.title;
+    const nextImage = image_url ?? existing.image_url;
+    const nextCategory = category ?? existing.category;
+
+    if (
+      !String(nextTitle).trim() ||
+      !String(nextImage).trim() ||
+      !String(nextCategory).trim()
+    ) {
+      return res.status(400).json({
+        message: "Product title, image URL, and category are required.",
+      });
+    }
+
+    const nextActive =
+      is_active === undefined
+        ? existing.is_active
+        : is_active === true ||
+          is_active === 1 ||
+          is_active === "1";
+
+    await db.query(
+      `UPDATE products SET
+        badge_text = ?,
+        title = ?,
+        description = ?,
+        price_upfront = ?,
+        price_monthly = ?,
+        lease_monthly = ?,
+        image_url = ?,
+        category = ?,
+        is_active = ?
+       WHERE id = ?`,
+      [
+        badge_text === undefined ? existing.badge_text : badge_text || null,
+        nextTitle,
+        description === undefined
+          ? existing.description
+          : description || null,
+        price_upfront === undefined
+          ? existing.price_upfront
+          : price_upfront === "" ? null : price_upfront,
+        price_monthly === undefined
+          ? existing.price_monthly
+          : price_monthly === "" ? null : price_monthly,
+        lease_monthly === undefined
+          ? existing.lease_monthly
+          : lease_monthly === "" ? null : lease_monthly,
+        nextImage,
+        nextCategory,
+        nextActive,
+        id,
+      ]
+    );
+
+    res.json({ message: "Product updated successfully." });
+  } catch (error) {
+    console.error("Update product error:", error);
+    res.status(500).json({
+      message: "Failed to update product.",
+    });
+  }
+});
+
+/* ==========================================
+   ADMIN: DELETE PRODUCT
+========================================== */
+
+app.delete("/api/products/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!Number.isInteger(Number(id)) || Number(id) < 1) {
+      return res.status(400).json({ message: "Invalid product ID." });
+    }
+
+    const [result] = await db.query(
+      "DELETE FROM products WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    res.json({ message: "Product deleted successfully." });
+  } catch (error) {
+    console.error("Delete product error:", error);
+    res.status(500).json({
+      message: "Failed to delete product.",
+    });
+  }
+});
+
 
 // ==========================================
 // AIRPODS NAVIGATION - ADMIN DELETE

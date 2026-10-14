@@ -19,6 +19,10 @@ import { Routes, Route } from 'react-router-dom'
 import Four04 from './pages/Four04.jsx';
 import SharedLayOut from './pages/sharedLayOut.jsx';
 import SignIn from "./pages/Signin";
+import Signup from "./pages/Signup.jsx"
+import UserDashbaord from './pages/userDashboard'
+import AdminDashboard from './admin/AdminDashboard.jsx'
+
 
 function App() {
 
@@ -45,7 +49,11 @@ function App() {
           <Route path="/bag" element={<Bag />}> </Route>
           
          </Route>
-          <Route path="/signin" element={<SignIn />} ></Route>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path='/userdashboard' element={<UserDashbaord/>}/>
+          <Route path="/admindashboard" element={<AdminDashboard />}
+/>
          
        
         <Route path='*' element={<Four04 />} />

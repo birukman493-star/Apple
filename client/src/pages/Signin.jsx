@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import "./Signin.css";
-import Navbar  from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import { useNavigate, Link } from "react-router-dom";
+import { redirectByRole } from "../utils/redirectByRole";
 
-
-function SignIn() {
+function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [step, setStep] = useState(1);
@@ -19,9 +18,10 @@ function SignIn() {
     e.preventDefault();
     setError("");
 
+    // Step 1: Validate email.
     if (step === 1) {
       if (!email.trim()) {
-        setError("Enter your email address or phone number.");
+        setError("Enter your email address.");
         return;
       }
 
@@ -29,7 +29,8 @@ function SignIn() {
       return;
     }
 
-    if (!password.trim()) {
+    // Step 2: Validate password.
+    if (!password) {
       setError("Enter your password.");
       return;
     }
@@ -37,37 +38,58 @@ function SignIn() {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          rememberMe,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/auth/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Preserve this if your backend uses cookie-based sessions.
+          credentials: "include",
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+            rememberMe,
+          }),
+        }
+      );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         setError(data.message || "Invalid email or password.");
         return;
       }
 
-      // The backend must verify the user and return their role.
-      const role = data.user?.role;
+      const user = data.user;
 
-      if (role === "admin") {
-        navigate("/admin/dashboard", { replace: true });
-      } else if (role === "user") {
-        navigate("/dashboard", { replace: true });
-      } else {
-        setError("Your account role is not recognized.");
+      // The backend must return the authenticated account and its role.
+      if (!user || !["admin", "user"].includes(user.role)) {
+        setError(
+          "The server did not return a valid account role. Please check your authentication API."
+        );
+        return;
       }
+
+      // Store a token only if your backend actually returns one.
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      } else {
+        localStorage.removeItem("token");
+      }
+
+      // Store the authenticated user for the existing frontend.
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirect using the existing role-based utility.
+      redirectByRole(user.role, navigate);
     } catch (err) {
-      setError("Cannot connect to the server. Please try again.");
+      console.error("Sign-in error:", err);
+
+      setError(
+        "Cannot connect to the server. Make sure your backend is running on port 5000."
+      );
     } finally {
       setLoading(false);
     }
@@ -94,18 +116,18 @@ function SignIn() {
             <div className="signin-fields">
               <div className="signin-field">
                 <label htmlFor="signin-email">
-                  Email or Phone Number
+                  Email Address
                 </label>
 
                 <input
                   id="signin-email"
-                  type="text"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="username"
                   required
                   autoFocus
-                  disabled={loading}
+                  disabled={loading || step === 2}
                 />
               </div>
 
@@ -132,7 +154,9 @@ function SignIn() {
                 className="signin-arrow"
                 type="submit"
                 disabled={loading}
-                aria-label={step === 1 ? "Continue" : "Sign in"}
+                aria-label={
+                  step === 1 ? "Continue" : "Sign in"
+                }
               >
                 <span aria-hidden="true">
                   {loading ? "…" : "➜"}
@@ -145,27 +169,44 @@ function SignIn() {
                 {error}
               </p>
             )}
+
+            {step === 2 && (
+              <button
+                type="button"
+                className="signin-back-button"
+                onClick={() => {
+                  setStep(1);
+                  setPassword("");
+                  setError("");
+                }}
+                disabled={loading}
+              >
+                Use a different email
+              </button>
+            )}
           </form>
 
           <label className="signin-remember">
             <input
               type="checkbox"
               checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
+              onChange={(e) =>
+                setRememberMe(e.target.checked)
+              }
             />
             <span>Remember me</span>
           </label>
 
           <div className="signin-bottom-links">
-            <a href="/forgot-password">
+            <Link to="/forgot-password">
               Forgot password? ↗
-            </a>
+            </Link>
 
             <p>
               Don’t have an account?{" "}
-              <a href="/create-account">
+              <Link to="/signup">
                 Create Your Account ↗
-              </a>
+              </Link>
             </p>
           </div>
         </section>
@@ -174,4 +215,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default Signin;

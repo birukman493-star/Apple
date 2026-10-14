@@ -1,3 +1,4 @@
+
 const mysql = require("mysql2/promise");
 const path = require("path");
 const dotenv = require("dotenv");
@@ -8,7 +9,7 @@ const dotenv = require("dotenv");
 
 dotenv.config({
     path: path.join(__dirname, ".env"),
-    override: true
+    override: true,
 });
 
 // ==================================================
@@ -20,6 +21,13 @@ const DB_USER = process.env.DB_USER || "root";
 const DB_PASSWORD = process.env.DB_PASSWORD || "";
 const DB_NAME = process.env.DB_NAME || "apple_store";
 const DB_PORT = Number(process.env.DB_PORT) || 3306;
+
+// Validate database name before using it as a SQL identifier.
+if (!/^[a-zA-Z0-9_]+$/.test(DB_NAME)) {
+    throw new Error(
+        "Invalid DB_NAME. Use only letters, numbers, and underscores."
+    );
+}
 
 console.log("Database configuration:");
 console.log("DB_HOST:", DB_HOST);
@@ -40,37 +48,28 @@ async function setupDatabase() {
         console.log("DATABASE SETUP STARTING");
         console.log("=================================");
 
-        // ==================================================
-        // CONNECT TO MYSQL SERVER
-        // ==================================================
-
+        // Connect to MySQL server.
         connection = await mysql.createConnection({
             host: DB_HOST,
             user: DB_USER,
             password: DB_PASSWORD,
             port: DB_PORT,
-            multipleStatements: true
+            charset: "utf8mb4",
         });
 
         console.log("Connected to MySQL server.");
 
-        // ==================================================
-        // CREATE DATABASE
-        // ==================================================
-
-        await connection.query(
-            `CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\``
-        );
+        // Create database if it does not exist.
+        await connection.query(`
+            CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`
+            CHARACTER SET utf8mb4
+            COLLATE utf8mb4_unicode_ci
+        `);
 
         console.log(`Database "${DB_NAME}" is ready.`);
 
-        // ==================================================
-        // USE DATABASE
-        // ==================================================
-
-        await connection.query(
-            `USE \`${DB_NAME}\``
-        );
+        // Select database.
+        await connection.query(`USE \`${DB_NAME}\``);
 
         console.log(`Using database "${DB_NAME}".`);
 
@@ -98,7 +97,7 @@ async function setupDatabase() {
                     ON UPDATE CURRENT_TIMESTAMP,
                 INDEX idx_products_category (category),
                 INDEX idx_products_active (is_active)
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Products table ready.");
@@ -118,7 +117,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Mac shop benefits table ready.");
@@ -138,7 +137,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Mac get to know table ready.");
@@ -159,7 +158,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Mac help me choose table ready.");
@@ -181,7 +180,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("iPad shop benefits table ready.");
@@ -204,7 +203,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("iPad get to know table ready.");
@@ -224,7 +223,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("iPad significant others table ready.");
@@ -245,7 +244,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("AirPods navigation table ready.");
@@ -266,7 +265,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Store help table ready.");
@@ -283,13 +282,12 @@ async function setupDatabase() {
                 description TEXT DEFAULT NULL,
                 icon_url TEXT DEFAULT NULL,
                 image_url TEXT DEFAULT NULL,
-                card_size ENUM('normal', 'large')
-                    DEFAULT 'normal',
+                card_size ENUM('normal', 'large') DEFAULT 'normal',
                 is_active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Store difference table ready.");
@@ -307,13 +305,12 @@ async function setupDatabase() {
                 image_url TEXT DEFAULT NULL,
                 badge_text VARCHAR(255) DEFAULT NULL,
                 price VARCHAR(255) DEFAULT NULL,
-                card_size ENUM('normal', 'large')
-                    DEFAULT 'normal',
+                card_size ENUM('normal', 'large') DEFAULT 'normal',
                 is_active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Store sound table ready.");
@@ -333,7 +330,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Store experience table ready.");
@@ -353,7 +350,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Store savings table ready.");
@@ -376,7 +373,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("iPhone shopping offers table ready.");
@@ -398,7 +395,7 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("iPhone features table ready.");
@@ -424,10 +421,30 @@ async function setupDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Watch lineup table ready.");
+
+        // ==================================================
+        // USERS - SIGNUP AND SIGNIN
+        // ==================================================
+
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                first_name VARCHAR(100) NOT NULL,
+                last_name VARCHAR(100) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL,
+                role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        `);
+
+        console.log("Users table ready.");
 
         // ==================================================
         // VISION PRO - CLOSER LOOK
@@ -446,7 +463,7 @@ async function setupDatabase() {
                     ON UPDATE CURRENT_TIMESTAMP,
                 INDEX idx_vision_active (is_active),
                 INDEX idx_vision_order (display_order)
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
 
         console.log("Vision closer look table ready.");
@@ -477,15 +494,11 @@ async function setupDatabase() {
         if (connection) {
             try {
                 await connection.end();
-
-                console.log(
-                    "Database setup connection closed."
-                );
-
+                console.log("Database setup connection closed.");
             } catch (closeError) {
                 console.error(
-                    "Error closing database connection:",
-                    closeError
+                    "Error closing database setup connection:",
+                    closeError.message
                 );
             }
         }

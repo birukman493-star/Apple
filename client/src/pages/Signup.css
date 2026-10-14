@@ -1,0 +1,270 @@
+
+.account-demo {
+  min-height: 100vh;
+  background: #fff;
+  color: #1d1d1f;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.account-header {
+  max-width: 1490px;
+  margin: 0 auto;
+  padding: 32px 24px 20px;
+  border-bottom: 1px solid #d2d2d7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.account-header h2 {
+  font-size: 29px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.account-header nav {
+  display: flex;
+  gap: 34px;
+}
+
+.account-header a,
+.account-signin a {
+  color: #06c;
+  text-decoration: none;
+}
+
+.account-header nav a {
+  color: #333;
+  font-size: 16px;
+}
+
+.account-main {
+  width: min(100% - 32px, 728px);
+  margin: 38px auto 70px;
+}
+
+.account-main h1 {
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: -2px;
+  margin: 0 0 22px;
+}
+
+.account-intro,
+.account-signin {
+  text-align: center;
+  font-size: 19px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.account-signin {
+  margin-bottom: 32px;
+}
+
+.account-demo form {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.account-demo input:not([type="checkbox"]),
+.account-demo select {
+  width: 100%;
+  min-width: 0;
+  height: 68px;
+  padding: 0 23px;
+  border: 1px solid #929297;
+  border-radius: 17px;
+  background: #fff;
+  color: #1d1d1f;
+  font: inherit;
+  font-size: 19px;
+  box-sizing: border-box;
+}
+
+.account-demo input::placeholder {
+  color: #737378;
+  opacity: 1;
+}
+
+.account-name-row,
+.account-birthday-row {
+  display: grid;
+  gap: 14px;
+}
+
+.account-name-row {
+  grid-template-columns: 1fr 1fr;
+}
+
+.account-birthday-row {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.account-floating-label {
+  position: relative;
+  display: block;
+}
+
+.account-floating-label span {
+  position: absolute;
+  top: 10px;
+  left: 24px;
+  font-size: 14px;
+  color: #737378;
+}
+
+.account-demo .account-floating-label select {
+  padding-top: 19px;
+}
+
+.account-field-label {
+  font-size: 19px;
+  margin-bottom: -9px;
+}
+
+.account-demo hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #e5e5ea;
+  margin: 10px 0 25px;
+}
+
+.account-help {
+  color: #55555a;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: -7px 0 8px;
+}
+
+.account-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.account-check-row input {
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  accent-color: #0071e3;
+  flex-shrink: 0;
+}
+
+.account-check-row span {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.account-check-row strong {
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.account-check-row small {
+  font-size: 16px;
+  line-height: 1.45;
+  color: #737378;
+}
+
+.account-demo-notice {
+  background: #f5f5f7;
+  padding: 20px;
+  border-radius: 14px;
+  line-height: 1.5;
+}
+
+.account-demo-notice p {
+  margin-bottom: 0;
+  color: #55555a;
+}
+
+.account-privacy {
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #737378;
+  margin: 10px 0;
+}
+
+.account-continue {
+  height: 58px;
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: #0071e3;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.account-continue:hover {
+  background: #0077ed;
+}
+
+.account-message {
+  text-align: center;
+  color: #16733a;
+  font-size: 15px;
+}
+
+@media (max-width: 600px) {
+  .account-header {
+    padding: 20px 16px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .account-header nav {
+    width: 100%;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .account-header nav a {
+    font-size: 14px;
+  }
+
+  .account-main {
+    margin-top: 32px;
+  }
+
+  .account-main h1 {
+    letter-spacing: -1px;
+  }
+
+  .account-intro,
+  .account-signin {
+    font-size: 16px;
+  }
+
+  .account-name-row {
+    grid-template-columns: 1fr;
+  }
+
+  .account-birthday-row {
+    gap: 8px;
+  }
+
+  .account-demo input:not([type="checkbox"]),
+  .account-demo select {
+    height: 58px;
+    padding-left: 14px;
+    font-size: 16px;
+    border-radius: 13px;
+  }
+
+  .account-demo .account-floating-label select {
+    padding-top: 18px;
+  }
+
+  .account-floating-label span {
+    left: 15px;
+    top: 7px;
+  }
+}

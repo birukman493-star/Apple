@@ -1,0 +1,118 @@
+/* =====================================
+   APPLE-STYLE BAG PAGE
+===================================== */
+
+.bag-page {
+  min-height: calc(100vh - 44px);
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 1px 24px 80px;
+}
+
+.bag-container {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.bag-empty {
+  padding-top: 58px;
+}
+
+.bag-empty h1 {
+  margin: 0 0 32px;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+}
+
+.bag-signin-message {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #6e6e73;
+}
+
+.bag-signin-message a {
+  color: #06c;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.bag-signin-message a:hover {
+  color: #004fba;
+}
+
+.bag-profile {
+  margin-top: 48px;
+}
+
+.bag-profile-heading {
+  margin: 0 0 14px;
+  font-size: 16px;
+  color: #6e6e73;
+}
+
+.bag-profile-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.bag-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #1d1d1f;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.bag-profile-link:hover {
+  color: #06c;
+}
+
+.bag-profile-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 15px;
+  color: #6e6e73;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+
+@media (max-width: 600px) {
+  .bag-page {
+    padding: 1px 20px 60px;
+  }
+
+  .bag-empty {
+    padding-top: 42px;
+  }
+
+  .bag-empty h1 {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  .bag-signin-message {
+    font-size: 14px;
+  }
+
+  .bag-profile {
+    margin-top: 40px;
+  }
+
+  .bag-profile-links {
+    gap: 18px;
+  }
+}

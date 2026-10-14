@@ -1366,7 +1366,7 @@ const Navbar = () => {
                   </Link>
 
                   <Link
-                    to="/account"
+                    to="/signup"
                     onClick={() => setBagOpen(false)}
                   >
                     Account
