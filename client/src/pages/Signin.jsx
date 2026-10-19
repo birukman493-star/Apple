@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import "./Signin.css";
 import Navbar from "../components/Navbar";
@@ -35,27 +36,67 @@ function Signin() {
       return;
     }
 
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      const response = await fetch(
+    const credentials = {
+      email: email.trim(),
+      password,
+      rememberMe,
+    };
+
+    try {
+      let response;
+      let data = {};
+
+      // First, check whether the credentials belong to the admin.
+      const adminResponse = await fetch(
+        "http://localhost:5000/api/admin-auth/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(credentials),
+        }
+      );
+
+      const adminData = await adminResponse.json().catch(() => ({}));
+
+      if (adminResponse.ok && adminData.token && adminData.user?.role === "admin") {
+        // Admin login successful.
+        localStorage.setItem("adminToken", adminData.token);
+        localStorage.removeItem("token");
+        localStorage.setItem("user", JSON.stringify(adminData.user));
+
+        navigate("/admindashboard", { replace: true });
+        return;
+      }
+
+      // Only fall back to regular login when admin authentication
+      // returns invalid credentials (401). Do not hide server errors.
+      if (adminResponse.status !== 401) {
+        setError(
+          adminData.message ||
+            "Admin authentication failed. Please try again."
+        );
+        return;
+      }
+
+      // If this isn't the admin account, try regular user sign-in.
+      response = await fetch(
         "http://localhost:5000/api/auth/signin",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          // Preserve this if your backend uses cookie-based sessions.
           credentials: "include",
-          body: JSON.stringify({
-            email: email.trim(),
-            password,
-            rememberMe,
-          }),
+          body: JSON.stringify(credentials),
         }
       );
 
-      const data = await response.json().catch(() => ({}));
+      data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         setError(data.message || "Invalid email or password.");
@@ -64,25 +105,24 @@ function Signin() {
 
       const user = data.user;
 
-      // The backend must return the authenticated account and its role.
-      if (!user || !["admin", "user"].includes(user.role)) {
+      if (!user || user.role !== "user") {
         setError(
-          "The server did not return a valid account role. Please check your authentication API."
+          "The server did not return a valid user account. Please check your authentication API."
         );
         return;
       }
 
-      // Store a token only if your backend actually returns one.
+      // Regular user login successful.
+      localStorage.removeItem("adminToken");
+
       if (data.token) {
         localStorage.setItem("token", data.token);
       } else {
         localStorage.removeItem("token");
       }
 
-      // Store the authenticated user for the existing frontend.
       localStorage.setItem("user", JSON.stringify(user));
 
-      // Redirect using the existing role-based utility.
       redirectByRole(user.role, navigate);
     } catch (err) {
       console.error("Sign-in error:", err);
@@ -154,9 +194,7 @@ function Signin() {
                 className="signin-arrow"
                 type="submit"
                 disabled={loading}
-                aria-label={
-                  step === 1 ? "Continue" : "Sign in"
-                }
+                aria-label={step === 1 ? "Continue" : "Sign in"}
               >
                 <span aria-hidden="true">
                   {loading ? "…" : "➜"}
@@ -190,9 +228,7 @@ function Signin() {
             <input
               type="checkbox"
               checked={rememberMe}
-              onChange={(e) =>
-                setRememberMe(e.target.checked)
-              }
+              onChange={(e) => setRememberMe(e.target.checked)}
             />
             <span>Remember me</span>
           </label>

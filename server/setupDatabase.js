@@ -77,6 +77,11 @@ async function setupDatabase() {
         // PRODUCTS
         // ==================================================
 
+
+        // ==================================================
+        // PRODUCTS
+        // ==================================================
+
         await connection.query(`
             CREATE TABLE IF NOT EXISTS products (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,18 +91,73 @@ async function setupDatabase() {
                 price_upfront DECIMAL(12,2) DEFAULT NULL,
                 price_monthly DECIMAL(12,2) DEFAULT NULL,
                 lease_monthly DECIMAL(12,2) DEFAULT NULL,
-                image_url TEXT NOT NULL,
+                image_url TEXT,
                 category VARCHAR(100) NOT NULL,
                 learn_more_link TEXT DEFAULT NULL,
                 buy_link TEXT DEFAULT NULL,
                 buy_text VARCHAR(255) DEFAULT 'Buy',
+                stock INT NOT NULL DEFAULT 0,
+                discount_price DECIMAL(12,2) DEFAULT NULL,
+                image_gallery JSON DEFAULT NULL,
+                colors JSON DEFAULT NULL,
+                storage_options JSON DEFAULT NULL,
+                nav_visibility BOOLEAN NOT NULL DEFAULT TRUE,
+                status ENUM('Active', 'Archived', 'Draft')
+                    NOT NULL DEFAULT 'Active',
                 is_active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP,
                 INDEX idx_products_category (category),
-                INDEX idx_products_active (is_active)
+                INDEX idx_products_active (is_active),
+                INDEX idx_products_status (status)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        `);
+
+        // Add fields to an existing products table.
+  
+        // Add fields to an existing products table.
+        const productColumns = [
+            ["stock", "INT NOT NULL DEFAULT 0"],
+            ["discount_price", "DECIMAL(12,2) DEFAULT NULL"],
+            ["image_gallery", "JSON DEFAULT NULL"],
+            ["colors", "JSON DEFAULT NULL"],
+            ["storage_options", "JSON DEFAULT NULL"],
+            ["nav_visibility", "BOOLEAN NOT NULL DEFAULT TRUE"],
+            ["status", "ENUM('Active','Archived','Draft') NOT NULL DEFAULT 'Active'"],
+        ];
+
+        for (const [columnName, columnDefinition] of productColumns) {
+            const [existingColumns] = await connection.execute(
+                `SELECT COLUMN_NAME
+                 FROM INFORMATION_SCHEMA.COLUMNS
+                 WHERE TABLE_SCHEMA = ?
+                   AND TABLE_NAME = ?
+                   AND COLUMN_NAME = ?`,
+                [DB_NAME, "products", columnName]
+            );
+
+            if (existingColumns.length === 0) {
+                await connection.query(
+                    `ALTER TABLE products ADD COLUMN \`${columnName}\` ${columnDefinition}`
+                );
+
+                console.log(`Added missing column: ${columnName}`);
+            }
+        }
+
+        
+
+
+        // Keep legacy active/inactive status consistent.
+        await connection.query(`
+            UPDATE products
+            SET status = CASE
+                WHEN is_active = 0 THEN 'Archived'
+                WHEN status = 'Archived' THEN 'Active'
+                ELSE status
+            END
+            WHERE status IS NULL
         `);
 
         console.log("Products table ready.");
@@ -445,6 +505,9 @@ async function setupDatabase() {
         `);
 
         console.log("Users table ready.");
+
+
+      
 
         // ==================================================
         // VISION PRO - CLOSER LOOK

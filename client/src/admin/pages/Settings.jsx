@@ -1,326 +1,742 @@
-import React, { useState } from 'react';
-import { 
-  FiSettings, FiSliders, FiShield, FiBell, FiDatabase, 
-  FiSave, FiLock, FiServer, FiCheckCircle, FiRefreshCw, FiAlertCircle 
-} from 'react-icons/fi';
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  FiSettings,
+  FiSliders,
+  FiShield,
+  FiBell,
+  FiDatabase,
+  FiSave,
+  FiLock,
+  FiServer,
+  FiCheckCircle,
+  FiRefreshCw,
+  FiAlertCircle,
+  FiSun,
+  FiMoon,
+} from "react-icons/fi";
 
-export default function Settings() {
-  const [activeTab, setActiveTab] = useState('store');
-  const [saveStatus, setSaveStatus] = useState('');
 
-  // Store Settings State
-  const [storeSettings, setStoreSettings] = useState({
-    storeName: 'Apple Store Online',
-    contactEmail: 'admin@apple.com',
-    contactPhone: '+1 (800) 692-7753',
-    currency: 'USD ($)',
-    country: 'United States',
-    address: 'One Apple Park Way, Cupertino, CA 95014'
-  });
 
-  // Website Global Settings State
-  const [websiteSettings, setWebsiteSettings] = useState({
-    announcementText: 'Get $200–$650 in credit when you trade in iPhone 11 or higher.',
+const API_URL = "http://localhost:5000/api";
+
+const DEFAULTS = {
+  store: {
+    storeName: "Apple Store Online",
+    contactEmail: "",
+    contactPhone: "",
+    currency: "USD ($)",
+    country: "United States",
+    address: "",
+  },
+  website: {
+    announcementText: "",
     showAnnouncement: true,
     maintenanceMode: false,
-    defaultTheme: 'light'
-  });
-
-  // Security State
-  const [securitySettings, setSecuritySettings] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-    twoFactorAuth: true
-  });
-
-  // Notification Preferences State
-  const [notifications, setNotifications] = useState({
+    defaultTheme: "light",
+  },
+  notifications: {
     newOrders: true,
     paymentAlerts: true,
     lowStock: true,
-    customerRegistrations: false
+    customerRegistrations: false,
+  },
+};
+
+export default function Settings() {
+  const [activeTab, setActiveTab] = useState("store");
+  const [saveStatus, setSaveStatus] = useState("");
+  const [statusType, setStatusType] = useState("success");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [systemStatus, setSystemStatus] = useState({
+    api: "Checking...",
+    database: "Checking...",
   });
 
-  const handleSave = (sectionName) => {
-    setSaveStatus(`${sectionName} saved successfully!`);
-    setTimeout(() => setSaveStatus(''), 3000);
+  const [storeSettings, setStoreSettings] = useState(DEFAULTS.store);
+  const [websiteSettings, setWebsiteSettings] = useState(DEFAULTS.website);
+  const [notifications, setNotifications] = useState(DEFAULTS.notifications);
+
+  const [securitySettings, setSecuritySettings] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+    twoFactorAuth: false,
+  });
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("admin-theme") === "dark";
+  });
+
+  const getToken = () => {
+    // Change "token" if your signin page uses a different storage key.
+    return localStorage.getItem("token");
+  };
+
+  const request = async (path, options = {}) => {
+    const token = getToken();
+
+    const response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || `Request failed (${response.status})`
+      );
+    }
+
+    return data;
+  };
+
+  const showMessage = (message, type = "success") => {
+    setSaveStatus(message);
+    setStatusType(type);
+  };
+
+  const loadSettings = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const data = await request("/settings");
+
+      if (data.store) {
+        setStoreSettings({
+          ...DEFAULTS.store,
+          ...data.store,
+        });
+      }
+
+      if (data.website) {
+        setWebsiteSettings({
+          ...DEFAULTS.website,
+          ...data.website,
+        });
+      }
+
+      if (data.notifications) {
+        setNotifications({
+          ...DEFAULTS.notifications,
+          ...data.notifications,
+        });
+      }
+    } catch (error) {
+      console.error("Settings load error:", error);
+      showMessage(
+        `Could not load saved settings: ${error.message}`,
+        "error"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadSettings();
+  }, [loadSettings]);
+
+  useEffect(() => {
+    document.documentElement.dataset.adminTheme = darkMode
+      ? "dark"
+      : "light";
+
+    localStorage.setItem("admin-theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  const saveSection = async (section, values) => {
+    setSaving(true);
+    setSaveStatus("");
+
+    try {
+      await request(`/settings/${section}`, {
+        method: "PUT",
+        body: JSON.stringify(values),
+      });
+
+      showMessage(
+        `${section.charAt(0).toUpperCase() + section.slice(1)} settings saved successfully.`
+      );
+    } catch (error) {
+      console.error("Settings save error:", error);
+      showMessage(error.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const updatePassword = async () => {
+    const { currentPassword, newPassword, confirmPassword } =
+      securitySettings;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      showMessage("Fill in all password fields.", "error");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      showMessage("New password must contain at least 8 characters.", "error");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      showMessage("New passwords do not match.", "error");
+      return;
+    }
+
+    // This requires a dedicated, secure backend endpoint.
+    setSaving(true);
+
+    try {
+      await request("/settings/security/password", {
+        method: "PUT",
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+
+      setSecuritySettings((previous) => ({
+        ...previous,
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      }));
+
+      showMessage("Password updated successfully.");
+    } catch (error) {
+      showMessage(error.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const checkSystem = async () => {
+    setSystemStatus({ api: "Checking...", database: "Checking..." });
+
+    try {
+      const result = await request("/health");
+
+      setSystemStatus({
+        api: "Online",
+        database:
+          result.database === "connected"
+            ? "Connected"
+            : result.database || "API responded",
+      });
+    } catch (error) {
+      console.error("System health check failed:", error);
+
+      setSystemStatus({
+        api: "Unavailable",
+        database: "Not verified",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "system") {
+      checkSystem();
+    }
+  }, [activeTab]);
+
+  const tabs = [
+    { id: "store", label: "Store Settings", icon: <FiSettings /> },
+    { id: "website", label: "Website Config", icon: <FiSliders /> },
+    { id: "security", label: "Security & Access", icon: <FiShield /> },
+    { id: "notifications", label: "Notifications", icon: <FiBell /> },
+    { id: "system", label: "System & Database", icon: <FiDatabase /> },
+  ];
+
+  const inputStyle = {
+    width: "100%",
+    padding: "11px 12px",
+    border: "1px solid var(--settings-border, #d1d5db)",
+    borderRadius: "9px",
+    background: "var(--settings-input-bg, #fff)",
+    color: "var(--settings-text, #111827)",
+    boxSizing: "border-box",
+  };
+
+  const fieldStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "7px",
+  };
+
+  const cardStyle = {
+    padding: "24px",
+    border: "1px solid var(--settings-border, #e5e7eb)",
+    borderRadius: "14px",
+    background: "var(--settings-card-bg, #fff)",
+    color: "var(--settings-text, #111827)",
+  };
+
+  const saveButtonStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    padding: "11px 17px",
+    border: "none",
+    borderRadius: "9px",
+    background: "#111827",
+    color: "#fff",
+    cursor: saving ? "wait" : "pointer",
+    opacity: saving ? 0.65 : 1,
+  };
+
+  const toggleStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "13px 0",
   };
 
   return (
-    <div className="content-view">
-      <div className="view-header">
-        <h1>Admin Settings</h1>
-        <p>Manage your store preferences, global website configurations, security, and system health.</p>
+    <div className="content-view settings-page">
+      <div
+        className="view-header"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: "16px",
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <h1>Admin Settings</h1>
+          <p>
+            Manage store preferences, website configuration, security,
+            notifications, and system health.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="secondary-btn"
+          onClick={() => setDarkMode((previous) => !previous)}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "10px 14px",
+            borderRadius: "9px",
+          }}
+        >
+          {darkMode ? <FiSun /> : <FiMoon />}
+          {darkMode ? "Light mode" : "Dark mode"}
+        </button>
       </div>
 
       {saveStatus && (
-        <div style={{ background: '#dcfce7', color: '#166534', padding: '12px 16px', borderRadius: '10px', fontSize: '13px', fontWeight: '700', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <FiCheckCircle size={16} /> {saveStatus}
+        <div
+          role="status"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "9px",
+            padding: "13px 16px",
+            borderRadius: "10px",
+            marginBottom: "20px",
+            color: statusType === "error" ? "#b91c1c" : "#166534",
+            background: statusType === "error" ? "#fef2f2" : "#dcfce7",
+          }}
+        >
+          {statusType === "error" ? <FiAlertCircle /> : <FiCheckCircle />}
+          {saveStatus}
+          <button
+            type="button"
+            onClick={() => setSaveStatus("")}
+            style={{ marginLeft: "auto", background: "transparent", border: 0, cursor: "pointer" }}
+            aria-label="Dismiss message"
+          >
+            ×
+          </button>
         </div>
       )}
 
-      {/* Settings Navigation Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', overflowX: 'auto' }}>
-        {[
-          { id: 'store', label: 'Store Settings', icon: <FiSettings size={15} /> },
-          { id: 'website', label: 'Website Config', icon: <FiSliders size={15} /> },
-          { id: 'security', label: 'Security & Access', icon: <FiShield size={15} /> },
-          { id: 'notifications', label: 'Notifications', icon: <FiBell size={15} /> },
-          { id: 'system', label: 'System & Database', icon: <FiDatabase size={15} /> },
-        ].map(tab => (
+      <div
+        role="tablist"
+        aria-label="Settings sections"
+        style={{
+          display: "flex",
+          gap: "8px",
+          marginBottom: "24px",
+          borderBottom: "1px solid var(--settings-border, #e5e7eb)",
+          paddingBottom: "12px",
+          overflowX: "auto",
+        }}
+      >
+        {tabs.map((tab) => (
           <button
             key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`primary-btn ${activeTab === tab.id ? '' : 'secondary-btn'}`}
-            style={{ 
-              height: '38px', 
-              background: activeTab === tab.id ? '#0f172a' : '#ffffff', 
-              color: activeTab === tab.id ? '#ffffff' : '#334155',
-              borderColor: activeTab === tab.id ? '#0f172a' : '#cbd5e1'
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              flexShrink: 0,
+              padding: "10px 13px",
+              borderRadius: "9px",
+              border: "1px solid",
+              borderColor: activeTab === tab.id ? "#111827" : "#d1d5db",
+              background: activeTab === tab.id ? "#111827" : "transparent",
+              color: activeTab === tab.id ? "#fff" : "var(--settings-text, #374151)",
+              cursor: "pointer",
             }}
           >
-            {tab.icon} {tab.label}
+            {tab.icon}
+            {tab.label}
           </button>
         ))}
       </div>
 
-      {/* 1. Store / General Settings */}
-      {activeTab === 'store' && (
-        <div className="table-container" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '16px' }}>General & Store Information</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div className="form-group">
-              <label>Store Name</label>
-              <input 
-                type="text" 
-                value={storeSettings.storeName}
-                onChange={e => setStoreSettings({...storeSettings, storeName: e.target.value})}
-              />
-            </div>
-            <div className="form-group">
-              <label>Contact Email</label>
-              <input 
-                type="email" 
-                value={storeSettings.contactEmail}
-                onChange={e => setStoreSettings({...storeSettings, contactEmail: e.target.value})}
-              />
-            </div>
-            <div className="form-group">
-              <label>Contact Phone</label>
-              <input 
-                type="text" 
-                value={storeSettings.contactPhone}
-                onChange={e => setStoreSettings({...storeSettings, contactPhone: e.target.value})}
-              />
-            </div>
-            <div className="form-group">
-              <label>Default Currency</label>
-              <select 
-                value={storeSettings.currency}
-                onChange={e => setStoreSettings({...storeSettings, currency: e.target.value})}
+      {loading ? (
+        <div style={cardStyle}>Loading saved settings...</div>
+      ) : (
+        <>
+          {activeTab === "store" && (
+            <section style={cardStyle}>
+              <h2>General & Store Information</h2>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+                  gap: "18px",
+                  marginTop: "20px",
+                }}
               >
-                <option value="USD ($)">USD ($)</option>
-                <option value="EUR (€)">EUR (€)</option>
-                <option value="GBP (£)">GBP (£)</option>
-              </select>
-            </div>
-            <div className="form-group" style={{ gridColumn: 'span 2' }}>
-              <label>Business Address</label>
-              <input 
-                type="text" 
-                value={storeSettings.address}
-                onChange={e => setStoreSettings({...storeSettings, address: e.target.value})}
-              />
-            </div>
-          </div>
-          <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
-            <button className="primary-btn" onClick={() => handleSave('Store Settings')}>
-              <FiSave size={15} /> Save Store Changes
-            </button>
-          </div>
-        </div>
-      )}
+                <label style={fieldStyle}>
+                  Store Name
+                  <input
+                    style={inputStyle}
+                    value={storeSettings.storeName}
+                    onChange={(e) =>
+                      setStoreSettings({ ...storeSettings, storeName: e.target.value })
+                    }
+                  />
+                </label>
 
-      {/* 2. Website Settings */}
-      {activeTab === 'website' && (
-        <div className="table-container" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '16px' }}>Global Website Configuration</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="form-group">
-              <label>Global Announcement Banner Text</label>
-              <input 
-                type="text" 
-                value={websiteSettings.announcementText}
-                onChange={e => setWebsiteSettings({...websiteSettings, announcementText: e.target.value})}
-              />
-            </div>
-            <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="announcementToggle"
-                checked={websiteSettings.showAnnouncement}
-                onChange={e => setWebsiteSettings({...websiteSettings, showAnnouncement: e.target.checked})}
-              />
-              <label htmlFor="announcementToggle" style={{ cursor: 'pointer' }}>Show Announcement Banner on Store Header</label>
-            </div>
-            <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="maintenanceToggle"
-                checked={websiteSettings.maintenanceMode}
-                onChange={e => setWebsiteSettings({...websiteSettings, maintenanceMode: e.target.checked})}
-              />
-              <label htmlFor="maintenanceToggle" style={{ cursor: 'pointer', color: websiteSettings.maintenanceMode ? '#dc2626' : 'inherit' }}>
-                Enable Website Maintenance Mode (Locks public customer access)
+                <label style={fieldStyle}>
+                  Contact Email
+                  <input
+                    type="email"
+                    style={inputStyle}
+                    value={storeSettings.contactEmail}
+                    onChange={(e) =>
+                      setStoreSettings({ ...storeSettings, contactEmail: e.target.value })
+                    }
+                  />
+                </label>
+
+                <label style={fieldStyle}>
+                  Contact Phone
+                  <input
+                    style={inputStyle}
+                    value={storeSettings.contactPhone}
+                    onChange={(e) =>
+                      setStoreSettings({ ...storeSettings, contactPhone: e.target.value })
+                    }
+                  />
+                </label>
+
+                <label style={fieldStyle}>
+                  Default Currency
+                  <select
+                    style={inputStyle}
+                    value={storeSettings.currency}
+                    onChange={(e) =>
+                      setStoreSettings({ ...storeSettings, currency: e.target.value })
+                    }
+                  >
+                    <option value="USD ($)">USD ($)</option>
+                    <option value="EUR (€)">EUR (€)</option>
+                    <option value="GBP (£)">GBP (£)</option>
+                    <option value="ETB (Br)">ETB (Br)</option>
+                  </select>
+                </label>
+
+                <label style={fieldStyle}>
+                  Country
+                  <input
+                    style={inputStyle}
+                    value={storeSettings.country}
+                    onChange={(e) =>
+                      setStoreSettings({ ...storeSettings, country: e.target.value })
+                    }
+                  />
+                </label>
+
+                <label style={fieldStyle}>
+                  Business Address
+                  <input
+                    style={inputStyle}
+                    value={storeSettings.address}
+                    onChange={(e) =>
+                      setStoreSettings({ ...storeSettings, address: e.target.value })
+                    }
+                  />
+                </label>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
+                <button
+                  type="button"
+                  style={saveButtonStyle}
+                  disabled={saving}
+                  onClick={() => saveSection("store", storeSettings)}
+                >
+                  <FiSave /> {saving ? "Saving..." : "Save Store Changes"}
+                </button>
+              </div>
+            </section>
+          )}
+
+          {activeTab === "website" && (
+            <section style={cardStyle}>
+              <h2>Global Website Configuration</h2>
+
+              <label style={{ ...fieldStyle, marginTop: "20px" }}>
+                Announcement Banner Text
+                <input
+                  style={inputStyle}
+                  value={websiteSettings.announcementText}
+                  onChange={(e) =>
+                    setWebsiteSettings({
+                      ...websiteSettings,
+                      announcementText: e.target.value,
+                    })
+                  }
+                />
               </label>
-            </div>
-          </div>
-          <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
-            <button className="primary-btn" onClick={() => handleSave('Website Settings')}>
-              <FiSave size={15} /> Save Website Config
-            </button>
-          </div>
-        </div>
-      )}
 
-      {/* 3. Security & Admin Account */}
-      {activeTab === 'security' && (
-        <div className="table-container" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '16px' }}>Administrator Security & Password</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '500px' }}>
-            <div className="form-group">
-              <label>Current Password</label>
-              <input 
-                type="password" 
-                placeholder="••••••••"
-                value={securitySettings.currentPassword}
-                onChange={e => setSecuritySettings({...securitySettings, currentPassword: e.target.value})}
-              />
-            </div>
-            <div className="form-group">
-              <label>New Password</label>
-              <input 
-                type="password" 
-                placeholder="••••••••"
-                value={securitySettings.newPassword}
-                onChange={e => setSecuritySettings({...securitySettings, newPassword: e.target.value})}
-              />
-            </div>
-            <div className="form-group">
-              <label>Confirm New Password</label>
-              <input 
-                type="password" 
-                placeholder="••••••••"
-                value={securitySettings.confirmPassword}
-                onChange={e => setSecuritySettings({...securitySettings, confirmPassword: e.target.value})}
-              />
-            </div>
-            <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="tfaToggle"
-                checked={securitySettings.twoFactorAuth}
-                onChange={e => setSecuritySettings({...securitySettings, twoFactorAuth: e.target.checked})}
-              />
-              <label htmlFor="tfaToggle" style={{ cursor: 'pointer' }}>Require Two-Factor Authentication (2FA) for Admin Login</label>
-            </div>
-          </div>
-          <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <button className="secondary-btn" style={{ color: '#dc2626', borderColor: '#fca5a5' }} onClick={() => alert('Signed out of all other active sessions.')}>
-              <FiLock size={14} /> Sign out of all other sessions
-            </button>
-            <button className="primary-btn" onClick={() => handleSave('Security Settings')}>
-              <FiSave size={15} /> Update Password
-            </button>
-          </div>
-        </div>
-      )}
+              <label style={toggleStyle}>
+                <input
+                  type="checkbox"
+                  checked={websiteSettings.showAnnouncement}
+                  onChange={(e) =>
+                    setWebsiteSettings({
+                      ...websiteSettings,
+                      showAnnouncement: e.target.checked,
+                    })
+                  }
+                />
+                Show announcement banner on the storefront
+              </label>
 
-      {/* 4. Notifications */}
-      {activeTab === 'notifications' && (
-        <div className="table-container" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '16px' }}>Email & Dashboard Alert Preferences</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="notif1"
-                checked={notifications.newOrders}
-                onChange={e => setNotifications({...notifications, newOrders: e.target.checked})}
-              />
-              <label htmlFor="notif1" style={{ cursor: 'pointer' }}>Notify me immediately when a new customer order is placed</label>
-            </div>
-            <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="notif2"
-                checked={notifications.paymentAlerts}
-                onChange={e => setNotifications({...notifications, paymentAlerts: e.target.checked})}
-              />
-              <label htmlFor="notif2" style={{ cursor: 'pointer' }}>Send payment gateway transaction & refund alerts</label>
-            </div>
-            <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="notif3"
-                checked={notifications.lowStock}
-                onChange={e => setNotifications({...notifications, lowStock: e.target.checked})}
-              />
-              <label htmlFor="notif3" style={{ cursor: 'pointer' }}>Alert when product inventory falls below 10 units</label>
-            </div>
-            <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="notif4"
-                checked={notifications.customerRegistrations}
-                onChange={e => setNotifications({...notifications, customerRegistrations: e.target.checked})}
-              />
-              <label htmlFor="notif4" style={{ cursor: 'pointer' }}>Email digest on new customer registrations</label>
-            </div>
-          </div>
-          <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
-            <button className="primary-btn" onClick={() => handleSave('Notification Preferences')}>
-              <FiSave size={15} /> Save Preferences
-            </button>
-          </div>
-        </div>
-      )}
+              <label style={toggleStyle}>
+                <input
+                  type="checkbox"
+                  checked={websiteSettings.maintenanceMode}
+                  onChange={(e) =>
+                    setWebsiteSettings({
+                      ...websiteSettings,
+                      maintenanceMode: e.target.checked,
+                    })
+                  }
+                />
+                Enable maintenance mode
+              </label>
 
-      {/* 5. System & Database Health */}
-      {activeTab === 'system' && (
-        <div className="table-container" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', marginBottom: '16px' }}>System Health & MySQL Database</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
-            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-              <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '6px' }}>Backend API Status</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#166534', fontWeight: 700, fontSize: '14px' }}>
-                <FiCheckCircle size={16} /> Online & Responsive
+              <label style={{ ...fieldStyle, maxWidth: "300px", marginTop: "15px" }}>
+                Default Admin Theme
+                <select
+                  style={inputStyle}
+                  value={websiteSettings.defaultTheme}
+                  onChange={(e) =>
+                    setWebsiteSettings({
+                      ...websiteSettings,
+                      defaultTheme: e.target.value,
+                    })
+                  }
+                >
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </label>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
+                <button
+                  type="button"
+                  style={saveButtonStyle}
+                  disabled={saving}
+                  onClick={() => saveSection("website", websiteSettings)}
+                >
+                  <FiSave /> {saving ? "Saving..." : "Save Website Config"}
+                </button>
               </div>
-            </div>
-            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-              <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '6px' }}>MySQL Database Connection</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#166534', fontWeight: 700, fontSize: '14px' }}>
-                <FiServer size={16} /> Connected (Pool Active)
-              </div>
-            </div>
-            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-              <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '6px' }}>Last Successful Backup</div>
-              <div style={{ color: '#0f172a', fontWeight: 700, fontSize: '14px' }}>
-                Today, 04:00 AM
-              </div>
-            </div>
-          </div>
+            </section>
+          )}
 
-          <div style={{ display: 'flex', gap: '12px', borderTop: '1px solid #e2e8f0', paddingTop: '20px' }}>
-            <button className="primary-btn" onClick={() => alert('Database backup generated successfully.')}>
-              <FiDatabase size={15} /> Backup Database Now
-            </button>
-            <button className="secondary-btn" onClick={() => alert('System cache cleared.')} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <FiRefreshCw size={14} /> Clear System Cache
-            </button>
-          </div>
-        </div>
+          {activeTab === "security" && (
+            <section style={cardStyle}>
+              <h2>Administrator Security</h2>
+              <p>Update the administrator password securely.</p>
+
+              <div style={{ ...fieldStyle, maxWidth: "480px", marginTop: "20px" }}>
+                <label style={fieldStyle}>
+                  Current Password
+                  <input
+                    type="password"
+                    autoComplete="current-password"
+                    style={inputStyle}
+                    value={securitySettings.currentPassword}
+                    onChange={(e) =>
+                      setSecuritySettings({
+                        ...securitySettings,
+                        currentPassword: e.target.value,
+                      })
+                    }
+                  />
+                </label>
+
+                <label style={fieldStyle}>
+                  New Password
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    style={inputStyle}
+                    value={securitySettings.newPassword}
+                    onChange={(e) =>
+                      setSecuritySettings({
+                        ...securitySettings,
+                        newPassword: e.target.value,
+                      })
+                    }
+                  />
+                </label>
+
+                <label style={fieldStyle}>
+                  Confirm New Password
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    style={inputStyle}
+                    value={securitySettings.confirmPassword}
+                    onChange={(e) =>
+                      setSecuritySettings({
+                        ...securitySettings,
+                        confirmPassword: e.target.value,
+                      })
+                    }
+                  />
+                </label>
+              </div>
+
+              <p style={{ color: "#b45309", marginTop: "18px" }}>
+                Password updates require the dedicated backend endpoint
+                <code> PUT /api/settings/security/password</code>. Do not store
+                passwords as plain text in app_settings.
+              </p>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+                <button
+                  type="button"
+                  style={saveButtonStyle}
+                  disabled={saving}
+                  onClick={updatePassword}
+                >
+                  <FiLock /> {saving ? "Updating..." : "Update Password"}
+                </button>
+              </div>
+            </section>
+          )}
+
+          {activeTab === "notifications" && (
+            <section style={cardStyle}>
+              <h2>Notification Preferences</h2>
+              <p>Save which types of events should trigger admin alerts.</p>
+
+              {[
+                ["newOrders", "Notify me when a new order is placed"],
+                ["paymentAlerts", "Notify me about payment and refund events"],
+                ["lowStock", "Alert when product inventory is low"],
+                ["customerRegistrations", "Notify me about new customer registrations"],
+              ].map(([key, label]) => (
+                <label key={key} style={toggleStyle}>
+                  <input
+                    type="checkbox"
+                    checked={notifications[key]}
+                    onChange={(e) =>
+                      setNotifications({
+                        ...notifications,
+                        [key]: e.target.checked,
+                      })
+                    }
+                  />
+                  {label}
+                </label>
+              ))}
+
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
+                <button
+                  type="button"
+                  style={saveButtonStyle}
+                  disabled={saving}
+                  onClick={() => saveSection("notifications", notifications)}
+                >
+                  <FiSave /> {saving ? "Saving..." : "Save Preferences"}
+                </button>
+              </div>
+            </section>
+          )}
+
+          {activeTab === "system" && (
+            <section style={cardStyle}>
+              <h2>System & Database Health</h2>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+                  gap: "16px",
+                  marginTop: "20px",
+                }}
+              >
+                <div style={{ padding: "18px", border: "1px solid #e5e7eb", borderRadius: "12px" }}>
+                  <FiServer size={22} />
+                  <p>Backend API</p>
+                  <strong>{systemStatus.api}</strong>
+                </div>
+
+                <div style={{ padding: "18px", border: "1px solid #e5e7eb", borderRadius: "12px" }}>
+                  <FiDatabase size={22} />
+                  <p>MySQL Database</p>
+                  <strong>{systemStatus.database}</strong>
+                </div>
+              </div>
+
+              <p style={{ marginTop: "18px", color: "#6b7280" }}>
+                Health information is only accurate when your backend health
+                endpoint reports the actual database connection status.
+              </p>
+
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={checkSystem}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "10px 14px",
+                  marginTop: "12px",
+                }}
+              >
+                <FiRefreshCw /> Check System Again
+              </button>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

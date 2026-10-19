@@ -1,37 +1,54 @@
 import React, { useState } from 'react';
-import Sidebar from './SideBar';
+import Sidebar from './Sidebar';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
+import Sections from './pages/Sections';
 import Orders from './pages/Orders';
 import Payments from './pages/Payments';
 import Users from './pages/Users';
-import Sections from './pages/Sections';
 import Settings from './pages/Settings';
-import { FiSearch, FiBell, FiMoon } from 'react-icons/fi';
+import Logout from './pages/Logout';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  // Shared synchronized database states
   const [products, setProducts] = useState([
-    { id: 'PROD-101', name: 'iPhone 17 Pro', category: 'iPhone', price: 999, status: 'Published', navVisibility: true, stock: 120 },
-    { id: 'PROD-102', name: 'MacBook Pro 16"', category: 'Mac', price: 2499, status: 'Published', navVisibility: true, stock: 45 },
-    { id: 'PROD-103', name: 'iPad Pro M4', category: 'iPad', price: 1099, status: 'Published', navVisibility: true, stock: 80 },
-    { id: 'PROD-104', name: 'Apple Watch Ultra 2', category: 'Watch', price: 799, status: 'Published', navVisibility: true, stock: 65 },
-    { id: 'PROD-105', name: 'Apple Vision Pro', category: 'Vision', price: 3499, status: 'Draft', navVisibility: false, stock: 15 },
-    { id: 'PROD-106', name: 'AirPods Pro 2', category: 'AirPods', price: 249, status: 'Published', navVisibility: true, stock: 200 }
+    { id: 'PRD-01', name: 'iPhone 17 Pro', category: 'iPhone', price: 999, stock: 45, status: 'Published', imageMain: '' },
+    { id: 'PRD-02', name: 'MacBook Pro 16"', category: 'Mac', price: 2499, stock: 12, status: 'Published', imageMain: '' }
+  ]);
+
+  const [orders, setOrders] = useState([
+    {
+      id: 'ORD-9821',
+      customerName: 'Alex Johnson',
+      email: 'alex.j@example.com',
+      phone: '+1 (555) 234-5678',
+      date: '2026-10-14',
+      items: [{ name: 'iPhone 17 Pro', quantity: 1, price: 999 }],
+      shippingCost: 0,
+      paymentStatus: 'Paid',
+      orderStatus: 'Processing',
+      shippingAddress: '123 Apple Blossom St, Cupertino, CA 95014'
+    }
+  ]);
+
+  const [sections, setSections] = useState([
+    { id: 'SEC-01', title: 'iPhone 17 Pro Spotlight', targetPage: 'iPhone page', status: 'Published' }
   ]);
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard': return <Dashboard products={products} />;
+      case 'dashboard': return <Dashboard products={products} orders={orders} sections={sections} />;
       case 'products': return <Products products={products} setProducts={setProducts} />;
-      case 'categories': return <Products products={products} setProducts={setProducts} />;
-      case 'orders': return <Orders />;
-      case 'payments': return <Payments />;
-      case 'customers': return <Users />;
-      case 'sections': return <Sections products={products} setProducts={setProducts} />;
+      case 'sections': return <Sections sections={sections} setSections={sections} products={products} />;
+      case 'orders': return <Orders orders={orders} setOrders={setOrders} products={products} />;
+      case 'payments': return <Payments orders={orders} />;
+      case 'users': return <Users orders={orders} />;
       case 'settings': return <Settings />;
-      default: return <Dashboard products={products} />;
+      case 'logout': return <Logout onCancel={() => setActiveTab('dashboard')} />;
+      default: return <Dashboard products={products} orders={orders} sections={sections} />;
     }
   };
 
@@ -39,26 +56,6 @@ export default function AdminDashboard() {
     <div className="admin-layout">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <div className="admin-main">
-        <header className="admin-header">
-          <div className="search-container">
-            <FiSearch size={16} />
-            <input type="text" placeholder="Search products, orders, settings..." />
-          </div>
-          <div className="header-actions">
-            <button className="icon-btn"><FiBell size={16} /></button>
-            <button className="icon-btn"><FiMoon size={16} /></button>
-            <div className="admin-profile">
-              <div className="avatar">
-                AD
-                <span className="status-dot"></span>
-              </div>
-              <div className="admin-info">
-                <span className="admin-name">Administrator</span>
-                <span className="admin-role">Super Admin</span>
-              </div>
-            </div>
-          </div>
-        </header>
         {renderContent()}
       </div>
     </div>

@@ -80,45 +80,67 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admin-auth", adminAuthRoutes);
 
+
+
+
+
 const requireAdmin = (req, res, next) => {
+  const authorization = req.headers.authorization;
+
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    return res.status(401).json({
+      message: "Authentication required. Please sign in as admin.",
+    });
+  }
+
+  const token = authorization.slice(7).trim();
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Admin token is missing.",
+    });
+  }
+
   try {
-    const token = req.cookies?.adminToken;
-
-    if (!token) {
-      return res.status(401).json({
-        message: "Admin login required.",
-      });
-    }
-
-    if (!process.env.JWT_SECRET || !process.env.ADMIN_EMAIL) {
-      return res.status(500).json({
-        message: "Admin authentication is not configured.",
-      });
-    }
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET, {
       algorithms: ["HS256"],
     });
 
+    const configuredAdminEmail = process.env.ADMIN_EMAIL
+      ?.trim()
+      .toLowerCase();
+
+    const tokenEmail =
+      typeof decoded.email === "string"
+        ? decoded.email.trim().toLowerCase()
+        : "";
+
     if (
       decoded.role !== "admin" ||
-      typeof decoded.email !== "string" ||
-      decoded.email.toLowerCase() !==
-        process.env.ADMIN_EMAIL.trim().toLowerCase()
+      !configuredAdminEmail ||
+      tokenEmail !== configuredAdminEmail
     ) {
       return res.status(403).json({
-        message: "Admin access denied.",
+        message: "Admin access denied. Check the admin JWT role and email.",
       });
     }
 
-    req.admin = decoded;
+    req.user = {
+      email: tokenEmail,
+      role: "admin",
+    };
+
     next();
   } catch (error) {
     return res.status(401).json({
-      message: "Invalid or expired admin session.",
+      message:
+        error.name === "TokenExpiredError"
+          ? "Admin session expired. Please sign in again."
+          : "Invalid admin token. Please sign in again.",
     });
   }
 };
+
 
 
 // ==================================================
@@ -173,11 +195,159 @@ app.get("/api/health", (req, res) => {
 // ADD PRODUCT
 // ==================================================
 
-app.post(
+
+/* ==================================================
+   PRODUCT MANAGEMENT
+   Apple Store - Express + MySQL
+================================================== */
+
+// Validate positive integer IDs.
+const isValidId = (id) =>
+    /^\d+$/.test(String(id)) && Number(id) > 0;
+
+// Normalize product fields.
+const normalizeNullable = (value) =>
+    value === "" || value === undefined ? null : value;
+
+// Validate product input.
+function validateProduct(body, partial = false) {
+    const {
+        title,
+        category,
+        image_url,
+        price_upfront,
+        price_monthly,
+        lease_monthly,
+    } = body;
+
+    if (!partial || title !== undefined) {
+        if (typeof title !== "string" || !title.trim()) {
+            return "Product title is required.";
+        }
+    }
+
+    if (!partial || category !== undefined) {
+        if (typeof category !== "string" || !category.trim()) {
+            return "Product category is required.";
+        }
+    }
+
+    if (!partial || image_url !== undefined) {
+        if (typeof image_url !== "string" || !image_url.trim()) {
+            return "Product image URL is required.";
+        }
+    }
+
+    for (const [field, value] of Object.entries({
+        price_upfront,
+        price_monthly,
+        lease_monthly,
+    })) {
+        if (value === undefined || value === null || value === "") {
+            continue;
+        }
+
+        const number = Number(value);
+
+        if (!Number.isFinite(number) || number < 0) {
+            return `${field} must be a non-negative number.`;
+        }
+    }
+
+    if (
+        image_url &&
+        !/^https?:\/\/|^\/uploads\//i.test(image_url)
+    ) {
+        return "Image URL must be HTTP(S) or a local /uploads/ path.";
+    }
+
+    return null;
+}
+
+// ------------------------------------------
+// ADMIN: GET ALL PRODUCTS
+// GET /api/products?category=iPhone
+// ------------------------------------------
+
+app.get(
     "/api/products",
+    requireAdmin,
     requireDatabase,
     async (req, res) => {
         try {
+            const { category, search, status } = req.query;
+
+            let sql = `
+                SELECT
+                    id,
+                    category,
+                    badge_text,
+                    title,
+                    description,
+                    price_upfront,
+                    price_monthly,
+                    lease_monthly,
+                    image_url,
+                    learn_more_link,
+                    buy_link,
+                    buy_text,
+                    is_active,
+                    created_at
+                FROM products
+                WHERE 1 = 1
+            `;
+
+            const values = [];
+
+            if (category) {
+                sql += " AND category = ?";
+                values.push(category);
+            }
+
+            if (search) {
+                sql += " AND (title LIKE ? OR CAST(id AS CHAR) = ?)";
+                values.push(`%${search}%`, String(search));
+            }
+
+            if (status === "active") {
+                sql += " AND is_active = TRUE";
+            } else if (status === "inactive") {
+                sql += " AND is_active = FALSE";
+            }
+
+            sql += " ORDER BY id DESC";
+
+            const [products] = await db.query(sql, values);
+
+            res.json(products);
+        } catch (error) {
+            console.error("Get admin products error:", error);
+            res.status(500).json({
+                message: "Failed to fetch products.",
+            });
+        }
+    }
+);
+
+// ------------------------------------------
+// ADMIN: ADD PRODUCT
+// POST /api/products
+// ------------------------------------------
+
+app.post(
+    "/api/products",
+    requireAdmin,
+    requireDatabase,
+    async (req, res) => {
+        try {
+            const validationError = validateProduct(req.body);
+
+            if (validationError) {
+                return res.status(400).json({
+                    message: validationError,
+                });
+            }
+
             const {
                 badge_text,
                 title,
@@ -186,20 +356,15 @@ app.post(
                 price_monthly,
                 lease_monthly,
                 image_url,
-                category
+                category,
+                learn_more_link,
+                buy_link,
+                buy_text,
+                is_active,
             } = req.body;
 
-            if (!title || !image_url || !category) {
-                return res.status(400).json({
-                    message:
-                        "Title, image URL and category are required"
-                });
-            }
-
             const [result] = await db.query(
-                `
-                INSERT INTO products
-                (
+                `INSERT INTO products (
                     badge_text,
                     title,
                     description,
@@ -208,39 +373,245 @@ app.post(
                     lease_monthly,
                     image_url,
                     category,
+                    learn_more_link,
+                    buy_link,
+                    buy_text,
                     is_active
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, TRUE)
-                `,
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
-                    badge_text || null,
-                    title,
-                    description || null,
-                    price_upfront || null,
-                    price_monthly || null,
-                    lease_monthly || null,
-                    image_url,
-                    category
+                    normalizeNullable(badge_text),
+                    title.trim(),
+                    normalizeNullable(description),
+                    normalizeNullable(price_upfront),
+                    normalizeNullable(price_monthly),
+                    normalizeNullable(lease_monthly),
+                    image_url.trim(),
+                    category.trim(),
+                    normalizeNullable(learn_more_link),
+                    normalizeNullable(buy_link),
+                    normalizeNullable(buy_text),
+                    is_active === false || is_active === 0 ? 0 : 1,
                 ]
             );
 
-            res.status(201).json({
-                message: "Product added successfully",
-                productId: result.insertId
-            });
-        } catch (error) {
-            console.error(
-                "Error adding product:",
-                error
+            const [rows] = await db.query(
+                "SELECT * FROM products WHERE id = ?",
+                [result.insertId]
             );
 
+            res.status(201).json({
+                message: "Product added successfully.",
+                product: rows[0],
+            });
+        } catch (error) {
+            console.error("Add product error:", error);
             res.status(500).json({
-                message: "Failed to add product",
-                error: error.message
+                message: "Failed to add product.",
             });
         }
     }
 );
+
+// ------------------------------------------
+// ADMIN: UPDATE PRODUCT
+// PUT /api/products/:id
+// ------------------------------------------
+
+app.put(
+    "/api/products/:id",
+    requireAdmin,
+    requireDatabase,
+    async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            if (!isValidId(id)) {
+                return res.status(400).json({
+                    message: "Invalid product ID.",
+                });
+            }
+
+            const validationError = validateProduct(
+                req.body,
+                true
+            );
+
+            if (validationError) {
+                return res.status(400).json({
+                    message: validationError,
+                });
+            }
+
+            const [existingRows] = await db.query(
+                "SELECT * FROM products WHERE id = ?",
+                [id]
+            );
+
+            if (!existingRows.length) {
+                return res.status(404).json({
+                    message: "Product not found.",
+                });
+            }
+
+            const existing = existingRows[0];
+            const body = req.body;
+
+            const next = {
+                badge_text:
+                    body.badge_text === undefined
+                        ? existing.badge_text
+                        : normalizeNullable(body.badge_text),
+
+                title:
+                    body.title === undefined
+                        ? existing.title
+                        : body.title.trim(),
+
+                description:
+                    body.description === undefined
+                        ? existing.description
+                        : normalizeNullable(body.description),
+
+                price_upfront:
+                    body.price_upfront === undefined
+                        ? existing.price_upfront
+                        : normalizeNullable(body.price_upfront),
+
+                price_monthly:
+                    body.price_monthly === undefined
+                        ? existing.price_monthly
+                        : normalizeNullable(body.price_monthly),
+
+                lease_monthly:
+                    body.lease_monthly === undefined
+                        ? existing.lease_monthly
+                        : normalizeNullable(body.lease_monthly),
+
+                image_url:
+                    body.image_url === undefined
+                        ? existing.image_url
+                        : body.image_url.trim(),
+
+                category:
+                    body.category === undefined
+                        ? existing.category
+                        : body.category.trim(),
+
+                learn_more_link:
+                    body.learn_more_link === undefined
+                        ? existing.learn_more_link
+                        : normalizeNullable(body.learn_more_link),
+
+                buy_link:
+                    body.buy_link === undefined
+                        ? existing.buy_link
+                        : normalizeNullable(body.buy_link),
+
+                buy_text:
+                    body.buy_text === undefined
+                        ? existing.buy_text
+                        : normalizeNullable(body.buy_text),
+
+                is_active:
+                    body.is_active === undefined
+                        ? existing.is_active
+                        : (
+                            body.is_active === true ||
+                            body.is_active === 1 ||
+                            body.is_active === "1"
+                        ) ? 1 : 0,
+            };
+
+            await db.query(
+                `UPDATE products SET
+                    badge_text = ?,
+                    title = ?,
+                    description = ?,
+                    price_upfront = ?,
+                    price_monthly = ?,
+                    lease_monthly = ?,
+                    image_url = ?,
+                    category = ?,
+                    learn_more_link = ?,
+                    buy_link = ?,
+                    buy_text = ?,
+                    is_active = ?
+                 WHERE id = ?`,
+                [
+                    next.badge_text,
+                    next.title,
+                    next.description,
+                    next.price_upfront,
+                    next.price_monthly,
+                    next.lease_monthly,
+                    next.image_url,
+                    next.category,
+                    next.learn_more_link,
+                    next.buy_link,
+                    next.buy_text,
+                    next.is_active,
+                    id,
+                ]
+            );
+
+            res.json({
+                message: "Product updated successfully.",
+            });
+        } catch (error) {
+            console.error("Update product error:", error);
+            res.status(500).json({
+                message: "Failed to update product.",
+            });
+        }
+    }
+);
+
+// ------------------------------------------
+// ADMIN: SOFT DELETE PRODUCT
+// DELETE /api/products/:id
+// ------------------------------------------
+
+app.delete(
+    "/api/products/:id",
+    requireAdmin,
+    requireDatabase,
+    async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            if (!isValidId(id)) {
+                return res.status(400).json({
+                    message: "Invalid product ID.",
+                });
+            }
+
+            const [result] = await db.query(
+                `UPDATE products
+                 SET is_active = FALSE
+                 WHERE id = ? AND is_active = TRUE`,
+                [id]
+            );
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({
+                    message: "Active product not found.",
+                });
+            }
+
+            res.json({
+                message: "Product removed successfully.",
+            });
+        } catch (error) {
+            console.error("Delete product error:", error);
+            res.status(500).json({
+                message: "Failed to remove product.",
+            });
+        }
+    }
+);
+
+
+
 
 // ==================================================
 // MAC SHOP BENEFITS
@@ -2106,52 +2477,7 @@ app.delete(
     }
 );
 
-// ==================================================
-// DELETE PRODUCT
-// ==================================================
 
-app.delete(
-    "/api/products/:id",
-    requireAdmin,
-    requireDatabase,
-    async (req, res) => {
-        try {
-            const { id } = req.params;
-
-            const [result] = await db.query(
-                `
-                UPDATE products
-                SET is_active = FALSE
-                WHERE id = ?
-                `,
-                [id]
-            );
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    error:
-                        "Product not found"
-                });
-            }
-
-            res.json({
-                message:
-                    "Product removed successfully"
-            });
-        } catch (error) {
-            console.error(
-                "Delete product error:",
-                error
-            );
-
-            res.status(500).json({
-                error:
-                    "Failed to remove product",
-                details: error.message
-            });
-        }
-    }
-);
 
 // ==========================================
 // AIRPODS NAVIGATION - PUBLIC
@@ -2335,135 +2661,7 @@ app.put("/api/admin/airpods-nav/:id", requireAdmin, async (req, res) => {
 });
 
 
-/* ==========================================
-   ADMIN: UPDATE PRODUCT
-========================================== */
 
-app.put("/api/products/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const {
-      badge_text,
-      title,
-      description,
-      price_upfront,
-      price_monthly,
-      lease_monthly,
-      image_url,
-      category,
-      is_active,
-    } = req.body;
-
-    if (!Number.isInteger(Number(id)) || Number(id) < 1) {
-      return res.status(400).json({ message: "Invalid product ID." });
-    }
-
-    // Support partial updates, including active/inactive status changes.
-    const [existingRows] = await db.query(
-      "SELECT * FROM products WHERE id = ?",
-      [id]
-    );
-
-    if (existingRows.length === 0) {
-      return res.status(404).json({ message: "Product not found." });
-    }
-
-    const existing = existingRows[0];
-
-    const nextTitle = title ?? existing.title;
-    const nextImage = image_url ?? existing.image_url;
-    const nextCategory = category ?? existing.category;
-
-    if (
-      !String(nextTitle).trim() ||
-      !String(nextImage).trim() ||
-      !String(nextCategory).trim()
-    ) {
-      return res.status(400).json({
-        message: "Product title, image URL, and category are required.",
-      });
-    }
-
-    const nextActive =
-      is_active === undefined
-        ? existing.is_active
-        : is_active === true ||
-          is_active === 1 ||
-          is_active === "1";
-
-    await db.query(
-      `UPDATE products SET
-        badge_text = ?,
-        title = ?,
-        description = ?,
-        price_upfront = ?,
-        price_monthly = ?,
-        lease_monthly = ?,
-        image_url = ?,
-        category = ?,
-        is_active = ?
-       WHERE id = ?`,
-      [
-        badge_text === undefined ? existing.badge_text : badge_text || null,
-        nextTitle,
-        description === undefined
-          ? existing.description
-          : description || null,
-        price_upfront === undefined
-          ? existing.price_upfront
-          : price_upfront === "" ? null : price_upfront,
-        price_monthly === undefined
-          ? existing.price_monthly
-          : price_monthly === "" ? null : price_monthly,
-        lease_monthly === undefined
-          ? existing.lease_monthly
-          : lease_monthly === "" ? null : lease_monthly,
-        nextImage,
-        nextCategory,
-        nextActive,
-        id,
-      ]
-    );
-
-    res.json({ message: "Product updated successfully." });
-  } catch (error) {
-    console.error("Update product error:", error);
-    res.status(500).json({
-      message: "Failed to update product.",
-    });
-  }
-});
-
-/* ==========================================
-   ADMIN: DELETE PRODUCT
-========================================== */
-
-app.delete("/api/products/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!Number.isInteger(Number(id)) || Number(id) < 1) {
-      return res.status(400).json({ message: "Invalid product ID." });
-    }
-
-    const [result] = await db.query(
-      "DELETE FROM products WHERE id = ?",
-      [id]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Product not found." });
-    }
-
-    res.json({ message: "Product deleted successfully." });
-  } catch (error) {
-    console.error("Delete product error:", error);
-    res.status(500).json({
-      message: "Failed to delete product.",
-    });
-  }
-});
 
 
 // ==========================================
@@ -2503,6 +2701,183 @@ app.delete(
     }
   }
 );
+
+
+// ============================================
+// ADMIN AUTHENTICATION MIDDLEWARE
+// Place this BEFORE the admin settings routes
+// ============================================
+
+function verifyAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      message: "Authentication required. Please sign in."
+    });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Adjust this check if your login token uses a different role format.
+    if (
+      !decoded ||
+      String(decoded.role || "").toLowerCase() !== "admin"
+    ) {
+      return res.status(403).json({
+        message: "Admin access required."
+      });
+    }
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Invalid or expired authentication token."
+    });
+  }
+}
+
+
+
+// Public settings that the storefront is allowed to read.
+app.get("/api/settings/public", async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT setting_key, setting_value
+      FROM app_settings
+      WHERE setting_key IN (
+        'store',
+        'website'
+      )
+    `);
+
+    const settings = {};
+
+    for (const row of rows) {
+      settings[row.setting_key] =
+        typeof row.setting_value === "string"
+          ? JSON.parse(row.setting_value)
+          : row.setting_value;
+    }
+
+    res.json(settings);
+  } catch (error) {
+    console.error("Read public settings:", error);
+    res.status(500).json({
+      message: "Unable to load website settings."
+    });
+  }
+});
+
+
+// ============================================
+// ADMIN SETTINGS ROUTES
+// Requires: app, db, and verifyAdmin
+// ============================================
+
+// Create the settings table
+
+// Admin reads all general settings.
+app.get("/api/settings", verifyAdmin, async (req, res) => {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS app_settings (
+        setting_key VARCHAR(100) PRIMARY KEY,
+        setting_value JSON NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+
+    const [rows] = await db.query(`
+      SELECT setting_key, setting_value
+      FROM app_settings
+    `);
+
+    const settings = {};
+
+    for (const row of rows) {
+      try {
+        settings[row.setting_key] =
+          typeof row.setting_value === "string"
+            ? JSON.parse(row.setting_value)
+            : row.setting_value;
+      } catch {
+        settings[row.setting_key] = row.setting_value;
+      }
+    }
+
+    return res.json(settings);
+  } catch (error) {
+    console.error("Read admin settings:", error);
+
+    return res.status(500).json({
+      message: "Unable to load settings."
+    });
+  }
+});
+
+
+// Save one settings section
+app.put("/api/settings/:section", verifyAdmin, async (req, res) => {
+  const allowedSections = [
+    "store",
+    "website",
+    "notifications"
+  ];
+
+  const { section } = req.params;
+
+  if (!allowedSections.includes(section)) {
+    return res.status(400).json({
+      message: "Invalid settings section."
+    });
+  }
+
+  if (
+    !req.body ||
+    typeof req.body !== "object" ||
+    Array.isArray(req.body)
+  ) {
+    return res.status(400).json({
+      message: "Invalid settings data."
+    });
+  }
+
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS app_settings (
+        setting_key VARCHAR(100) PRIMARY KEY,
+        setting_value JSON NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+
+    await db.query(
+      `INSERT INTO app_settings (setting_key, setting_value)
+       VALUES (?, ?)
+       ON DUPLICATE KEY UPDATE
+         setting_value = VALUES(setting_value)`,
+      [section, JSON.stringify(req.body)]
+    );
+
+    return res.json({
+      message: `${section} settings saved successfully.`,
+      settings: req.body
+    });
+  } catch (error) {
+    console.error("Save settings:", error);
+
+    return res.status(500).json({
+      message: "Unable to save settings."
+    });
+  }
+});
 
 // ==================================================
 // 404 HANDLER

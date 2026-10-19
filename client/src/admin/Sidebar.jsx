@@ -1,17 +1,16 @@
 import React from 'react';
-import { 
-  FiGrid, FiBox, FiLayers, FiShoppingCart, 
-  FiCreditCard, FiUsers, FiGlobe, FiSettings, FiLogOut, FiChevronRight 
+import {
+  FiGrid, FiBox, FiLayers, FiShoppingCart,
+  FiCreditCard, FiUsers, FiGlobe, FiSettings, FiLogOut, FiChevronRight
 } from 'react-icons/fi';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const mainNav = [
     { id: 'dashboard', label: 'Dashboard', icon: <FiGrid size={18} /> },
     { id: 'products', label: 'Products', icon: <FiBox size={18} /> },
-    { id: 'categories', label: 'Categories', icon: <FiLayers size={18} /> },
     { id: 'orders', label: 'Orders', icon: <FiShoppingCart size={18} /> },
     { id: 'payments', label: 'Payments', icon: <FiCreditCard size={18} /> },
-    { id: 'customers', label: 'Customers', icon: <FiUsers size={18} /> },
+    { id: 'users', label: 'users', icon: <FiUsers size={18} /> },
   ];
 
   const contentNav = [
@@ -59,7 +58,10 @@ export default function Sidebar({ activeTab, setActiveTab }) {
       </div>
 
       <div className="sidebar-footer">
-        <button className="nav-item logout-btn" onClick={() => alert('Logged out successfully!')}>
+        <button
+          className={`nav-item logout-btn ${activeTab === 'logout' ? 'active' : ''}`}
+          onClick={() => setActiveTab('logout')}
+        >
           <FiLogOut size={18} />
           <span>Logout</span>
         </button>
