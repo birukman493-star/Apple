@@ -1,7 +1,9 @@
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import placeholder from "../constants/placeholder";
 import "./ipad.css";
+
 import ApplePencilImage from "../assets/ipad6.png";
 import MagicKeyboardImage from "../assets/ipad7.png";
 
@@ -16,6 +18,48 @@ import Accessories from "../assets/ipad8.png";
 import iPadOS from "../assets/ipad9.png";
 import ShopiPad from "../assets/ipad10.png";
 import Iphoncamera from "../assets/ipadcamera.png";
+
+const localIpadImages = {
+  "ipad pro": iPadPro,
+  "ipad air": iPadAir,
+  "ipad mini": iPadMini,
+  "ipad": iPad,
+};
+
+const getIpadImage = (product) => {
+  if (!product) return placeholder;
+  const title = (product.title || "").toLowerCase();
+  for (const [key, img] of Object.entries(localIpadImages)) {
+    if (title.includes(key)) return img;
+  }
+  return product.image_url || placeholder;
+};
+
+const renderColors = (colors) => {
+  let list = [];
+  if (Array.isArray(colors)) {
+    list = colors;
+  } else if (typeof colors === "string") {
+    try {
+      const parsed = JSON.parse(colors);
+      if (Array.isArray(parsed)) list = parsed;
+      else list = colors.split(",");
+    } catch {
+      list = colors.split(",");
+    }
+  }
+  if (!list.length) {
+    list = ["#1d1d1f", "#e3e4e5"];
+  }
+  return list.map((color, index) => (
+    <span
+      key={index}
+      className="ipad-color-dot"
+      style={{ backgroundColor: color.trim() }}
+      title={color.trim()}
+    />
+  ));
+};
 
 function Ipad() {
   const items = [
@@ -43,29 +87,21 @@ function Ipad() {
   useEffect(() => {
     const fetchIpadProducts = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/products/category/ipad"
-        );
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to load iPad products: ${response.status}`
-          );
-        }
-
+        const response = await fetch("/api/products/category/ipad");
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
         const data = await response.json();
-
-        // Support either an array or an object containing products.
         const products = Array.isArray(data)
           ? data
           : Array.isArray(data.products)
             ? data.products
             : [];
-
         setIpadProducts(products);
       } catch (error) {
         console.error("Error loading iPad products:", error);
-        setIpadProducts([]);
+        fetch("http://localhost:5000/api/products/category/ipad")
+          .then((res) => res.json())
+          .then((data) => setIpadProducts(Array.isArray(data) ? data : []))
+          .catch(() => setIpadProducts([]));
       } finally {
         setIpadLoading(false);
       }
@@ -78,20 +114,16 @@ function Ipad() {
   useEffect(() => {
     const fetchIpadBenefits = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/ipad-shop-benefits"
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-
+        const response = await fetch("/api/ipad-shop-benefits");
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
         const data = await response.json();
-
         setIpadBenefits(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching iPad benefits:", error);
-        setIpadBenefits([]);
+        fetch("http://localhost:5000/api/ipad-shop-benefits")
+          .then((res) => res.json())
+          .then((data) => setIpadBenefits(Array.isArray(data) ? data : []))
+          .catch(() => setIpadBenefits([]));
       } finally {
         setIpadBenefitsLoading(false);
       }
@@ -103,19 +135,16 @@ function Ipad() {
   useEffect(() => {
     const fetchIpadKnowItems = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/ipad-get-to-know"
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-
+        const response = await fetch("/api/ipad-get-to-know");
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
         const data = await response.json();
         setIpadKnowItems(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching iPad information:", error);
-        setIpadKnowItems([]);
+        fetch("http://localhost:5000/api/ipad-get-to-know")
+          .then((res) => res.json())
+          .then((data) => setIpadKnowItems(Array.isArray(data) ? data : []))
+          .catch(() => setIpadKnowItems([]));
       } finally {
         setIpadKnowLoading(false);
       }
@@ -183,38 +212,20 @@ function Ipad() {
                 {/* IMAGE */}
                 <div className="ipad-lineup-image">
                   <img
-                    src={product.image_url}
+                    src={getIpadImage(product)}
                     alt={product.title || "iPad"}
-                    loading="lazy"
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
-
-                  <h3>{product.title}</h3>
-
-                  <p>{product.description}</p>
-
-                  {product.price_upfront != null && (
-                    <p>From ${product.price_upfront}</p>
-                  )}
-
-                  {product.price_monthly != null && (
-                    <p>Or ${product.price_monthly}/month</p>
-                  )}
                 </div>
 
                 {/* COLORS */}
-                {product.colors && (
-                  <div className="ipad-lineup-colors">
-                    {product.colors.split(",").map((color, index) => (
-                      <span
-                        key={`${product.id}-${index}`}
-                        className="ipad-color-dot"
-                        style={{
-                          backgroundColor: color.trim(),
-                        }}
-                        title={color.trim()}
-                      />
-                    ))}
-                  </div>
+                <div className="ipad-lineup-colors">
+                  {renderColors(product.colors)}
+                </div>
+
+                {/* BADGE */}
+                {product.badge_text && (
+                  <div className="ipad-product-badge">{product.badge_text}</div>
                 )}
 
                 {/* TITLE */}
@@ -227,31 +238,38 @@ function Ipad() {
 
                 {/* PRICE */}
                 <p className="ipad-product-price">
-                  {product.price_text}
+                  {product.price_upfront != null && (
+                    <>From ${Number(product.price_upfront).toLocaleString()}</>
+                  )}
+                  {product.price_monthly != null && (
+                    <> or ${Number(product.price_monthly).toFixed(2)}/mo. for 12 mo.**</>
+                  )}
                 </p>
 
                 {/* LEASE */}
-                {product.lease_text && (
+                {product.lease_monthly != null && (
                   <p className="ipad-product-lease">
-                    {product.lease_text}
+                    Lease from ${Number(product.lease_monthly).toFixed(2)}/mo. for 36 mo.
                   </p>
                 )}
 
                 {/* BUTTONS */}
                 <div className="ipad-product-buttons">
-                  <a
-                    href={product.learn_more_url || "#"}
+                  <Link
+                    to={product.learn_more_link || product.learn_more_url || "/ipad"}
                     className="ipad-learn-button"
+                    style={{ textDecoration: "none" }}
                   >
                     Learn more
-                  </a>
+                  </Link>
 
-                  <a
-                    href={product.buy_url || "#"}
+                  <Link
+                    to={product.buy_link || product.buy_url || "/store"}
                     className="ipad-buy-button"
+                    style={{ textDecoration: "none" }}
                   >
-                    Buy <span>›</span>
-                  </a>
+                    {product.buy_text || "Buy ›"}
+                  </Link>
                 </div>
               </div>
             ))}
@@ -622,6 +640,7 @@ function Ipad() {
         </div>
 
       </section>
+
     </>
   );
 }

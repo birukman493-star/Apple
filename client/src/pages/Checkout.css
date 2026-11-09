@@ -1,0 +1,768 @@
+/* ==================================================
+   APPLE STORE CHECKOUT INTERFACE
+================================================== */
+
+.checkout-page {
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 0 0 100px;
+}
+
+.checkout-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.checkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid #d2d2d7;
+  margin-bottom: 40px;
+}
+
+.checkout-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.apple-logo-link {
+  font-size: 26px;
+  color: #1d1d1f;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.checkout-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #1d1d1f;
+}
+
+.checkout-header-secure {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #86868b;
+  font-weight: 500;
+}
+
+/* Error Banner */
+.checkout-error-banner {
+  background-color: #fff2f2;
+  border: 1px solid #ffcdd2;
+  color: #d32f2f;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Layout */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 56px;
+  align-items: start;
+}
+
+/* Steps */
+.checkout-step-section {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e5e5ea;
+  margin-bottom: 28px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.checkout-step-section.step-active {
+  border-color: #d2d2d7;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 28px;
+  cursor: pointer;
+  background: #fafafa;
+  border-bottom: 1px solid #f2f2f7;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0071e3;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-title-box h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 2px;
+  color: #1d1d1f;
+  letter-spacing: -0.01em;
+}
+
+.step-title-box p {
+  font-size: 13px;
+  color: #86868b;
+  margin: 0;
+}
+
+.step-content {
+  padding: 28px;
+}
+
+/* Delivery Mode Selection Cards */
+.delivery-methods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.delivery-card {
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1.5px solid #d2d2d7;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+.delivery-card input[type="radio"] {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  accent-color: #0071e3;
+}
+
+.delivery-card.selected {
+  border-color: #0071e3;
+  background-color: #f5f9ff;
+  box-shadow: 0 0 0 1px #0071e3;
+}
+
+.method-icon {
+  color: #0071e3;
+  margin-bottom: 12px;
+}
+
+.method-info strong {
+  display: block;
+  font-size: 14px;
+  color: #1d1d1f;
+  margin-bottom: 4px;
+}
+
+.method-info span {
+  font-size: 12px;
+  color: #6e6e73;
+  line-height: 1.3;
+}
+
+.method-cost {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0071e3;
+}
+
+/* Form Fields */
+.form-fields-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-row--2 .form-group {
+  flex: 1;
+}
+
+.form-row--3 .form-group {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6e6e73;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d2d2d7;
+  font-size: 14px;
+  color: #1d1d1f;
+  background-color: #ffffff;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #0071e3;
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+.step-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.apple-continue-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #0071e3;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 980px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.apple-continue-btn:hover {
+  background-color: #0077ed;
+}
+
+/* ==================================================
+   PAYMENT CATEGORY SELECTION CARDS
+================================================== */
+
+.payment-categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.payment-method-card {
+  border: 1.5px solid #d2d2d7;
+  border-radius: 16px;
+  padding: 18px 22px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-method-card:hover {
+  border-color: #86868b;
+}
+
+.payment-method-card.selected {
+  border-color: #0071e3;
+  background-color: #fbfbfd;
+  box-shadow: 0 0 0 1px #0071e3;
+}
+
+.card-top-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Radio Indicator */
+.radio-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid #86868b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.payment-method-card.selected .radio-indicator {
+  border-color: #0071e3;
+}
+
+.radio-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.payment-method-card.selected .radio-dot {
+  background-color: #0071e3;
+}
+
+.method-label-box {
+  flex: 1;
+}
+
+.method-title-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.method-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.method-pill-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+
+.ethio-badge { background: #e0f2fe; color: #0369a1; }
+.chapa-badge { background: #f3e8ff; color: #7e22ce; }
+.cbe-badge { background: #fae8ff; color: #86198f; }
+.bank-badge { background: #dcfce7; color: #15803d; }
+.card-badge { background: #e0e7ff; color: #4338ca; }
+.cod-badge { background: #fef3c7; color: #b45309; }
+
+.method-sub {
+  font-size: 13px;
+  color: #6e6e73;
+}
+
+.method-logo-badge {
+  flex-shrink: 0;
+}
+
+/* Expanded Content */
+.method-expanded-content {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #f2f2f7;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.instruction-box {
+  background: #f5f5f7;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #424245;
+}
+
+.instruction-box p {
+  margin: 0;
+}
+
+/* Bank Selector */
+.bank-selector-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.bank-tab-btn {
+  padding: 8px 14px;
+  border-radius: 980px;
+  border: 1px solid #d2d2d7;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1f;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.bank-tab-btn.active {
+  background: #0071e3;
+  color: #ffffff;
+  border-color: #0071e3;
+}
+
+.bank-account-details-box {
+  background: #ffffff;
+  border: 1px solid #e5e5ea;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bank-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.bank-detail-item .detail-label {
+  color: #86868b;
+}
+
+.account-num-highlight {
+  font-family: monospace;
+  font-size: 15px;
+  color: #0071e3;
+  letter-spacing: 0.05em;
+}
+
+/* Card Inputs */
+.test-card-banner {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: #166534;
+}
+
+.test-card-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.test-card-btn {
+  background: #ffffff;
+  border: 1px solid #86efac;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.test-card-btn:hover {
+  background: #dcfce7;
+}
+
+.card-inputs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 440px;
+}
+
+/* Place Order Button */
+.apple-place-order-btn {
+  width: 100%;
+  background-color: #0071e3;
+  color: #ffffff;
+  border: none;
+  padding: 18px 24px;
+  border-radius: 980px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+}
+
+.apple-place-order-btn:hover:not(:disabled) {
+  background-color: #0077ed;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 113, 227, 0.4);
+}
+
+.apple-place-order-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-spinner-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.apple-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================================================
+   ORDER SUMMARY SIDEBAR
+================================================== */
+
+.checkout-sidebar-col {
+  position: sticky;
+  top: 40px;
+}
+
+.checkout-order-summary-box {
+  background: #ffffff;
+  border: 1px solid #e5e5ea;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.03);
+}
+
+.summary-collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f2f2f7;
+}
+
+.summary-head-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-head-title h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: #1d1d1f;
+}
+
+.summary-head-price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* Items list */
+.summary-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border-bottom: 1px solid #f2f2f7;
+}
+
+.summary-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.summary-item-img {
+  width: 48px;
+  height: 48px;
+  background: #fafafa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.summary-item-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.summary-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1f;
+  line-height: 1.25;
+}
+
+.summary-item-qty {
+  font-size: 11px;
+  color: #86868b;
+}
+
+.summary-item-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* Breakdown */
+.summary-totals-breakdown {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #424245;
+}
+
+.free-text {
+  color: #34c759;
+  font-weight: 700;
+}
+
+.totals-divider {
+  height: 1px;
+  background-color: #e5e5ea;
+  margin: 6px 0;
+}
+
+.grand-total-row {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.grand-total-amount {
+  font-size: 20px;
+  color: #0071e3;
+}
+
+.summary-benefits {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f2f2f7;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #6e6e73;
+}
+
+.benefit-item svg {
+  color: #0071e3;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .checkout-sidebar-col {
+    position: static;
+    order: -1; /* Place summary on top for mobile */
+  }
+
+  .summary-items-list {
+    display: none;
+  }
+
+  .summary-items-list.mobile-expanded {
+    display: flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .checkout-page {
+    padding-bottom: 60px;
+  }
+
+  .checkout-container {
+    padding: 0 16px;
+  }
+
+  .step-header {
+    padding: 18px 20px;
+  }
+
+  .step-content {
+    padding: 20px 16px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .delivery-methods-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

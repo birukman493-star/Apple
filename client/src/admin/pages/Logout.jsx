@@ -3,15 +3,16 @@ import { FiLogOut, FiShield, FiArrowLeft } from 'react-icons/fi';
 
 export default function Logout({ onConfirmLogout, onCancel }) {
   const handleLogout = () => {
-    // Clear any local storage tokens or session storage if used
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     localStorage.removeItem('adminAuthToken');
     sessionStorage.clear();
     
     if (onConfirmLogout) {
       onConfirmLogout();
     } else {
-      // Default fallback redirect or reload
-      window.location.href = '/';
+      window.location.href = '/signin';
     }
   };
 

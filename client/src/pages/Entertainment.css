@@ -2124,3 +2124,363 @@
     letter-spacing: -1px;
   }
 }
+
+/* =========================
+   APPLE FITNESS+ SECTION
+========================= */
+
+.entertainment-service-hero {
+  width: 100%;
+  padding: 0 20px 20px;
+  box-sizing: border-box;
+}
+
+.entertainment-service-hero-card {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  min-height: 540px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.entertainment-service-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.entertainment-fitness-card .entertainment-foundation-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.85) 0%,
+    rgba(0,0,0,0.4) 40%,
+    rgba(0,0,0,0.1) 100%
+  );
+}
+
+.entertainment-fitness-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.entertainment-fitness-ring {
+  background: conic-gradient(
+    #FA114F 0% 33%,
+    #92F10C 33% 66%,
+    #1DCFF5 66% 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.entertainment-fitness-workout-card .entertainment-music-badge,
+.entertainment-fitness-workout-badge {
+  background: linear-gradient(135deg, #FA114F, #FF6B3D);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+/* =========================
+   APPLE NEWS+ SECTION
+========================= */
+
+.entertainment-news-section {
+  width: 100%;
+  background: #fff;
+  padding: 60px 20px 40px;
+  box-sizing: border-box;
+}
+
+.entertainment-news-header {
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.entertainment-news-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.entertainment-news-service-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.entertainment-news-icon {
+  font-size: 22px;
+  background: linear-gradient(135deg, #FF2D55, #FF6B3D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.entertainment-news-bundle-badge {
+  background: rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #6e6e73;
+  font-weight: 500;
+}
+
+.entertainment-news-content h2 {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.entertainment-news-actions {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.entertainment-news-free {
+  background: #1d1d1f !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.entertainment-news-learn {
+  color: #1d1d1f !important;
+  border-color: #1d1d1f !important;
+}
+
+.entertainment-news-magazines {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.entertainment-news-magazines-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+}
+
+/* =========================
+   APPLE PODCASTS SECTION
+========================= */
+
+.entertainment-podcasts-section {
+  width: 100%;
+  background: #f5f5f7;
+  padding: 60px 0 40px;
+  box-sizing: border-box;
+}
+
+.entertainment-podcasts-card {
+  background: transparent;
+  box-shadow: none;
+}
+
+.entertainment-podcasts-header {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.entertainment-podcasts-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.entertainment-podcasts-service-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.entertainment-podcasts-icon {
+  font-size: 24px;
+}
+
+.entertainment-podcasts-header h2 {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.entertainment-podcasts-badge {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.entertainment-podcasts-list {
+  background: transparent;
+}
+
+/* =========================
+   APPLE BOOKS SECTION
+========================= */
+
+.entertainment-books-section {
+  width: 100%;
+  background: #fff;
+  padding: 60px 20px 60px;
+  box-sizing: border-box;
+}
+
+.entertainment-books-header {
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.entertainment-books-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.entertainment-books-service-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.entertainment-books-icon {
+  font-size: 24px;
+}
+
+.entertainment-books-header h2 {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.entertainment-books-actions {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.entertainment-books-primary {
+  background: #1d1d1f;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.entertainment-books-primary:hover {
+  opacity: 0.85;
+}
+
+.entertainment-books-learn {
+  color: #1d1d1f !important;
+  border-color: #1d1d1f !important;
+}
+
+.entertainment-books-badge {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.entertainment-books-carousel {
+  background: transparent;
+}
+
+.entertainment-book-card .entertainment-music-image {
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+
+.entertainment-book-image-wrapper {
+  aspect-ratio: 2/3;
+}
+
+@media (max-width: 768px) {
+  .entertainment-service-hero-card {
+    min-height: 380px;
+  }
+
+  .entertainment-news-header,
+  .entertainment-podcasts-header,
+  .entertainment-books-header {
+    padding: 0 16px;
+  }
+
+  .entertainment-news-section,
+  .entertainment-books-section {
+    padding: 40px 16px 30px;
+  }
+
+  .entertainment-podcasts-section {
+    padding: 40px 0 30px;
+  }
+}

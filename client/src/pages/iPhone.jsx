@@ -13,6 +13,51 @@ import Iphonepro from "../assets/iphone3.png";
 import Iphonepromax from "../assets/iphone4.png";
 import Iphone18max from "../assets/iphone5.png";
 
+// Local image map for lineup cards
+const localIphoneImages = {
+    "iphone duo": Iphonedeo,
+    "iphone 18 pro": Iphone18pro,
+    "iphone air": Iphone17,
+    "iphone 17e": Iphone18max,
+    "iphone 17": Iphone17pro,
+    "iphone 16": Iphone18,
+};
+
+const getIphoneImage = (product) => {
+    if (!product) return null;
+    const title = (product.title || "").toLowerCase();
+    for (const [key, img] of Object.entries(localIphoneImages)) {
+        if (title.includes(key)) return img;
+    }
+    return product.image_url || null;
+};
+
+const renderColors = (colors) => {
+    let list = [];
+    if (Array.isArray(colors)) {
+        list = colors;
+    } else if (typeof colors === "string") {
+        try {
+            const parsed = JSON.parse(colors);
+            if (Array.isArray(parsed)) list = parsed;
+            else list = colors.split(",");
+        } catch {
+            list = colors.split(",");
+        }
+    }
+    if (!list.length) {
+        list = ["#1d1d1f", "#e3e4e5"];
+    }
+    return list.map((color, index) => (
+        <span
+            key={index}
+            className="iphone-color-dot"
+            style={{ backgroundColor: color.trim() }}
+            title={color.trim()}
+        />
+    ));
+};
+
 const iPhone = () => {
     const [iphoneProducts, setIphoneProducts] = useState([]);
     const [iphoneShoppingOffers, setIphoneShoppingOffers] = useState([]);
@@ -20,14 +65,12 @@ const iPhone = () => {
     const [activeAppleWorld, setActiveAppleWorld] = useState(2);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/products?category=iphone")
+        fetch("/api/products/category/iphone")
             .then(async (res) => {
                 const data = await res.json();
-
                 if (!res.ok) {
                     throw new Error(data.message || "Failed to fetch iPhone products");
                 }
-
                 return data;
             })
             .then((data) => {
@@ -40,32 +83,24 @@ const iPhone = () => {
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/iphone-shopping-offers")
+        fetch("/api/iphone-shopping-offers")
             .then((res) => res.json())
             .then((data) => {
-                setIphoneShoppingOffers(data);
+                setIphoneShoppingOffers(Array.isArray(data) ? data : []);
             })
             .catch((error) => {
-                console.error(
-                    "Failed to load iPhone shopping offers:",
-                    error
-                );
+                console.error("Failed to load iPhone shopping offers:", error);
             });
     }, []);
 
-
-
     useEffect(() => {
-        fetch("http://localhost:5000/api/iphone-features")
+        fetch("/api/iphone-features")
             .then((res) => res.json())
             .then((data) => {
-                setIphoneFeatures(data);
+                setIphoneFeatures(Array.isArray(data) ? data : []);
             })
             .catch((error) => {
-                console.error(
-                    "Failed to load iPhone features:",
-                    error
-                );
+                console.error("Failed to load iPhone features:", error);
             });
     }, []);
 
@@ -304,7 +339,7 @@ const iPhone = () => {
                             <div className="iphone-lineup-image">
 
                                 <img
-                                    src={product.image_url}
+                                    src={getIphoneImage(product)}
                                     alt={product.title}
                                 />
 
@@ -328,6 +363,14 @@ const iPhone = () => {
                                     {product.description}
                                 </p>
 
+                                {/* COLOR DOTS */}
+
+                                {product.colors && (
+                                    <div className="iphone-lineup-colors">
+                                        {renderColors(product.colors)}
+                                    </div>
+                                )}
+
                                 {/* PURCHASE PRICE */}
 
                                 <p className="iphone-lineup-price">
@@ -335,7 +378,7 @@ const iPhone = () => {
                                     From{" "}
 
                                     <strong>
-                                        {product.price_upfront}
+                                        ${Number(product.price_upfront).toLocaleString()}
                                     </strong>
 
                                     {product.price_monthly && (
@@ -343,7 +386,7 @@ const iPhone = () => {
                                             {" "}or{" "}
 
                                             <strong>
-                                                {product.price_monthly}
+                                                ${Number(product.price_monthly).toFixed(2)}
                                             </strong>
 
                                             /mo. for 24 mo.
@@ -360,7 +403,7 @@ const iPhone = () => {
                                         Lease from{" "}
 
                                         <strong>
-                                            {product.lease_monthly}
+                                            ${Number(product.lease_monthly).toFixed(2)}
                                         </strong>
 
                                         {" "}for 24 mo. with Apple Upgrade
@@ -753,7 +796,6 @@ const iPhone = () => {
                     </div>
                 </div>
             </section>
-
         </>
     );
 };

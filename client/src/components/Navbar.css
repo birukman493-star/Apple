@@ -120,6 +120,11 @@
     justify-content: flex-start;
   }
 
+  /* Hide desktop links on mobile */
+  .nav-links {
+    display: none !important;
+  }
+
   /* Apple logo → LEFT */
   .apple-logo {
     order: 1;
@@ -135,6 +140,13 @@
   .mobile-menu {
     order: 3;
     margin-left: 20px;
+    display: flex !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobile-menu {
+    display: none !important;
   }
 }
 
@@ -198,15 +210,17 @@
 /* Desktop Navigation */
 /* =============================== */
 
-.nav-links {
-  flex: 1;
+@media (min-width: 992px) {
+  .nav-links {
+    flex: 1;
 
-  margin: 0 28px;
+    margin: 0 28px;
 
-  display: flex;
+    display: flex;
 
-  align-items: center;
-  justify-content: space-between;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .nav-links > a,
@@ -487,6 +501,10 @@
     justify-content: flex-start;
   }
 
+  .nav-links {
+    display: none !important;
+  }
+
   /* Apple logo LEFT */
   .apple-logo {
     order: 1;
@@ -504,6 +522,7 @@
     order: 3;
 
     margin-left: 20px;
+    display: flex !important;
   }
 }
 

@@ -167,6 +167,7 @@
   height: 100%;
   max-width: 280px;
   object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.08));
   transition: transform 0.3s ease;
 }
 
@@ -182,7 +183,7 @@
   justify-content: center;
   align-items: center;
   gap: 7px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
@@ -193,6 +194,16 @@
   flex-shrink: 0;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+/* PRODUCT BADGE */
+
+.ipad-product-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b64400;
+  margin-bottom: 8px;
+  letter-spacing: -0.1px;
 }
 
 /* PRODUCT TITLE */

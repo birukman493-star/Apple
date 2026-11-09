@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import AppleLogo from "../assets/gemini-svg.svg";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext.jsx";
 
 const Navbar = () => {
+  const { cart, itemCount, subtotal } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -1329,19 +1331,88 @@ const Navbar = () => {
               <div className="search-menu">
 
                 <div className="bag-status">
+                  {cart && cart.length > 0 ? (
+                    <div>
+                      <span className="store-label">
+                        Your Bag ({itemCount} item{itemCount !== 1 ? 's' : ''})
+                      </span>
+                      <div style={{ maxHeight: "220px", overflowY: "auto", margin: "14px 0", display: "flex", flexDirection: "column", gap: "10px" }}>
+                        {cart.map((item) => (
+                          <div key={item.id} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "6px 0", borderBottom: "1px solid #f2f2f7" }}>
+                            <img
+                              src={item.image || "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-card-40-iphone15prohero-202309?wid=400&hei=400&fmt=p-jpg"}
+                              alt={item.title}
+                              style={{ width: "36px", height: "36px", objectFit: "contain", background: "#f5f5f7", borderRadius: "6px" }}
+                            />
+                            <div style={{ flex: 1, fontSize: "13px" }}>
+                              <div style={{ fontWeight: 600, color: "#1d1d1f" }}>{item.title}</div>
+                              <div style={{ color: "#86868b", fontSize: "11px" }}>Qty: {item.quantity} × ${parseFloat(item.price).toFixed(2)}</div>
+                            </div>
+                            <div style={{ fontWeight: 700, fontSize: "13px", color: "#1d1d1f" }}>
+                              ${(parseFloat(item.price) * item.quantity).toFixed(2)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
 
-                  <span className="store-label">
-                    Shopping Bag Status
-                  </span>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: "14px", margin: "12px 0 16px" }}>
+                        <span>Subtotal:</span>
+                        <span>${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
 
-                  <h3>
-                    Your Bag is empty.
-                  </h3>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <Link
+                          to="/checkout"
+                          onClick={() => setBagOpen(false)}
+                          style={{
+                            flex: 1,
+                            backgroundColor: "#0071e3",
+                            color: "#ffffff",
+                            textAlign: "center",
+                            padding: "10px 14px",
+                            borderRadius: "980px",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            textDecoration: "none"
+                          }}
+                        >
+                          Check Out
+                        </Link>
+                        <Link
+                          to="/bag"
+                          onClick={() => setBagOpen(false)}
+                          style={{
+                            flex: 1,
+                            backgroundColor: "#f5f5f7",
+                            color: "#1d1d1f",
+                            border: "1px solid #d2d2d7",
+                            textAlign: "center",
+                            padding: "10px 14px",
+                            borderRadius: "980px",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            textDecoration: "none"
+                          }}
+                        >
+                          Review Bag
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <span className="store-label">
+                        Shopping Bag Status
+                      </span>
 
-                  <p>
-                    Sign in to see if you have any saved items
-                  </p>
+                      <h3>
+                        Your Bag is empty.
+                      </h3>
 
+                      <p>
+                        Sign in to see if you have any saved items
+                      </p>
+                    </div>
+                  )}
                 </div>
 
 
@@ -1359,26 +1430,67 @@ const Navbar = () => {
                   </Link>
 
                   <Link
-                    to="/your-saves"
+                    to="/saves"
                     onClick={() => setBagOpen(false)}
                   >
                     Your Saves
                   </Link>
 
-                  <Link
-                    to="/signup"
-                    onClick={() => setBagOpen(false)}
-                  >
-                    Account
-                  </Link>
+                  {(() => {
+                    const savedUser = JSON.parse(localStorage.getItem("user") || "null");
+                    const token = localStorage.getItem("token") || localStorage.getItem("adminToken");
+                    const isLoggedIn = Boolean(token && savedUser);
+                    const isAdmin = savedUser?.role === "admin";
+                    const userName = savedUser ? (savedUser.firstName || savedUser.email?.split('@')[0] || "Account") : "Account";
 
-                  <Link
-                    to="/signin"
-                    onClick={() => setBagOpen(false)}
-                  >
-                    Sign in
-                  </Link>
-
+                    return isLoggedIn ? (
+                      <>
+                        {isAdmin && (
+                          <Link
+                            to="/admindashboard"
+                            style={{ color: "#0284c7", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" }}
+                            onClick={() => setBagOpen(false)}
+                          >
+                            <span></span> Admin Dashboard
+                          </Link>
+                        )}
+                        <Link
+                          to="/account"
+                          onClick={() => setBagOpen(false)}
+                        >
+                          Account ({userName})
+                        </Link>
+                        <a
+                          href="#signout"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            localStorage.removeItem("token");
+                            localStorage.removeItem("adminToken");
+                            localStorage.removeItem("user");
+                            setBagOpen(false);
+                            window.location.href = "/signin";
+                          }}
+                        >
+                          Sign out
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          to="/signin"
+                          onClick={() => setBagOpen(false)}
+                        >
+                          Account
+                        </Link>
+                        <Link
+                          to="/signin"
+                          onClick={() => setBagOpen(false)}
+                        >
+                          Sign in
+                        </Link>
+                      </>
+                    );
+                  })()}
                 </div>
 
               </div>
@@ -1411,8 +1523,28 @@ const Navbar = () => {
             className="icon-button"
             aria-label="Bag"
             onClick={openBag}
+            style={{ position: "relative" }}
           >
             <i className="bi bi-bag"></i>
+            {itemCount > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  right: "-4px",
+                  backgroundColor: "#0071e3",
+                  color: "#ffffff",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  borderRadius: "10px",
+                  padding: "1px 5px",
+                  lineHeight: "12px",
+                  pointerEvents: "none"
+                }}
+              >
+                {itemCount}
+              </span>
+            )}
           </button>
 
         </div>

@@ -1,7 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import SectionRenderer from "../components/SectionRenderer";
+import {
+  FiSearch,
+  FiShoppingBag,
+  FiEye,
+  FiCheck,
+  FiFilter,
+  FiTruck,
+  FiRotateCcw,
+  FiCreditCard,
+  FiArrowRight,
+  FiX
+} from "react-icons/fi";
 import "./Accessories.css";
 
+// Assets
 import iphone from "../assets/iphone.png";
 import ipad from "../assets/ipad1.png";
 import mac from "../assets/mac.png";
@@ -11,699 +26,589 @@ import airpods from "../assets/airpads1.jpg";
 import tvhome from "../assets/tvhome.jpg";
 import airtag from "../assets/airpads2.jpg";
 import beats from "../assets/iphone7.png";
-import ipad2 from '../assets/ipad2.png'
-import ipad3 from '../assets/ipad3.png'
-import make from '../assets/make.jpg'
-import make1 from '../assets/make1.jpg'
-import make2 from '../assets/make2.jpg'
-import make3 from '../assets/make3.jpg'
-import accessory1 from '../assets/accessories1.jpg'
-import accessory2 from '../assets/accessories2.jpg'
-import accessory3 from '../assets/accessories3.avif'
-import accessory4 from '../assets/accessories4.jpg'
-import accessory5 from '../assets/accessories5.jpg'
-import accessory6 from '../assets/accessories6.jpg'
-import accessory7 from '../assets/accessories7.jpg'
-import accessory8 from '../assets/accessories8.jpg'
+import make from "../assets/make.jpg";
+import make1 from "../assets/make1.jpg";
+import make2 from "../assets/make2.jpg";
+import make3 from "../assets/make3.jpg";
+import accessory1 from "../assets/accessories1.jpg";
+import accessory2 from "../assets/accessories2.jpg";
+import accessory3 from "../assets/accessories3.avif";
+import accessory4 from "../assets/accessories4.jpg";
+import accessory5 from "../assets/accessories5.jpg";
+import accessory6 from "../assets/accessories6.jpg";
+import accessory7 from "../assets/accessories7.jpg";
+import accessory8 from "../assets/accessories8.jpg";
 
-
-
-const categories = [
-  { name: "iPhone", imageSrc: iphone },
-  { name: "iPad", imageSrc: ipad },
-  { name: "Mac", imageSrc: mac },
-  { name: "Apple Watch", imageSrc: watch },
-  { name: "Apple Vision Pro", imageSrc: vision },
-  { name: "AirPods", imageSrc: airpods },
-  { name: "TV & Home", imageSrc: tvhome },
-  { name: "AirTag", imageSrc: airtag },
-  { name: "Beats", imageSrc: beats },
+const categoryNavigation = [
+  { name: "iPhone", imageSrc: iphone, path: "/iphone" },
+  { name: "iPad", imageSrc: ipad, path: "/ipad" },
+  { name: "Mac", imageSrc: mac, path: "/mac" },
+  { name: "Apple Watch", imageSrc: watch, path: "/watch" },
+  { name: "Apple Vision Pro", imageSrc: vision, path: "/vision" },
+  { name: "AirPods", imageSrc: airpods, path: "/airpods" },
+  { name: "TV & Home", imageSrc: tvhome, path: "/tv-home" },
+  { name: "AirTag", imageSrc: airtag, path: "/store" },
+  { name: "Beats", imageSrc: beats, path: "/store" },
 ];
 
-const caseProtectionProducts = [
+// Rich curated accessory products matching official Apple Store lineup
+const curatedAccessories = [
   {
-    id: 1,
-    title: "Find your color story.",
-    category: "iPhone Cases & Protection",
+    id: "acc-1",
+    title: "iPhone 16 Pro Silicone Case with MagSafe",
+    category: "Cases & Protection",
+    badge: "New",
+    price: 49.00,
+    priceMonthly: 4.08,
     image: accessory1,
-    type: "feature",
-    link: "#",
+    description: "Crafted with silky, soft-touch silicone exterior that feels great in your hand. Inside, a soft microfiber lining offers added protection.",
+    colors: ["#2d4b68", "#a6685b", "#2a363b", "#e3d7bf", "#78866b"],
+    compatibility: "iPhone 16 Pro & Pro Max",
+    inStock: true
   },
   {
-    id: 2,
-    title: "AirTag FineWoven Key Ring – Wildflower Blue",
-    category: "New",
-    price: "$35.00",
-    image: accessory6,
-    colors: ["#76684b", "#77515a", "#7894b9", "#393b43", "#555555"],
-  },
-  {
-    id: 3,
-    title: "Wrist Strap – Crisp Blue",
-    category: "New",
-    price: "$29.00 or $2.41/mo. for 12 mo.",
-    image: accessory3,
-    colors: ["#77515a", "#89816f", "#a9c4df", "#777777", "#a32975"],
-  },
-  {
-    id: 4,
-    title: "AirPods 5 with Wireless Charging Case",
-    category: "New",
-    price: "$149.00 or $24.83/mo. for 6 mo.",
-    image: accessory4,
-    colors: [],
-  },
-  {
-    id: 5,
-    title: "42mm Wildflower Blue Magnetic Link - S/M",
-    category: "New",
-    price: "$99.00 or $8.25/mo. for 12 mo.",
-    image: accessory5,
-    colors: ["#454545", "#77515a", "#7894b9", "#a28c70"],
-  },
-];
-const duoCaseItems = [
-  {
-    id: 1,
-    title: "iPhone Duo Case – Sand",
-    category: "New",
-    price: "$79.00 or $6.58/mo. for 12 mo.",
+    id: "acc-2",
+    title: "iPhone Duo Folio Case with Kickstand – Taupe",
+    category: "Cases & Protection",
+    badge: "Staff Pick",
+    price: 79.00,
+    priceMonthly: 6.58,
     image: accessory2,
+    description: "Multi-functional folio crafted from premium supple leather alternative with integrated magnetic kickstand for landscape FaceTime calls.",
+    colors: ["#a28c70", "#393b43", "#77515a"],
+    compatibility: "iPhone 16, 16 Plus",
+    inStock: true
   },
   {
-    id: 2,
-    title: "iPhone Duo Folio with Kickstand – Taupe",
-    category: "New",
-    price: "$129.00 or $10.75/mo. for 12 mo.",
+    id: "acc-3",
+    title: "AirTag FineWoven Key Ring – Wildflower Blue",
+    category: "Cases & Protection",
+    badge: "Popular",
+    price: 35.00,
+    priceMonthly: 2.91,
+    image: accessory6,
+    description: "Engineered thoughtfully from durable microtwill that has a soft, suede-like feel. Stainless steel hardware is as striking as it is strong.",
+    colors: ["#7894b9", "#77515a", "#76684b", "#393b43"],
+    compatibility: "AirTag",
+    inStock: true
+  },
+  {
+    id: "acc-4",
+    title: "MagSafe Charger (2m)",
+    category: "Charging",
+    badge: "Fast Charging",
+    price: 49.00,
+    priceMonthly: 4.08,
+    image: make,
+    description: "Faster wireless charging up to 25W for iPhone 16 models when paired with the 30W USB-C Power Adapter. Perfectly aligned magnets snap instantly.",
+    colors: ["#ffffff"],
+    compatibility: "iPhone 12 through iPhone 16, AirPods Pro",
+    inStock: true
+  },
+  {
+    id: "acc-5",
+    title: "35W Dual USB-C Port Compact Power Adapter",
+    category: "Charging",
+    badge: "Essential",
+    price: 59.00,
+    priceMonthly: 4.91,
+    image: make1,
+    description: "Charge two devices at the same time, whether you're at home, in the office, or on the go. Compact prongs fold for effortless travel.",
+    colors: ["#ffffff"],
+    compatibility: "iPhone, iPad, Apple Watch, Mac",
+    inStock: true
+  },
+  {
+    id: "acc-6",
+    title: "AirPods 4 with Active Noise Cancellation",
+    category: "Audio",
+    badge: "Top Seller",
+    price: 179.00,
+    priceMonthly: 14.91,
+    image: accessory4,
+    description: "Featuring transformed acoustic architecture, Personalized Spatial Audio with dynamic head tracking, and industry-leading Open-Ear ANC.",
+    colors: ["#ffffff"],
+    compatibility: "All Apple Devices",
+    inStock: true
+  },
+  {
+    id: "acc-7",
+    title: "AirPods Max – Midnight Blue",
+    category: "Audio",
+    badge: "Lossless Audio",
+    price: 549.00,
+    priceMonthly: 45.75,
+    image: accessory5,
+    description: "Over-ear acoustic masterpiece with USB-C charging, pro-level Active Noise Cancellation, and computational audio powered by Apple H1 chips.",
+    colors: ["#1c2536", "#e4e5e7", "#845e6d", "#d19a66"],
+    compatibility: "Mac, iPad, iPhone, Apple TV",
+    inStock: true
+  },
+  {
+    id: "acc-8",
+    title: "Thunderbolt 4 (USB-C) Pro Cable (1.8m)",
+    category: "Cables",
+    badge: "Pro Gear",
+    price: 129.00,
+    priceMonthly: 10.75,
+    image: accessory8,
+    description: "Features black braided design that coils without tangling. Supports Thunderbolt 4 data transfer up to 40Gb/s and charging up to 100W.",
+    colors: ["#1d1d1f"],
+    compatibility: "Mac, iPad Pro, Studio Display",
+    inStock: true
+  },
+  {
+    id: "acc-9",
+    title: "USB-C to Lightning Adapter",
+    category: "Adapters",
+    badge: "Handy",
+    price: 29.00,
+    priceMonthly: 2.41,
     image: accessory7,
+    description: "Connect your Lightning accessories to a USB-C enabled iPhone or iPad to conveniently provide three key functions: charging, data, and audio.",
+    colors: ["#ffffff"],
+    compatibility: "iPhone 15 & 16 series, iPad Pro USB-C",
+    inStock: true
   },
+  {
+    id: "acc-10",
+    title: "46mm Burgundy Braided Solo Loop – Apple Watch",
+    category: "Accessories",
+    badge: "Autumn Series",
+    price: 99.00,
+    priceMonthly: 8.25,
+    image: make3,
+    description: "Each Braided Solo Loop features a unique, stretchable design that’s ultracomfortable and easy to slip on and off your wrist. Sweat and water resistant.",
+    colors: ["#77515a", "#1d1d1f", "#2b4c7e"],
+    compatibility: "Apple Watch 42mm, 44mm, 45mm, 46mm & Ultra",
+    inStock: true
+  },
+  {
+    id: "acc-11",
+    title: "iPhone FineWoven Wallet with MagSafe",
+    category: "Accessories",
+    badge: "Find My Ready",
+    price: 59.00,
+    priceMonthly: 4.91,
+    image: make2,
+    description: "Designed with both style and function in mind. Supports Find My so you can be notified of your wallet’s last known location if it gets separated.",
+    colors: ["#77515a", "#1d1d1f", "#a28c70", "#2d4b68"],
+    compatibility: "iPhone 12 through iPhone 16",
+    inStock: true
+  },
+  {
+    id: "acc-12",
+    title: "Beats Pill Wireless Bluetooth Speaker",
+    category: "Audio",
+    badge: "IP67 Waterproof",
+    price: 149.00,
+    priceMonthly: 12.41,
+    image: beats,
+    description: "Up to 24 hours of battery life, room-filling acoustic power with custom racetrack woofer, and lossless audio via USB-C cable.",
+    colors: ["#bf2b37", "#1d1d1f", "#d5c9b1"],
+    compatibility: "iOS and Android Devices",
+    inStock: true
+  }
 ];
 
-const accessoryBenefits = [
-  {
-    id: 1,
-    icon: "🚚",
-    title: "Fast delivery or pickup.",
-    description:
-      "Enjoy two-hour delivery from an Apple Store, free delivery, or easy pickup.",
-    details: "Choose an available delivery or pickup option at checkout.",
-  },
-  {
-    id: 2,
-    icon: "📦",
-    title: "Free and easy returns.",
-    description:
-      "Complete your return online or take it to an Apple Store.",
-    details: "Review the return options and eligibility for your order.",
-  },
-  {
-    id: 3,
-    icon: "▱",
-    title: "Shop with Apple Card.◊",
-    description:
-      "Get 3% Daily Cash back when you shop at Apple with Apple Card.",
-    details: "Eligibility and terms apply to Apple Card benefits.",
-  },
+const filterCategories = [
+  "All",
+  "Cases & Protection",
+  "Charging",
+  "Audio",
+  "Cables",
+  "Adapters",
+  "Accessories"
 ];
 
-
-
-const Accessories = () => {
-  const [activeDuoSlide, setActiveDuoSlide] = useState(0);
-  const [expandedBenefit, setExpandedBenefit] = useState(null);
+export default function Accessories() {
+  const { addToCart } = useCart();
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("featured"); // 'featured' | 'low-high' | 'high-low'
+  const [previewProduct, setPreviewProduct] = useState(null);
+  const [toastMessage, setToastMessage] = useState("");
+  const [apiAccessories, setApiAccessories] = useState([]);
 
   const scrollRef = useRef(null);
 
-  const scrollRight = () => {
+  // Fetch accessories from database to merge with curated catalog
+  useEffect(() => {
+    const loadDbAccessories = async () => {
+      try {
+        const res = await fetch("/api/products/accessories");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setApiAccessories(data.map(p => ({
+              id: p.id,
+              title: p.title,
+              category: "Accessories",
+              badge: p.badge_text || "Apple",
+              price: Number(p.price_upfront || 49),
+              priceMonthly: p.price_monthly ? Number(p.price_monthly) : Math.round(Number(p.price_upfront || 49) / 12 * 100) / 100,
+              image: p.image_url || make,
+              description: p.description || "Official Apple accessory engineered with the highest quality standards.",
+              colors: p.colors && p.colors.length ? p.colors : ["#1d1d1f", "#ffffff"],
+              compatibility: "Apple Devices",
+              inStock: p.stock > 0
+            })));
+          }
+        }
+      } catch (err) {
+        console.warn("Using curated accessories catalog:", err);
+      }
+    };
+
+    loadDbAccessories();
+  }, []);
+
+  // Merge database items with curated items (avoiding duplicates)
+  const allProducts = useMemo(() => {
+    const existingTitles = new Set(curatedAccessories.map(c => c.title.toLowerCase()));
+    const uniqueApi = apiAccessories.filter(a => !existingTitles.has(a.title.toLowerCase()));
+    return [...curatedAccessories, ...uniqueApi];
+  }, [apiAccessories]);
+
+  // Filter and sort products
+  const filteredProducts = useMemo(() => {
+    return allProducts.filter((product) => {
+      const matchesCategory =
+        selectedCategory === "All" ||
+        product.category.toLowerCase().includes(selectedCategory.toLowerCase());
+      const matchesSearch =
+        searchQuery.trim() === "" ||
+        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    }).sort((a, b) => {
+      if (sortOption === "low-high") return a.price - b.price;
+      if (sortOption === "high-low") return b.price - a.price;
+      return 0; // featured maintains original curated priority
+    });
+  }, [allProducts, selectedCategory, searchQuery, sortOption]);
+
+  const handleAddToCart = (product, e) => {
+    if (e) e.stopPropagation();
+    addToCart(product, 1);
+    setToastMessage(`✓ Added "${product.title}" to your Bag.`);
+    setTimeout(() => setToastMessage(""), 3500);
+  };
+
+  const scrollCategoryRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: 260,
-        behavior: "smooth",
-      });
+      scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
     }
   };
 
   return (
-    <>
-      <section className="accessories-section">
-
-        {/* =====================================
-            ACCESSORIES HEADER
-        ===================================== */}
-        <div className="accessories-header">
-
-          <h1 className="accessories-title">
-            Accessories
-          </h1>
-
-          <div className="accessories-links">
-
-            <a href="#">
-              Connect with a Specialist
-              <span>↗</span>
-            </a>
-
-            <a href="#">
-              Find an Apple Store
-              <span>↗</span>
-            </a>
-
+    <div className="accessories-page-wrapper">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="accessories-toast">
+          <span>{toastMessage}</span>
+          <div className="toast-actions">
+            <Link to="/bag" className="toast-link">Review Bag</Link>
+            <Link to="/checkout" className="toast-btn">Check Out</Link>
           </div>
         </div>
+      )}
 
-
-        {/* =====================================
-            CATEGORY CAROUSEL
-        ===================================== */}
-        <div className="accessories-carousel-wrapper">
-
-          <div
-            ref={scrollRef}
-            className="accessories-scroll"
-          >
-
-            {categories.map((item) => (
-              <div
-                key={item.name}
-                className="accessory-item"
-              >
-
-                {/* Image */}
-                <div className="accessory-image">
-                  <img
-                    src={item.imageSrc}
-                    alt={item.name}
-                  />
-                </div>
-
-                {/* Name */}
-                <span className="accessory-name">
-                  {item.name}
-                </span>
-
-              </div>
-            ))}
-
+      {/* Hero Section */}
+      <section className="accessories-hero">
+        <div className="accessories-hero-container">
+          <span className="hero-eyebrow">Apple Accessories</span>
+          <h1 className="hero-heading">Mix. Match. MagSafe.</h1>
+          <p className="hero-subtext">
+            Explore colorful cases, fast chargers, premium audio, and essential adapters engineered specifically for your Apple devices.
+          </p>
+          <div className="hero-actions">
+            <a href="#browse-catalog" className="hero-btn-primary">Shop All Accessories</a>
+            <Link to="/store" className="hero-btn-secondary">Explore Apple Store</Link>
           </div>
-
-
-          {/* =====================================
-              RIGHT ARROW
-          ===================================== */}
-          <button
-            type="button"
-            className="accessories-arrow"
-            onClick={scrollRight}
-            aria-label="Scroll right"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                d="M9 5l7 7-7 7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-
-        </div>
-
-      </section>
-
-      {/* =========================================
-      ACCESSORIES PRODUCT CAROUSEL
-  ========================================= */}
-
-      <section className="accessories-product-carousel">
-
-        <div className="accessories-carousel-track">
-
-          {/* AirPods 5 */}
-          <div className="accessories-product-card accessories-airpods-card">
-
-            <div className="accessories-card-content">
-              <h2>AirPods 5</h2>
-
-              <p>
-                Discover the magic of Active Noise Cancellation.
-              </p>
-
-              <a href="#">
-                Shop <span>›</span>
-              </a>
-            </div>
-
-            <img
-              src={ipad2}
-              alt="AirPods 5"
-              className="accessories-card-image"
-            />
-
-          </div>
-
-
-          {/* Mix & Match */}
-          <div className="accessories-product-card accessories-mix-card">
-
-            <div className="accessories-card-content">
-
-              <h2>
-                Mix it. Match it. Make it yours.
-              </h2>
-
-              <p>
-                Pair your iPhone with a MagSafe case or wallet,
-                Wrist Strap, or Crossbody Strap in a new mix
-                of colors and textures.
-              </p>
-
-              <a href="#">
-                Shop all <span>›</span>
-              </a>
-
-            </div>
-
-            <div className="accessories-products-image">
-              <img
-                src={ipad3}
-                alt="MagSafe accessories"
-              />
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      {/* =========================================================
-    FEATURED ACCESSORIES — OUR TOP PICKS
-========================================================= */}
-      <section className="accessories-featured">
-
-        <div className="accessories-featured-header">
-          <h2>Our top picks.</h2>
-          <span>Your next favorites.</span>
-        </div>
-
-        <div className="accessories-featured-grid">
-
-          {/* 1. Crossbody Strap */}
-          <div className="accessories-featured-card">
-
-            <div className="accessories-featured-image">
-              <img
-                src={make}
-                alt="Crossbody Strap Burgundy"
-              />
-            </div>
-
-            <div className="accessories-featured-info">
-
-              <h3>Crossbody Strap</h3>
-
-              <p className="accessories-featured-color">
-                Burgundy
-              </p>
-
-              <div className="accessories-color-dots">
-                <span className="accessory-dot burgundy"></span>
-                <span className="accessory-dot black"></span>
-                <span className="accessory-dot blue"></span>
-                <span className="accessory-dot beige"></span>
-              </div>
-
-              <p className="accessories-featured-description">
-                An adjustable hands-free strap made from 100% recycled PET yarn,
-                designed to clip directly into select Apple MagSafe cases.
-              </p>
-
-              <div className="accessories-featured-price">
-                <strong>$59.00</strong>
-                <span>or $4.91/mo. for 12 mo.</span>
-              </div>
-
-              <button className="accessories-featured-buy">
-                Buy
-              </button>
-
-            </div>
-          </div>
-
-
-          {/* 2. iPhone Clear Case */}
-          <div className="accessories-featured-card">
-
-            <div className="accessories-featured-image">
-              <img
-                src={make1}
-                alt="iPhone 18 Pro Max Clear Case with MagSafe"
-              />
-            </div>
-
-            <div className="accessories-featured-info">
-
-              <h3>iPhone 18 Pro Max Clear Case with MagSafe</h3>
-
-              <p className="accessories-featured-color">
-                Clear
-              </p>
-
-              <div className="accessories-color-dots">
-                <span className="accessory-dot clear"></span>
-              </div>
-
-              <p className="accessories-featured-description">
-                A thin, protective clear case that showcases the deep burgundy
-                finish of iPhone 18 Pro Max, with built-in MagSafe magnetic
-                alignment.
-              </p>
-
-              <div className="accessories-featured-price">
-                <strong>$49.00</strong>
-                <span>or $4.08/mo. for 12 mo.</span>
-              </div>
-
-              <button className="accessories-featured-buy">
-                Buy
-              </button>
-
-            </div>
-          </div>
-
-
-          {/* 3. FineWoven Wallet */}
-          <div className="accessories-featured-card">
-
-            <div className="accessories-featured-image">
-              <img
-                src={make2}
-                alt="iPhone FineWoven Wallet with MagSafe Burgundy"
-              />
-            </div>
-
-            <div className="accessories-featured-info">
-
-              <h3>iPhone FineWoven Wallet with MagSafe</h3>
-
-              <p className="accessories-featured-color">
-                Burgundy
-              </p>
-
-              <div className="accessories-color-dots">
-                <span className="accessory-dot burgundy"></span>
-                <span className="accessory-dot black"></span>
-                <span className="accessory-dot taupe"></span>
-                <span className="accessory-dot blue"></span>
-              </div>
-
-              <p className="accessories-featured-description">
-                A magnetic card wallet constructed from microtwill FineWoven
-                material that snaps onto the back of MagSafe-compatible
-                iPhone cases.
-              </p>
-
-              <div className="accessories-featured-price">
-                <strong>$59.00</strong>
-                <span>or $4.91/mo. for 12 mo.</span>
-              </div>
-
-              <button className="accessories-featured-buy">
-                Buy
-              </button>
-
-            </div>
-          </div>
-
-
-          {/* 4. Braided Solo Loop */}
-          <div className="accessories-featured-card">
-
-            <div className="accessories-featured-image">
-              <img
-                src={make3}
-                alt="46mm Burgundy Braided Solo Loop"
-              />
-            </div>
-
-            <div className="accessories-featured-info">
-
-              <h3>46mm Burgundy Braided Solo Loop</h3>
-
-              <p className="accessories-featured-color">
-                Size 3 · Burgundy
-              </p>
-
-              <div className="accessories-color-dots">
-                <span className="accessory-dot burgundy"></span>
-                <span className="accessory-dot black"></span>
-                <span className="accessory-dot blue"></span>
-              </div>
-
-              <p className="accessories-featured-description">
-                A stretchable, lug-integrated Apple Watch strap woven from
-                recycled polyester thread interthreaded with silicone threads.
-              </p>
-
-              <div className="accessories-featured-price">
-                <strong>$99.00</strong>
-                <span>or $8.25/mo. for 12 mo.</span>
-              </div>
-
-              <button className="accessories-featured-buy">
-                Buy
-              </button>
-
-            </div>
-          </div>
-
         </div>
       </section>
 
-      {/* CASES AND PROTECTION SHOWCASE */}
-
-      <section className="case-protection-section">
-        <div className="case-protection-grid">
-
-          {caseProtectionProducts.map((product) => (
-            <article
-              key={product.id}
-              className={`case-protection-card ${product.type === "feature" ? "case-protection-feature" : ""
-                }`}
-            >
-              <a
-                href={product.link || "#"}
-                className="case-protection-image"
-                aria-label={product.title}
-              >
-                <img src={product.image} alt={product.title} />
-              </a>
-
-              <div className="case-protection-info">
-                <span className={`case-protection-category ${product.type === "feature" ? "muted" : ""
-                  }`}>
-                  {product.category}
-                </span>
-
-                <h3>{product.title}</h3>
-
-                {product.colors?.length > 0 && (
-                  <div className="case-protection-colors">
-                    {product.colors.map((color, index) => (
-                      <span
-                        key={index}
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
+      {/* Device Category Carousel */}
+      <section className="accessories-devices-carousel">
+        <div className="devices-carousel-container">
+          <h2 className="carousel-title">Shop by Device</h2>
+          <div className="carousel-track-wrapper">
+            <div ref={scrollRef} className="devices-track">
+              {categoryNavigation.map((device) => (
+                <Link to={device.path} key={device.name} className="device-item-card">
+                  <div className="device-thumb">
+                    <img src={device.imageSrc} alt={device.name} />
                   </div>
-                )}
-
-                {product.price && (
-                  <p className="case-protection-price">{product.price}</p>
-                )}
-              </div>
-
-              {product.type === "feature" && (
-                <a
-                  href={product.link || "#"}
-                  className="case-protection-arrow"
-                  aria-label="Explore iPhone cases"
-                >
-                  ›
-                </a>
-              )}
-            </article>
-          ))}
-
-        </div>
-      </section>
-
-
-      {/* IPHONE DUO CASE SHOWCASE */}
-
-      <section className="duo-showcase-section">
-        <div className="duo-showcase-grid">
-
-          {duoCaseItems.map((item) => (
-            <article className="duo-product-card" key={item.id}>
-              <div className="duo-product-image">
-                <img src={item.image} alt={item.title} />
-              </div>
-
-              <div className="duo-product-colors">
-                <span />
-                <span />
-              </div>
-
-              <div className="duo-product-info">
-                <span>{item.category}</span>
-                <h3>{item.title}</h3>
-                <p>{item.price}</p>
-              </div>
-            </article>
-          ))}
-
-          <article className="duo-feature-card">
-            <div className="duo-feature-heading">
-              <span>iPhone Cases &amp; Protection</span>
-              <h2>Snaps on. Stands up.</h2>
+                  <span className="device-label">{device.name}</span>
+                </Link>
+              ))}
             </div>
-
-            <div className="duo-feature-image">
-              <img
-                src={accessory8}
-                alt="iPhone case with built-in kickstand"
-              />
-            </div>
-
             <button
               type="button"
-              className="duo-feature-arrow duo-arrow-left"
-              aria-label="Previous image"
-              onClick={() =>
-                setActiveDuoSlide((prev) => (prev === 0 ? 1 : 0))
-              }
-            >
-              ‹
-            </button>
-
-            <button
-              type="button"
-              className="duo-feature-arrow duo-arrow-right"
-              aria-label="Next image"
-              onClick={() =>
-                setActiveDuoSlide((prev) => (prev === 0 ? 1 : 0))
-              }
+              className="carousel-nav-btn"
+              onClick={scrollCategoryRight}
+              aria-label="Scroll devices"
             >
               ›
             </button>
-          </article>
-
-        </div>
-
-        <div className="duo-shop-all">
-          <a href="#">Shop all</a>
+          </div>
         </div>
       </section>
 
+      {/* Main Browse Catalog Section */}
+      <section id="browse-catalog" className="accessories-catalog-section">
+        <div className="catalog-container">
+          <div className="catalog-header-bar">
+            <div>
+              <h2 className="catalog-title">Explore Accessories</h2>
+              <p className="catalog-subtitle">Showing {filteredProducts.length} accessories</p>
+            </div>
 
-      {/* ACCESSORIES BENEFITS SECTION */}
-
-      <section className="accessory-benefits-section">
-        <h2 className="accessory-benefits-heading">
-          Why Apple is the best place to buy accessories.
-        </h2>
-
-        <div className="accessory-benefits-grid">
-          {accessoryBenefits.map((item) => (
-            <article className="accessory-benefit-card" key={item.id}>
-              <div className="accessory-benefit-icon">
-                {item.icon}
+            {/* Search within accessories */}
+            <div className="catalog-controls">
+              <div className="catalog-search-box">
+                <FiSearch size={16} />
+                <input
+                  type="text"
+                  placeholder="Search accessories..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery && (
+                  <button type="button" onClick={() => setSearchQuery("")} className="clear-search-btn">
+                    <FiX size={14} />
+                  </button>
+                )}
               </div>
 
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+              {/* Price Sort */}
+              <select
+                className="catalog-sort-select"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+              >
+                <option value="featured">Sort: Featured</option>
+                <option value="low-high">Price: Low to High</option>
+                <option value="high-low">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
 
-              {expandedBenefit === item.id && (
-                <div className="accessory-benefit-details">
-                  {item.details}
-                </div>
-              )}
+          {/* Category Filter Pills */}
+          <div className="category-pills-row">
+            {filterCategories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className={`filter-pill ${selectedCategory === cat ? "active" : ""}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
 
+          {/* Product Grid */}
+          {filteredProducts.length === 0 ? (
+            <div className="no-products-state">
+              <FiFilter size={36} color="#86868b" />
+              <h3>No matching accessories found</h3>
+              <p>Try clearing your search query or selecting a different category.</p>
               <button
                 type="button"
-                className="accessory-benefit-expand"
-                aria-label="Expand benefit details"
-                onClick={() =>
-                  setExpandedBenefit(
-                    expandedBenefit === item.id ? null : item.id
-                  )
-                }
+                className="reset-filters-btn"
+                onClick={() => {
+                  setSelectedCategory("All");
+                  setSearchQuery("");
+                }}
               >
-                {expandedBenefit === item.id ? "×" : "+"}
+                Reset Filters
               </button>
-            </article>
-          ))}
-        </div>
+            </div>
+          ) : (
+            <div className="accessories-product-grid">
+              {filteredProducts.map((product) => (
+                <article
+                  key={product.id}
+                  className="accessory-product-card"
+                  onClick={() => setPreviewProduct(product)}
+                >
+                  <div className="card-badge-row">
+                    {product.badge && <span className="acc-badge">{product.badge}</span>}
+                  </div>
 
-        <div className="accessory-benefits-controls">
-          <button type="button" aria-label="Previous">‹</button>
-          <button type="button" aria-label="Next">›</button>
+                  <div className="card-image-box">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div className="card-info-box">
+                    <span className="card-category">{product.category}</span>
+                    <h3 className="card-product-title">{product.title}</h3>
+
+                    {/* Color Swatches */}
+                    {product.colors && product.colors.length > 0 && (
+                      <div className="card-swatches">
+                        {product.colors.map((c, i) => (
+                          <span
+                            key={i}
+                            className="swatch-dot"
+                            style={{ backgroundColor: c }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="card-price-row">
+                      <div className="price-stack">
+                        <strong className="price-upfront">${product.price.toFixed(2)}</strong>
+                        {product.priceMonthly && (
+                          <span className="price-monthly">or ${product.priceMonthly.toFixed(2)}/mo.</span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="card-action-buttons">
+                      <button
+                        type="button"
+                        className="btn-add-to-bag"
+                        onClick={(e) => handleAddToCart(product, e)}
+                      >
+                        <FiShoppingBag size={14} /> Add to Bag
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-quick-preview"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewProduct(product);
+                        }}
+                      >
+                        <FiEye size={14} /> Quick View
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-
-      {/* ACCESSORIES FOOTER NAVIGATION */}
-       <h1>Accessories</h1>
-      <section className="accessories-footer-nav">
-        <div className="accessories-footer-container">
-
-          <div className="accessories-footer-column">
-            <h3>Shop by Product</h3>
-            <Link to="#">iPhone</Link>
-            <Link to="#">iPad</Link>
-            <Link to="#">Mac</Link>
-            <Link to="#">Apple Watch</Link>
-            <Link to="#">Apple Vision Pro</Link>
-            <Link to="#">AirPods</Link>
-            <Link to="#">TV &amp; Home</Link>
-            <Link to="#">AirTag</Link>
-            <Link to="#">Beats</Link>
+      {/* Apple Benefits Bar */}
+      <section className="accessories-perks-bar">
+        <div className="perks-container">
+          <div className="perk-cell">
+            <FiTruck size={24} color="#0071e3" />
+            <div>
+              <h4>Free Next-Day Delivery</h4>
+              <p>On all orders with guaranteed prompt courier service.</p>
+            </div>
           </div>
-
-          <div className="accessories-footer-column">
-            <h3>Shop by Category</h3>
-            <Link to="#">Software</Link>
-            <Link to="#">Chargers &amp; Adapters</Link>
-            <Link to="#">Smart Home Accessories</Link>
-            <Link to="#">Health &amp; Fitness</Link>
-            <Link to="#">Office Accessories</Link>
-            <Link to="#">Cases &amp; Protection</Link>
-            <Link to="#">Hard Drives &amp; Storage</Link>
-            <Link to="#">Headphones &amp; Speakers</Link>
-            <Link to="#">Content Creation</Link>
-            <Link to="#">Mice &amp; Keyboards</Link>
-            <Link to="#">Gaming</Link>
+          <div className="perk-cell">
+            <FiRotateCcw size={24} color="#0071e3" />
+            <div>
+              <h4>Free & Easy Returns</h4>
+              <p>Return online or drop off at any verified location.</p>
+            </div>
           </div>
-
-          <div className="accessories-footer-column">
-            <h3>Explore More Accessories</h3>
-            <Link to="#">College Essentials</Link>
-            <Link to="#">New Arrivals</Link>
-            <Link to="#">Made by Apple</Link>
-            <Link to="#">Accessibility</Link>
+          <div className="perk-cell">
+            <FiCreditCard size={24} color="#0071e3" />
+            <div>
+              <h4>Flexible Local Payments</h4>
+              <p>Telebirr, Chapa, CBE Birr, Bank Transfer, or Cards.</p>
+            </div>
           </div>
-
         </div>
       </section>
 
-    </>
+      {/* Quick View Modal */}
+      {previewProduct && (
+        <div className="modal-backdrop" onClick={() => setPreviewProduct(null)}>
+          <div className="quickview-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="modal-close-icon"
+              onClick={() => setPreviewProduct(null)}
+              aria-label="Close"
+            >
+              <FiX size={20} />
+            </button>
+
+            <div className="quickview-grid">
+              <div className="quickview-image-pane">
+                <img src={previewProduct.image} alt={previewProduct.title} />
+              </div>
+
+              <div className="quickview-details-pane">
+                <span className="modal-category">{previewProduct.category}</span>
+                <h2>{previewProduct.title}</h2>
+                <div className="modal-pricing">
+                  <span className="modal-price">${previewProduct.price.toFixed(2)}</span>
+                  {previewProduct.priceMonthly && (
+                    <span className="modal-monthly">or ${previewProduct.priceMonthly.toFixed(2)}/mo. for 12 months</span>
+                  )}
+                </div>
+
+                <p className="modal-description">{previewProduct.description}</p>
+
+                {previewProduct.colors && previewProduct.colors.length > 0 && (
+                  <div className="modal-colors-group">
+                    <label>Available Finishes</label>
+                    <div className="modal-swatches">
+                      {previewProduct.colors.map((c, i) => (
+                        <span key={i} className="swatch-bubble" style={{ backgroundColor: c }} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {previewProduct.compatibility && (
+                  <div className="modal-compatibility">
+                    <strong>Compatibility:</strong> {previewProduct.compatibility}
+                  </div>
+                )}
+
+                <div className="modal-stock-status">
+                  <FiCheck size={16} color="#16a34a" /> In stock and ready to ship
+                </div>
+
+                <div className="modal-actions-row">
+                  <button
+                    type="button"
+                    className="modal-add-btn"
+                    onClick={() => {
+                      handleAddToCart(previewProduct);
+                      setPreviewProduct(null);
+                    }}
+                  >
+                    <FiShoppingBag size={16} /> Add to Bag (${previewProduct.price.toFixed(2)})
+                  </button>
+                  <Link
+                    to="/checkout"
+                    onClick={() => {
+                      addToCart(previewProduct, 1);
+                      setPreviewProduct(null);
+                    }}
+                    className="modal-checkout-btn"
+                  >
+                    Buy Now
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Preserve Existing CMS Website Sections */}
+      <SectionRenderer category="Accessories" />
+    </div>
   );
-};
-
-export default Accessories;
+}

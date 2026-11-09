@@ -13,6 +13,7 @@ import {
   FiAlertCircle,
   FiSun,
   FiMoon,
+  FiCreditCard,
 } from "react-icons/fi";
 
 
@@ -68,9 +69,38 @@ export default function Settings() {
     return localStorage.getItem("admin-theme") === "dark";
   });
 
-  const getToken = () => {
-    // Change "token" if your signin page uses a different storage key.
-    return localStorage.getItem("token");
+  const [gateways, setGateways] = useState([]);
+  const [gatewaysLoading, setGatewaysLoading] = useState(false);
+
+  const fetchGateways = async () => {
+    setGatewaysLoading(true);
+    try {
+      const data = await request("/payments/admin/gateways");
+      if (Array.isArray(data)) {
+        setGateways(data);
+      }
+    } catch (err) {
+      console.error("Failed to load gateways in settings:", err);
+    } finally {
+      setGatewaysLoading(false);
+    }
+  };
+
+  const updateGatewaySetting = async (key, updates) => {
+    try {
+      await request(`/payments/admin/gateways/${key}`, {
+        method: "PUT",
+        body: JSON.stringify(updates),
+      });
+      showMessage(`Updated settings for '${key}'.`);
+      fetchGateways();
+    } catch (err) {
+      showMessage(err.message, "error");
+    }
+  };
+
+const getToken = () => {
+    return localStorage.getItem("adminToken") || localStorage.getItem("token");
   };
 
   const request = async (path, options = {}) => {
@@ -240,11 +270,14 @@ export default function Settings() {
   useEffect(() => {
     if (activeTab === "system") {
       checkSystem();
+    } else if (activeTab === "payments") {
+      fetchGateways();
     }
   }, [activeTab]);
 
   const tabs = [
     { id: "store", label: "Store Settings", icon: <FiSettings /> },
+    { id: "payments", label: "Payment Gateways", icon: <FiCreditCard /> },
     { id: "website", label: "Website Config", icon: <FiSliders /> },
     { id: "security", label: "Security & Access", icon: <FiShield /> },
     { id: "notifications", label: "Notifications", icon: <FiBell /> },
@@ -497,6 +530,94 @@ export default function Settings() {
                 >
                   <FiSave /> {saving ? "Saving..." : "Save Store Changes"}
                 </button>
+              </div>
+            </section>
+          )}
+
+          {activeTab === "payments" && (
+            <section style={cardStyle}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <h2>Payment Gateways & Providers</h2>
+                  <p>Configure which payment methods are available to customers at checkout, toggle sandbox test modes, and update instructions.</p>
+                </div>
+                <button
+                  type="button"
+                  className="secondary-btn"
+                  onClick={fetchGateways}
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <FiRefreshCw size={14} className={gatewaysLoading ? "spin" : ""} /> Refresh
+                </button>
+              </div>
+
+              {gatewaysLoading && <p>Loading gateway configurations...</p>}
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "20px" }}>
+                {gateways.map((gw) => (
+                  <div
+                    key={gw.gatewayKey}
+                    style={{
+                      background: "var(--settings-bg, #f8fafc)",
+                      border: "1px solid var(--settings-border, #e2e8f0)",
+                      borderRadius: "14px",
+                      padding: "20px",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <strong style={{ fontSize: "16px", color: "var(--settings-text, #0f172a)" }}>{gw.name}</strong>
+                          {gw.badge && (
+                            <span style={{ fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "6px", background: "#e0f2fe", color: "#0369a1" }}>
+                              {gw.badge}
+                            </span>
+                          )}
+                        </div>
+                        <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#64748b" }}>{gw.description}</p>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", cursor: "pointer" }}>
+                          <input
+                            type="checkbox"
+                            checked={gw.isActive}
+                            onChange={(e) => updateGatewaySetting(gw.gatewayKey, { isActive: e.target.checked })}
+                          />
+                          <strong>{gw.isActive ? "Active in Store" : "Disabled"}</strong>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginTop: "14px", paddingTop: "14px", borderTop: "1px solid #e2e8f0" }}>
+                      <div>
+                        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", marginBottom: "8px" }}>
+                          <input
+                            type="checkbox"
+                            checked={gw.isTestMode}
+                            onChange={(e) => updateGatewaySetting(gw.gatewayKey, { isTestMode: e.target.checked })}
+                          />
+                          <span>Sandbox / Test Mode (Safe Testing)</span>
+                        </label>
+                        <div style={{ fontSize: "12px", color: "#64748b" }}>
+                          Mode: <strong style={{ color: gw.isTestMode ? "#b45309" : "#166534" }}>{gw.isTestMode ? "Sandbox (Test)" : "Live Production"}</strong>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "#64748b", marginBottom: "4px" }}>
+                          Customer Instructions:
+                        </label>
+                        <input
+                          style={{ ...inputStyle, fontSize: "12px", padding: "8px 10px" }}
+                          defaultValue={gw.instructions || ""}
+                          onBlur={(e) => updateGatewaySetting(gw.gatewayKey, { instructions: e.target.value })}
+                          placeholder="Instructions displayed to customer..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
           )}

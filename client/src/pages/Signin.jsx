@@ -66,7 +66,7 @@ function Signin() {
       if (adminResponse.ok && adminData.token && adminData.user?.role === "admin") {
         // Admin login successful.
         localStorage.setItem("adminToken", adminData.token);
-        localStorage.removeItem("token");
+        localStorage.setItem("token", adminData.token);
         localStorage.setItem("user", JSON.stringify(adminData.user));
 
         navigate("/admindashboard", { replace: true });
@@ -105,10 +105,20 @@ function Signin() {
 
       const user = data.user;
 
-      if (!user || user.role !== "user") {
+      if (!user) {
         setError(
           "The server did not return a valid user account. Please check your authentication API."
         );
+        return;
+      }
+
+      if (user.role === "admin") {
+        if (data.token) {
+          localStorage.setItem("adminToken", data.token);
+          localStorage.setItem("token", data.token);
+        }
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate("/admindashboard", { replace: true });
         return;
       }
 

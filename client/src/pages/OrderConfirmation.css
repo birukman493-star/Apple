@@ -1,0 +1,528 @@
+/* ==================================================
+   APPLE ORDER CONFIRMATION STYLES
+================================================== */
+
+.order-confirmation-page {
+  min-height: 100vh;
+  background-color: #f5f5f7;
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 60px 24px 100px;
+}
+
+.confirmation-container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Loading Screen */
+.confirmation-loading-screen {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #6e6e73;
+}
+
+.apple-spinner-large {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e5e5ea;
+  border-top-color: #0071e3;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Hero */
+.confirmation-hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.success-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #e8f5e9;
+  margin-bottom: 20px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.apple-check-icon {
+  color: #34c759;
+}
+
+.confirmation-eyebrow {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #34c759;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.confirmation-hero h1 {
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #1d1d1f;
+  margin: 0 0 12px;
+}
+
+.confirmation-sub {
+  font-size: 17px;
+  color: #6e6e73;
+  margin: 0 0 28px;
+}
+
+.order-ref-card {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #d2d2d7;
+  border-radius: 14px;
+  padding: 14px 28px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.ref-block {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.ref-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #86868b;
+  margin-bottom: 2px;
+}
+
+.ref-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.ref-value.monospace {
+  font-family: monospace;
+  color: #0071e3;
+  font-size: 14px;
+}
+
+.ref-divider {
+  width: 1px;
+  height: 32px;
+  background: #e5e5ea;
+  margin: 0 24px;
+}
+
+.ref-copy-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-btn {
+  background: none;
+  border: 1px solid #d2d2d7;
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+  color: #6e6e73;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s ease;
+}
+
+.copy-btn:hover {
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+/* Callout */
+.payment-status-callout {
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 32px;
+  border: 1px solid;
+}
+
+.callout-paid {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.callout-pending {
+  background-color: #fffbeb;
+  border-color: #fde68a;
+}
+
+.callout-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.callout-header h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.callout-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #424245;
+  line-height: 1.45;
+}
+
+/* Bank Slip Submission Form */
+.bank-slip-form-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.bank-slip-form h5 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #1d1d1f;
+}
+
+.slip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.slip-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slip-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6e6e73;
+}
+
+.slip-group input,
+.slip-group select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d2d2d7;
+  font-size: 13px;
+  background: #ffffff;
+  outline: none;
+}
+
+.slip-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #0071e3;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 980px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slip-submit-btn:hover {
+  background-color: #0077ed;
+}
+
+.slip-success-msg {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #bbf7d0;
+}
+
+.slip-success-msg strong {
+  display: block;
+  font-size: 14px;
+  color: #15803d;
+}
+
+.slip-success-msg p {
+  margin: 0;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.slip-error {
+  color: #dc2626;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+/* Details Grid */
+.confirmation-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 32px;
+  align-items: start;
+}
+
+.items-receipt-card,
+.shipping-receipt-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e5e5ea;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.items-receipt-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 18px;
+  color: #1d1d1f;
+}
+
+.receipt-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f2f2f7;
+}
+
+.receipt-item-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.receipt-item-img {
+  width: 56px;
+  height: 56px;
+  background: #fafafa;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.receipt-item-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.receipt-item-details {
+  flex: 1;
+}
+
+.receipt-item-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 2px;
+}
+
+.receipt-item-qty {
+  font-size: 12px;
+  color: #86868b;
+}
+
+.receipt-item-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* Receipt Totals */
+.receipt-totals-table {
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.totals-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #6e6e73;
+}
+
+.totals-line.total-highlight {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e5ea;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* Shipping Receipt Card */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.section-head h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: #1d1d1f;
+}
+
+.shipping-text {
+  font-size: 14px;
+  color: #424245;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.delivery-timing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f5f7;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-top: 6px;
+}
+
+.info-divider {
+  height: 1px;
+  background: #f2f2f7;
+  margin: 20px 0;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 980px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-paid {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.confirmation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.apple-btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0071e3;
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 980px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.apple-btn-primary:hover {
+  background: #0077ed;
+  color: #ffffff;
+}
+
+.apple-btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #1d1d1f;
+  border: 1px solid #d2d2d7;
+  padding: 12px 20px;
+  border-radius: 980px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.apple-btn-secondary:hover {
+  background: #f5f5f7;
+}
+
+.confirmation-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.back-to-store-link {
+  color: #0071e3;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-to-store-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+  .confirmation-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .confirmation-hero h1 {
+    font-size: 32px;
+  }
+
+  .order-ref-card {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .ref-divider {
+    display: none;
+  }
+}
+

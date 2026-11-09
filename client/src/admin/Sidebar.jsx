@@ -1,7 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   FiGrid, FiBox, FiLayers, FiShoppingCart,
-  FiCreditCard, FiUsers, FiGlobe, FiSettings, FiLogOut, FiChevronRight
+  FiCreditCard, FiUsers, FiGlobe, FiSettings, FiLogOut, FiChevronRight,
+  FiExternalLink, FiUser
 } from 'react-icons/fi';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
@@ -54,6 +56,29 @@ export default function Sidebar({ activeTab, setActiveTab }) {
               {activeTab === item.id && <FiChevronRight size={14} />}
             </button>
           ))}
+
+          <div className="nav-section-title">Storefront &amp; User</div>
+          <Link
+            to="/"
+            className="nav-item"
+            style={{ textDecoration: 'none', color: '#94a3b8' }}
+            title="Preview Online Store"
+          >
+            <FiGlobe size={18} />
+            <span style={{ flex: 1 }}>View Store</span>
+            <FiExternalLink size={14} />
+          </Link>
+
+          <Link
+            to="/account"
+            className="nav-item"
+            style={{ textDecoration: 'none', color: '#94a3b8' }}
+            title="Open Apple Account Dashboard"
+          >
+            <FiUser size={18} />
+            <span style={{ flex: 1 }}>User Account</span>
+            <FiChevronRight size={14} />
+          </Link>
         </div>
       </div>
 

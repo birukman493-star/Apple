@@ -1,231 +1,521 @@
-
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import {
+  FiSearch,
+  FiX,
+  FiShoppingBag,
+  FiClock,
+  FiTrendingUp,
+  FiTrash2,
+  FiArrowRight,
+  FiFilter,
+  FiTag,
+  FiCheck
+} from "react-icons/fi";
 import "./Search.css";
 
-function Search() {
+const POPULAR_SEARCHES = [
+  "iPhone 16 Pro",
+  "MacBook Pro M4",
+  "AirPods Pro",
+  "Apple Watch Ultra",
+  "iPad Air",
+  "Apple Vision Pro",
+  "MagSafe Charger",
+  "FineWoven Wallet"
+];
+
+const CATEGORIES = [
+  { name: "All", label: "All Products" },
+  { name: "iPhone", label: "iPhone" },
+  { name: "Mac", label: "Mac" },
+  { name: "iPad", label: "iPad" },
+  { name: "Watch", label: "Apple Watch" },
+  { name: "Vision", label: "Vision Pro" },
+  { name: "AirPods", label: "AirPods" },
+  { name: "TV & Home", label: "TV & Home" },
+  { name: "Accessories", label: "Accessories" }
+];
+
+const PRICE_RANGES = [
+  { id: "all", label: "All Prices", min: 0, max: Infinity },
+  { id: "under-100", label: "Under $100", min: 0, max: 100 },
+  { id: "100-500", label: "$100 – $500", min: 100, max: 500 },
+  { id: "500-1000", label: "$500 – $1,000", min: 500, max: 1000 },
+  { id: "over-1000", label: "$1,000 & Above", min: 1000, max: Infinity }
+];
+
+export default function Search() {
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+
   const [query, setQuery] = useState("");
+  const [activeQuery, setActiveQuery] = useState("");
   const [products, setProducts] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [isSuggesting, setIsSuggesting] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
   const [error, setError] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
 
+  // Filters & Sorting
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedPriceRange, setSelectedPriceRange] = useState("all");
+  const [sortOption, setSortOption] = useState("relevance"); // 'relevance' | 'low-high' | 'high-low'
+
+  // Toast
+  const [toastMsg, setToastMsg] = useState("");
+
+  // Recent Searches
+  const [recentSearches, setRecentSearches] = useState(() => {
+    try {
+      const saved = localStorage.getItem("apple_recent_searches");
+      return saved ? JSON.parse(saved) : ["iPhone 16", "MacBook", "AirPods"];
+    } catch {
+      return ["iPhone 16", "MacBook", "AirPods"];
+    }
+  });
+
+  const searchInputRef = useRef(null);
+
+  // Save recent search
+  const addRecentSearch = (term) => {
+    const trimmed = term.trim();
+    if (!trimmed) return;
+    setRecentSearches((prev) => {
+      const filtered = prev.filter((item) => item.toLowerCase() !== trimmed.toLowerCase());
+      const updated = [trimmed, ...filtered].slice(0, 8);
+      try {
+        localStorage.setItem("apple_recent_searches", JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  };
+
+  const removeRecentSearch = (term, e) => {
+    e.stopPropagation();
+    setRecentSearches((prev) => {
+      const updated = prev.filter((item) => item !== term);
+      try {
+        localStorage.setItem("apple_recent_searches", JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  };
+
+  const clearAllRecent = () => {
+    setRecentSearches([]);
+    localStorage.removeItem("apple_recent_searches");
+  };
+
+  // Live suggestions query
   useEffect(() => {
-    const searchQuery = query.trim();
-
-    if (!searchQuery) {
-      setProducts([]);
-      setSearched(false);
-      setError("");
-      setLoading(false);
+    const q = query.trim();
+    if (!q) {
+      setSuggestions([]);
+      setIsSuggesting(false);
       return;
     }
 
-    const controller = new AbortController();
-
     const timer = setTimeout(async () => {
-      setLoading(true);
-      setError("");
-      setSearched(true);
-
       try {
-        const response = await fetch(
-          `/api/products/search?q=${encodeURIComponent(searchQuery)}`,
-          { signal: controller.signal }
-        );
-
-        if (!response.ok) {
-          throw new Error("Product search is unavailable.");
+        const res = await fetch(`/api/products/search?q=${encodeURIComponent(q)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSuggestions(Array.isArray(data) ? data.slice(0, 5) : []);
+          setIsSuggesting(true);
         }
-
-        const data = await response.json();
-
-        setProducts(Array.isArray(data) ? data : data.products || []);
       } catch (err) {
-        if (err.name !== "AbortError") {
-          setError("Unable to load local products. Try Apple's website below.");
-          setProducts([]);
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-        }
+        console.warn("Suggestions error:", err);
       }
-    }, 350);
+    }, 200);
 
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
+    return () => clearTimeout(timer);
   }, [query]);
 
-  const appleSearchUrl = `https://www.apple.com/search/?q=${encodeURIComponent(
-    query.trim()
-  )}`;
+  // Execute full search
+  const performSearch = async (searchTerm) => {
+    const term = searchTerm.trim();
+    if (!term) return;
 
-  const categories = [
-    { name: "iPhone", image: "/iphone.png" },
-    { name: "Mac", image: "/mac.png" },
-    { name: "iPad", image: "/ipad.png" },
-    { name: "Watch", image: "/watch.png" },
-    { name: "Vision", image: "/vision.png" },
-    { name: "AirPods", image: "/airpods.png" },
-  ];
+    setActiveQuery(term);
+    setQuery(term);
+    setIsSuggesting(false);
+    setLoading(true);
+    setError("");
+    setHasSearched(true);
+    addRecentSearch(term);
+
+    try {
+      const response = await fetch(`/api/products/search?q=${encodeURIComponent(term)}`);
+      if (!response.ok) {
+        throw new Error("Unable to retrieve products at this time.");
+      }
+      const data = await response.json();
+      setProducts(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err.message || "Failed to search product database.");
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      performSearch(query);
+    }
+  };
+
+  const handleQuickTermClick = (term) => {
+    setQuery(term);
+    performSearch(term);
+  };
+
+  // Filter & Sort results
+  const filteredProducts = useMemo(() => {
+    const activeRange = PRICE_RANGES.find((r) => r.id === selectedPriceRange) || PRICE_RANGES[0];
+
+    return products.filter((p) => {
+      const matchesCat =
+        selectedCategory === "All" ||
+        (p.category && p.category.toLowerCase().includes(selectedCategory.toLowerCase()));
+      const price = Number(p.price_upfront || p.price || 0);
+      const matchesPrice = price >= activeRange.min && price <= activeRange.max;
+      return matchesCat && matchesPrice;
+    }).sort((a, b) => {
+      const priceA = Number(a.price_upfront || a.price || 0);
+      const priceB = Number(b.price_upfront || b.price || 0);
+      if (sortOption === "low-high") return priceA - priceB;
+      if (sortOption === "high-low") return priceB - priceA;
+      return 0; // relevance keeps database ranking
+    });
+  }, [products, selectedCategory, selectedPriceRange, sortOption]);
+
+  const handleAddToCart = (product, e) => {
+    if (e) e.stopPropagation();
+    addToCart(product, 1);
+    setToastMsg(`✓ Added "${product.title || product.name}" to Bag.`);
+    setTimeout(() => setToastMsg(""), 3500);
+  };
 
   return (
     <main className="apple-search-page">
-      <section className="apple-search-hero">
-        <h1>Search</h1>
-        <p>Find the Apple products you're looking for.</p>
+      {/* Toast */}
+      {toastMsg && (
+        <div className="search-floating-toast">
+          <span>{toastMsg}</span>
+          <Link to="/bag" className="toast-bag-btn">Review Bag</Link>
+          <Link to="/checkout" className="toast-checkout-btn">Check Out</Link>
+        </div>
+      )}
 
-        <form
-          className="apple-search-form"
-          onSubmit={(e) => {
-            e.preventDefault();
+      {/* Hero Search Box */}
+      <section className="search-hero-box">
+        <h1 className="search-main-heading">Search Apple</h1>
+        <p className="search-subheading">
+          Find products, hardware specs, accessories, and store availability.
+        </p>
 
-            if (query.trim()) {
-              window.location.href = appleSearchUrl;
-            }
-          }}
-        >
-          <i className="bi bi-search" aria-hidden="true"></i>
-
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search apple.com"
-            aria-label="Search products"
-          />
-
-          {query && (
-            <button
-              type="button"
-              className="search-clear"
-              onClick={() => setQuery("")}
-              aria-label="Clear search"
-            >
-              ×
+        <div className="search-bar-wrapper">
+          <form className="search-input-container" onSubmit={handleFormSubmit}>
+            <FiSearch size={22} className="search-icon-decor" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search products by name, model, or category..."
+              aria-label="Search Apple products"
+              autoFocus
+            />
+            {query && (
+              <button
+                type="button"
+                className="btn-clear-query"
+                onClick={() => {
+                  setQuery("");
+                  setActiveQuery("");
+                  setHasSearched(false);
+                  setProducts([]);
+                  searchInputRef.current?.focus();
+                }}
+                aria-label="Clear query"
+              >
+                <FiX size={18} />
+              </button>
+            )}
+            <button type="submit" className="btn-submit-search">
+              Search
             </button>
-          )}
-        </form>
+          </form>
 
-        {query.trim() && (
-          <a
-            className="apple-external-search"
-            href={appleSearchUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Search Apple's website for "{query.trim()}" ↗
-          </a>
-        )}
-      </section>
-
-      {query.trim() ? (
-        <section className="search-results">
-          <h2>Search results</h2>
-
-          {loading && <p>Searching products...</p>}
-
-          {!loading && error && (
-            <p className="search-error">{error}</p>
-          )}
-
-          {!loading && !error && searched && products.length === 0 && (
-            <p>
-              No matching products in your website's database.
-              Try searching Apple's website directly.
-            </p>
-          )}
-
-          {!loading && products.length > 0 && (
-            <div className="search-product-grid">
-              {products.map((product) => (
-                <article
-                  className="search-product-card"
-                  key={product.id}
+          {/* Live Auto-Suggest Dropdown */}
+          {isSuggesting && suggestions.length > 0 && (
+            <div className="search-suggestions-dropdown">
+              <div className="suggestions-header">Matching Products</div>
+              {suggestions.map((item) => (
+                <div
+                  key={item.id}
+                  className="suggestion-row"
+                  onClick={() => {
+                    performSearch(item.title || item.name);
+                  }}
                 >
                   <img
-                    src={
-                      product.image
-                        ? product.image.startsWith("http")
-                          ? product.image
-                          : `/uploads/${product.image}`
-                        : "/product-placeholder.png"
-                    }
-                    alt={product.name}
-                    onError={(e) => {
-                      e.currentTarget.src = "/product-placeholder.png";
-                    }}
+                    src={item.image_url || item.image || item.imageMain || "/product-placeholder.png"}
+                    alt={item.title}
+                    onError={(e) => { e.target.style.display = 'none'; }}
                   />
-
-                  <h3>{product.name}</h3>
-
-                  {product.description && (
-                    <p>{product.description}</p>
-                  )}
-
-                  {product.price != null && (
-                    <p className="search-product-price">
-                      ${product.price}
-                    </p>
-                  )}
-
-                  <Link
-                    to={
-                      product.slug
-                        ? `/product/${product.slug}`
-                        : `/product/${product.id}`
-                    }
-                    className="search-learn-more"
-                  >
-                    Learn more →
-                  </Link>
-                </article>
+                  <div className="suggestion-details">
+                    <span className="suggestion-title">{item.title || item.name}</span>
+                    <span className="suggestion-cat">{item.category}</span>
+                  </div>
+                  <div className="suggestion-price">
+                    ${Number(item.price_upfront || item.price || 0).toFixed(2)}
+                  </div>
+                </div>
               ))}
             </div>
           )}
-        </section>
-      ) : (
-        <section className="search-browse-section">
-          <h2>Explore by product</h2>
+        </div>
 
-          <div className="support-category-grid">
-            {categories.map((item) => (
-              <button
-                type="button"
-                className="support-category-item"
-                key={item.name}
-                onClick={() => setQuery(item.name)}
-              >
-                <div className="support-icon-wrap">
-                  <img src={item.image} alt={item.name} />
+        {/* Quick Links: Recent & Popular */}
+        {!hasSearched && (
+          <div className="search-discovery-panel">
+            {recentSearches.length > 0 && (
+              <div className="discovery-group">
+                <div className="discovery-group-header">
+                  <span className="group-title">
+                    <FiClock size={14} /> Recent Searches
+                  </span>
+                  <button type="button" className="clear-all-link" onClick={clearAllRecent}>
+                    Clear All
+                  </button>
                 </div>
-                <span>{item.name}</span>
-              </button>
-            ))}
+                <div className="tag-pills-row">
+                  {recentSearches.map((term) => (
+                    <span
+                      key={term}
+                      className="discovery-pill"
+                      onClick={() => handleQuickTermClick(term)}
+                    >
+                      {term}
+                      <button
+                        type="button"
+                        onClick={(e) => removeRecentSearch(term, e)}
+                        className="pill-remove-btn"
+                        title="Remove"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="discovery-group">
+              <span className="group-title">
+                <FiTrendingUp size={14} /> Popular Searches
+              </span>
+              <div className="tag-pills-row">
+                {POPULAR_SEARCHES.map((term) => (
+                  <button
+                    key={term}
+                    type="button"
+                    className="discovery-pill popular"
+                    onClick={() => handleQuickTermClick(term)}
+                  >
+                    {term}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Search Results Area */}
+      {hasSearched && (
+        <section className="search-results-area">
+          <div className="results-header-container">
+            <div>
+              <h2 className="results-title">
+                Results for "<strong>{activeQuery}</strong>"
+              </h2>
+              <span className="results-count">
+                {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""} found
+              </span>
+            </div>
+
+            {/* Filter and Sort controls */}
+            <div className="results-controls-row">
+              <select
+                className="results-dropdown"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat.name} value={cat.name}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="results-dropdown"
+                value={selectedPriceRange}
+                onChange={(e) => setSelectedPriceRange(e.target.value)}
+              >
+                {PRICE_RANGES.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="results-dropdown"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+              >
+                <option value="relevance">Sort: Relevance</option>
+                <option value="low-high">Price: Low to High</option>
+                <option value="high-low">Price: High to Low</option>
+              </select>
+            </div>
           </div>
 
-          <h2 className="search-quick-title">Quick Links</h2>
+          {/* Loading state */}
+          {loading && (
+            <div className="search-loading-box">
+              <div className="apple-spinner-small"></div>
+              <span>Searching Apple product catalog...</span>
+            </div>
+          )}
 
-          <div className="search-quick-links">
-            {["MacBook", "iPhone", "iPad", "AirPods", "Apple Watch"].map(
-              (name) => (
+          {/* Error state */}
+          {!loading && error && (
+            <div className="search-error-box">
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* Empty Results state */}
+          {!loading && !error && filteredProducts.length === 0 && (
+            <div className="search-empty-box">
+              <FiSearch size={48} className="empty-search-icon" />
+              <h3>No products found for "{activeQuery}"</h3>
+              <p>We couldn't find matches matching your active filters. Try searching for broader terms or resetting your filters.</p>
+              <div className="empty-suggestions-tags">
                 <button
                   type="button"
-                  key={name}
-                  onClick={() => setQuery(name)}
+                  className="reset-btn"
+                  onClick={() => {
+                    setSelectedCategory("All");
+                    setSelectedPriceRange("all");
+                  }}
                 >
-                  {name} →
+                  Reset Category & Price Filters
                 </button>
-              )
-            )}
-          </div>
+              </div>
+            </div>
+          )}
+
+          {/* Results Grid */}
+          {!loading && filteredProducts.length > 0 && (
+            <div className="search-products-grid">
+              {filteredProducts.map((p) => {
+                const price = Number(p.price_upfront || p.price || 0);
+                const discount = p.discount_price ? Number(p.discount_price) : null;
+                const effectivePrice = discount || price;
+                const categoryUrl = p.category
+                  ? `/${p.category.toLowerCase().replace(/[\s\-_&]/g, "")}`
+                  : "/store";
+
+                return (
+                  <article key={p.id} className="search-result-card">
+                    {p.badge_text && <span className="product-badge">{p.badge_text}</span>}
+
+                    <div className="card-thumb-container">
+                      <img
+                        src={p.image_url || p.image || p.imageMain || "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&auto=format&fit=crop"}
+                        alt={p.title || p.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&auto=format&fit=crop";
+                        }}
+                      />
+                    </div>
+
+                    <div className="card-info">
+                      <span className="card-category-label">{p.category}</span>
+                      <h3 className="card-title">{p.title || p.name}</h3>
+
+                      {p.description && (
+                        <p className="card-snippet">
+                          {p.description.length > 90
+                            ? `${p.description.slice(0, 90)}...`
+                            : p.description}
+                        </p>
+                      )}
+
+                      <div className="card-pricing">
+                        <strong className="current-price">${effectivePrice.toFixed(2)}</strong>
+                        {discount && (
+                          <span className="original-price">${price.toFixed(2)}</span>
+                        )}
+                      </div>
+
+                      <div className="card-cta-row">
+                        <button
+                          type="button"
+                          className="btn-add-bag"
+                          onClick={(e) => handleAddToCart(p, e)}
+                        >
+                          <FiShoppingBag size={14} /> Add to Bag
+                        </button>
+                        <Link to={categoryUrl} className="btn-learn-more">
+                          Learn More <FiArrowRight size={13} />
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </section>
       )}
+
+      {/* Explore Store Categories */}
+      <section className="search-categories-section">
+        <h2 className="explore-title">Explore Apple Store</h2>
+        <div className="explore-grid">
+          {[
+            { name: "iPhone", path: "/iphone", desc: "Titanium design & Apple Intelligence" },
+            { name: "Mac", path: "/mac", desc: "Supercharged by Apple M4 chips" },
+            { name: "iPad", path: "/ipad", desc: "Touch, draw, and type on pure power" },
+            { name: "Apple Watch", path: "/watch", desc: "The ultimate device for a healthy life" },
+            { name: "Apple Vision Pro", path: "/vision", desc: "Welcome to the era of spatial computing" },
+            { name: "AirPods", path: "/airpods", desc: "Immersive audio & active noise cancellation" },
+            { name: "Accessories", path: "/accessories", desc: "Cases, MagSafe charging, cables & straps" }
+          ].map((item) => (
+            <Link to={item.path} key={item.name} className="explore-card">
+              <h3>{item.name}</h3>
+              <p>{item.desc}</p>
+              <span className="explore-arrow">Shop {item.name} →</span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
-
-export default Search;

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./ProductSection.css";
 
 const ProductSection = ({
@@ -6,6 +7,8 @@ const ProductSection = ({
   description,
   image,
   dark = false,
+  learnLink = "/mac",
+  buyLink = "/store",
 }) => {
   return (
     <section className={`product-section ${dark ? "dark" : ""}`}>
@@ -17,13 +20,13 @@ const ProductSection = ({
         <p>{description}</p>
 
         <div className="product-buttons">
-          <button className="learn-button">
+          <Link to={learnLink} className="learn-button" style={{ textDecoration: "none" }}>
             Learn more
-          </button>
+          </Link>
 
-          <button className="buy-button">
+          <Link to={buyLink} className="buy-button" style={{ textDecoration: "none" }}>
             Buy
-          </button>
+          </Link>
         </div>
 
       </div>

@@ -96,7 +96,7 @@
 /* Product image */
 /* ========================= */
 
-.product-image {
+.product-section .product-image {
   width: 80%;
   max-width: 550px;
 
@@ -146,7 +146,7 @@
     font-size: 30px;
   }
 
-  .product-image {
+  .product-section .product-image {
     width: 75%;
   }
 }
@@ -171,7 +171,7 @@
     font-size: 16px;
   }
 
-  .product-image {
+  .product-section .product-image {
     width: 90%;
     bottom: -10px;
   }

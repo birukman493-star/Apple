@@ -5,12 +5,10 @@ import Home from '../components/Home'
 import YouTube from '../YouTube/YouTube'
 import Entertainment from '../components/Entertainment'
 
-
 const main = () => {
   return (
    <>
-        <Hero/>
-      {/* <ProductSection/> */}
+      <Hero/>
       <Home/>
       <YouTube/>
       <Entertainment/>

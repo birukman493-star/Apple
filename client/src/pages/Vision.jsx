@@ -1,12 +1,10 @@
-
-import React from "react";
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./Vision.css";
+import placeholder from "../constants/placeholder";
 
-
+// Local image assets
 import visionImage from "../assets/visionPro.jpg";
-// import visionImage from "../assets/visionPro.jpg";
-
 import visionPro1 from "../assets/visionPro1.jpg";
 import visionPro2 from "../assets/visionPro2.jpg";
 import visionPro3 from "../assets/visionPro3.jpg";
@@ -18,213 +16,213 @@ import visionPro8 from "../assets/vision8.jpg";
 import visionPro9 from "../assets/vision9.jpg";
 import visionPro10 from "../assets/vision10.jpg";
 import visionPro11 from "../assets/vision11.jpg";
-const visionData = [
+import visionPro12 from "../assets/vision12.jpg";
+import spatialVideo from "../assets/video2.mp4";
+import TradeInImg from "../assets/TradeIn.jpg";
+import CardImg from "../assets/Card.jpg";
+import SupportImg from "../assets/support1.png";
+
+// Local fallback mapping for closer look cards
+const localCloserLookImages = [
+  visionPro8, // Curved 3D Glass
+  visionPro5, // M5 & R1 Chips
+  visionPro2, // 23M Micro-OLED
+  visionPro3, // Spatial Audio
+  visionPro4, // Eye & Hand Tracking
+  visionPro1, // Dual Knit Band
+];
+
+// Fallback items if API is slow or offline
+const defaultCloserLook = [
   {
-    id: "intro",
-    title: "Innovation you can see, hear, and feel.",
-    description:
-      "Pushing boundaries from the inside out. Spatial experiences on Apple Vision Pro are only possible through groundbreaking Apple technology. Displays that deliver more pixels than a 4K TV to each eye. Incredible Spatial Audio. A revolutionary dual-chip design featuring the powerful M5 chip. A sophisticated array of cameras and sensors. All the elements work together to create an unprecedented experience you have to see to believe.",
-    imageSrc: visionPro1,
-    alt: "Apple Vision Pro Top View",
+    id: 1,
+    title: "Curved 3D Laminated Glass",
+    description: "A singular piece of three-dimensionally formed laminated glass acts as an optical surface for the cameras and sensors.",
+    image_url: visionPro8,
   },
+  {
+    id: 2,
+    title: "Dual-Chip Power: M5 & R1",
+    description: "The M5 chip delivers unprecedented standalone computing performance, while R1 processes 12 cameras, 5 sensors, and 6 microphones with virtually zero lag.",
+    image_url: visionPro5,
+  },
+  {
+    id: 3,
+    title: "23 Million Pixels Beyond 4K",
+    description: "Custom micro-OLED display system fits 64 pixels into the space of a single iPhone pixel for mind-blowing clarity.",
+    image_url: visionPro2,
+  },
+  {
+    id: 4,
+    title: "Acoustic Ray-Tracing Audio",
+    description: "Dual-driver audio pods deliver rich personalized sound that matches the acoustic properties of your room.",
+    image_url: visionPro3,
+  },
+  {
+    id: 5,
+    title: "Precision Eye & Hand Tracking",
+    description: "High-speed cameras and LED rings track your eyes with surgical accuracy, making navigation as natural as looking and tapping.",
+    image_url: visionPro4,
+  },
+  {
+    id: 6,
+    title: "Dual Knit Band Ergonomics",
+    description: "3D-knitted structure with overhead strap offers continuous breathability, cushioning, and effortless micro-adjustments.",
+    image_url: visionPro1,
+  },
+];
+
+// Deep-dive technology features
+const techFeatures = [
   {
     id: "display",
     title: "More pixels than a 4K TV. For each eye.",
-    description: (
-      <>
-        The <strong>custom micro-OLED display system</strong> features
-        23 million pixels, delivering stunning resolution and colors.
-        And a specially designed three-element lens creates the feeling
-        of a display that's everywhere you look.
-      </>
-    ),
+    eyebrow: "Displays",
+    description:
+      "The custom micro-OLED display system features 23 million pixels, delivering stunning resolution and wide color gamut. A specially designed three-element lens creates the feeling of a display that is everywhere you look.",
     imageSrc: visionPro2,
-    alt: "Micro-OLED Display Visual",
+    stat: "23M",
+    statLabel: "Pixels Across Two Displays",
   },
   {
     id: "audio",
     title: "Our most advanced Spatial Audio system ever.",
-    description: (
-      <>
-        Dual-driver audio pods positioned next to each ear deliver
-        personalized sound while letting you hear what's around you.
-        <strong> Spatial Audio</strong> makes sounds feel like they're
-        coming from your surroundings. Audio ray tracing analyzes your
-        room's acoustic properties to adapt and match sound to your space.
-      </>
-    ),
+    eyebrow: "Audio",
+    description:
+      "Dual-driver audio pods positioned next to each ear deliver personalized sound while letting you hear what is around you. Audio ray tracing analyzes your room acoustic properties to adapt sound to your physical space.",
     imageSrc: visionPro3,
-    alt: "Spatial Audio Pods View",
+    stat: "Spatial",
+    statLabel: "Ray-Tracing Acoustics",
   },
   {
     id: "eye-tracking",
     title: "Responsive, precision eye tracking.",
-    description: (
-      <>
-        A high-performance eye-tracking system of{" "}
-        <strong>LEDs</strong> and <strong>infrared cameras</strong>{" "}
-        projects invisible light patterns onto each eye. This advanced
-        system provides ultraprecise input, so you can accurately select
-        elements just by looking at them.
-      </>
-    ),
+    eyebrow: "Sensors",
+    description:
+      "A high-performance eye-tracking system of LEDs and infrared cameras projects invisible light patterns onto each eye. This advanced system provides ultraprecise input so you can accurately select elements simply by looking at them.",
     imageSrc: visionPro4,
-    alt: "Eye Tracking Sensor Array",
+    stat: "Sub-pixel",
+    statLabel: "Gaze Precision",
   },
   {
     id: "chips",
-    title: (
-      <>
-        Revolutionary dual-chip performance.
-        <br />
-        Now powered by M5.
-      </>
-    ),
-    description: (
-      <>
-        Apple Vision Pro makes a giant leap in chip performance with
-        the new <strong>M5</strong>. It simultaneously runs visionOS,
-        executes advanced computer vision algorithms, and delivers
-        stunning graphics. And the <strong>R1</strong> chip is
-        specifically dedicated to processing input from the cameras,
-        sensors, and microphones.
-      </>
-    ),
+    title: "Revolutionary dual-chip performance. Powered by M5.",
+    eyebrow: "Silicon",
+    description:
+      "Apple Vision Pro makes a giant leap in chip performance with the new M5. It simultaneously runs visionOS, executes computer vision algorithms, and delivers stunning graphics. The dedicated R1 chip streams images to the displays in just 12 milliseconds.",
     imageSrc: visionPro5,
-    alt: "M5 and R1 Dual-Chip Array",
-  },
-];
-// ==================================================
-// VISION PRO TECHNOLOGY GALLERY
-// ==================================================
-
-const stats = [
-  {
-    value: "120Hz",
-    label: "Enables up to",
-    detail: "refresh rates",
+    stat: "12ms",
+    statLabel: "Sensor-to-Display Latency",
   },
   {
-    value: "10%",
-    label: "Renders",
-    detail: "more pixels⁸",
-  },
-  {
-    value: "3 hours",
-    label: "Delivers up to",
-    detail: "video playback¹",
+    id: "design",
+    title: "Innovation you can see, hear, and feel.",
+    eyebrow: "Craftsmanship",
+    description:
+      "Custom aluminum alloy frame curves gently around your face, while modular components like the Light Seal and Dual Knit Band conform precisely to individual facial features for a tailored, light-sealed fit.",
+    imageSrc: visionPro1,
+    stat: "Modular",
+    statLabel: "Tailored Ergonomic Fit",
   },
 ];
 
-const galleryCards = [
+// Spatial Experiences
+const spatialExperiences = [
   {
-    id: 1,
-    title: "Spatial Display",
-    type: "large-feature",
-    imageSrc: visionPro6,
+    id: "apps",
+    category: "Apps & Workspace",
+    title: "Free your desktop. And your imagination.",
+    description:
+      "Your apps live right in your space. Arrange them anywhere, scale them to the perfect size, and stay present in the room with colleagues and family.",
+    image: visionPro6,
+    tags: ["Infinite Canvas", "Mac Virtual Display", "Multitasking"],
   },
   {
-    id: 2,
-    title: "Audio Pods Close-up",
-    type: "portrait",
-    imageSrc: visionPro7,
+    id: "entertainment",
+    category: "Entertainment",
+    title: "The ultimate personal theater.",
+    description:
+      "Transform any room into your own private cinema. Expand movies and Apple TV+ shows up to 100 feet wide with immersive Spatial Audio.",
+    image: visionPro7,
+    tags: ["100-ft Screen", "3D Movies", "Spatial Audio"],
   },
   {
-    id: 3,
-    title: "Curved Glass Front",
-    type: "portrait",
-    imageSrc: visionPro8,
+    id: "photos",
+    category: "Photos & Memories",
+    title: "Be in the moment. All over again.",
+    description:
+      "Capture and relive spatial photos and spatial videos in remarkable 3D depth with lifelike clarity. Panoramas wrap around you like you are standing right there.",
+    image: visionPro9,
+    tags: ["Spatial Photos", "Spatial Video", "Panoramas"],
   },
   {
-    id: 4,
-    title: "Dual Chip M5 & R1",
-    type: "portrait",
-    imageSrc: visionPro5,
-  },
-];
-
-const visionMediaCards = [
-  {
-    id: "privacy",
-    title: "Privacy and Security",
-    subtitle:
-      "Optic ID uses the uniqueness of your iris to unlock Apple Vision Pro.",
-    videoSrc: "/assets/privacy-eye.mp4",
-    posterSrc: visionPro9,
-    badge: "Privacy",
-  },
-  {
-    id: "accessibility",
-    title: "Accessibility",
-    subtitle:
-      "Built-in accessibility features designed to work the way you do.",
-    videoSrc: "/assets/accessibility.mp4",
-    posterSrc: visionPro10,
-    badge: "Accessibility",
-  },
-  {
-    id: "environment",
-    title: "Environment",
-    subtitle:
-      "100% recycled aluminum used in the enclosure and frame.",
-    videoSrc: "/assets/environment-interface.mp4",
-    posterSrc: visionPro11,
-    badge: "Environment",
+    id: "connection",
+    category: "Connection",
+    title: "Get on the same page. In the same space.",
+    description:
+      "FaceTime video tiles are life-size, and as new people join, the call simply expands. Collaborate seamlessly on Freeform, Keynote, and documents in real time.",
+    image: visionPro10,
+    tags: ["Spatial Persona", "FaceTime", "Collaboration"],
   },
 ];
 
 const Vision = () => {
-
   const videoRef = useRef(null);
+  const closerLookScrollRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const galleryScrollRef = useRef(null);
-  // ADD THIS
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeTechIndex, setActiveTechIndex] = useState(0);
+  const [activeExpIndex, setActiveExpIndex] = useState(0);
 
-  const [visionCloserLook, setVisionCloserLook] = useState([]);
+  // Dynamic closer look data
+  const [closerLookItems, setCloserLookItems] = useState(defaultCloserLook);
+  const [closerLookLoading, setCloserLookLoading] = useState(true);
+
+  // Dynamic vision products
+  const [visionProducts, setVisionProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+
+  // Fetch Closer Look from DB
   useEffect(() => {
-    fetch("http://localhost:5000/api/vision-closer-look")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `HTTP error: ${response.status}`
-          );
-        }
-
-        return response.json();
+    fetch("/api/vision-closer-look")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load vision closer look");
+        return res.json();
       })
       .then((data) => {
-        console.log("Vision closer look:", data);
-
-        if (Array.isArray(data)) {
-          setVisionCloserLook(data);
-        } else {
-          setVisionCloserLook([]);
+        if (Array.isArray(data) && data.length > 0) {
+          setCloserLookItems(data);
         }
       })
-      .catch((error) => {
-        console.error(
-          "Vision closer look error:",
-          error
-        );
+      .catch((err) => {
+        console.warn("Using fallback closer look items:", err.message);
+      })
+      .finally(() => {
+        setCloserLookLoading(false);
       });
   }, []);
 
-  <video
-    ref={videoRef}
-    className="vision-video"
-    autoPlay
-    loop
-    muted
-    playsInline
-    preload="auto"
-  >
-    <source src="/videos/vision-pro.mp4" type="video/mp4" />
-  </video>
+  // Fetch Vision Products from DB
+  useEffect(() => {
+    fetch("/api/products/category/vision")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load Vision products");
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setVisionProducts(data);
+        }
+      })
+      .catch((err) => {
+        console.warn("Vision products fallback:", err.message);
+      })
+      .finally(() => {
+        setProductsLoading(false);
+      });
+  }, []);
 
   const toggleVideo = () => {
     if (!videoRef.current) return;
-
     if (isPlaying) {
       videoRef.current.pause();
       setIsPlaying(false);
@@ -234,1333 +232,475 @@ const Vision = () => {
     }
   };
 
-  const handleGalleryScroll = (direction) => {
-    if (galleryScrollRef.current) {
-      galleryScrollRef.current.scrollBy({
-        left: direction === "left" ? -500 : 500,
+  const scrollCloserLook = (direction) => {
+    if (closerLookScrollRef.current) {
+      closerLookScrollRef.current.scrollBy({
+        left: direction * 520,
         behavior: "smooth",
       });
     }
   };
 
-  const mediaScrollRef = useRef(null);
-
-  const handleMediaScroll = (direction) => {
-    if (mediaScrollRef.current) {
-      mediaScrollRef.current.scrollBy({
-        left: direction === "left" ? -480 : 480,
-        behavior: "smooth",
-      });
+  const getCloserLookImage = (item, index) => {
+    if (item.image_url && item.image_url.startsWith("http")) {
+      return item.image_url;
     }
+    return localCloserLookImages[index % localCloserLookImages.length] || placeholder;
   };
-
 
   return (
-    <>
-      <section className="vision-hero-container">
-        {/* Central Vision Pro Image */}
-        <div className="vision-graphic-wrapper">
-          <img
-            src={visionImage}
-            alt="Apple Vision Pro"
-            className="vision-graphic-svg"
-          />
+    <div className="vision-page">
+      {/* =========================================
+          STICKY VISION LOCAL NAVIGATION
+      ========================================= */}
+      <nav className="vision-local-nav" aria-label="Apple Vision Pro Navigation">
+        <div className="vision-local-nav-content">
+          <div className="vision-local-nav-title">
+            <Link to="/vision">Apple Vision Pro</Link>
+          </div>
+
+          <div className="vision-local-nav-links">
+            <a href="#overview" className="nav-link active">Overview</a>
+            <a href="#guided-tour" className="nav-link">Guided Tour</a>
+            <a href="#technology" className="nav-link">Tech Specs</a>
+            <a href="#experiences" className="nav-link">Experiences</a>
+            <Link to="/store" className="nav-demo-btn">Book a demo</Link>
+            <Link to="/store" className="nav-buy-btn">Buy</Link>
+          </div>
         </div>
+      </nav>
 
-        {/* Bottom Content */}
-        <div className="vision-hero-content">
-          {/* Text */}
-          <div className="vision-text-group">
-            <h1 className="vision-title">
-              <span className="apple-logo-icon"></span>
-              <span>Vision Pro</span>
+      {/* =========================================
+          HERO SECTION
+      ========================================= */}
+      <section className="vision-hero" id="overview">
+        <div className="vision-hero-inner">
+          <div className="vision-hero-badges">
+            <span className="vision-badge">Now Powered by M5</span>
+          </div>
+
+          <div className="vision-hero-title-group">
+            <h1 className="vision-hero-logo">
+              <span className="apple-glyph"></span>Vision Pro
             </h1>
-
-            <p className="vision-subtitle">
-              New powerful M5 chip and comfortable Dual Knit Band.
+            <p className="vision-hero-tagline">
+              Welcome to the era of spatial computing.
             </p>
           </div>
 
-          {/* Buttons */}
-          <div className="vision-button-group">
-            <button className="btn btn-outline">Book a demo</button>
-            <button className="btn btn-solid">Buy</button>
+          {/* Central 3D Headset Showcase */}
+          <div className="vision-headset-visual">
+            <div className="vision-glow-backdrop"></div>
+            <img
+              src={visionImage}
+              alt="Apple Vision Pro spatial headset"
+              className="vision-headset-img"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = visionPro1;
+              }}
+            />
+          </div>
+
+          {/* Pricing & CTA Buttons */}
+          <div className="vision-hero-cta">
+            <div className="vision-pricing-banner">
+              <strong>From $3,499</strong> or <span>$291.58/mo. for 12 mo.*</span> at 0% APR
+            </div>
+
+            <div className="vision-action-buttons">
+              <Link to="/store" className="vision-btn-book">
+                Book a demo
+              </Link>
+              <Link to="/store" className="vision-btn-buy">
+                Buy <span>›</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="vision-intro-section">
-        <div className="vision-intro-content">
-          <h2>
-            Apple Vision Pro seamlessly
-            <br />
-            blends digital content with
-            <br />
-            your physical space.
+      {/* =========================================
+          INTRO PHILOSOPHY BANNER
+      ========================================= */}
+      <section className="vision-intro">
+        <div className="vision-intro-container">
+          <h2 className="vision-intro-lead">
+            Apple Vision Pro seamlessly blends digital content with your physical space.
           </h2>
-
-          <h2>
-            So you can work, watch, relive
-            <br />
-            memories, and connect in ways
-            <br />
-            never before possible.
-          </h2>
-
-          <h2>The era of spatial computing is here.</h2>
+          <p className="vision-intro-body">
+            You navigate simply by using your eyes, hands, and voice. So you can do the things you love in ways never before possible.
+          </p>
         </div>
       </section>
 
-      <section className="vision-video-section">
-        <div className="vision-video-container">
-
-          {/* Vision Pro Video */}
+      {/* =========================================
+          SPATIAL VIDEO & visionOS INTERFACE
+      ========================================= */}
+      <section className="vision-video-showcase" id="guided-tour">
+        <div className="vision-video-wrapper">
           <video
             ref={videoRef}
-            className="vision-video"
+            className="vision-main-video"
             autoPlay
             loop
             muted
             playsInline
           >
-            <source src="/videos/vision-pro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
+            <source src={spatialVideo} type="video/mp4" />
+            Your browser does not support video playback.
           </video>
 
-          {/* Play / Pause Button */}
+          {/* Video Play/Pause Control */}
           <button
-            className="vision-video-control"
+            type="button"
+            className="vision-video-toggle"
             onClick={toggleVideo}
-            aria-label={isPlaying ? "Pause video" : "Play video"}
+            aria-label={isPlaying ? "Pause spatial demonstration" : "Play spatial demonstration"}
           >
             {isPlaying ? (
-              <span className="pause-icon">
-                <span></span>
-                <span></span>
+              <span className="control-bars">
+                <i></i><i></i>
               </span>
             ) : (
-              <span className="play-icon"></span>
+              <span className="control-play">▶</span>
             )}
           </button>
 
-          {/* Floating visionOS UI */}
-          <div className="vision-os-overlay">
-
-            {/* Left floating control pill */}
-            <div className="vision-control-pill">
-              <div className="vision-control-dot"></div>
-              <div className="vision-control-line"></div>
-              <div className="vision-control-dot"></div>
+          {/* Floating visionOS App Grid Overlay */}
+          <div className="vision-os-hud">
+            <div className="vision-hud-status">
+              <span className="hud-pulse-dot"></span>
+              <span>visionOS 2.2 Live Immersion</span>
             </div>
 
-            {/* App Icons */}
-            <div className="vision-app-grid">
-
-              <div className="vision-app-icon apple-tv">
-                <span></span>
-                <small>TV</small>
-              </div>
-
-              <div className="vision-app-icon music">
-                <span>♫</span>
-              </div>
-
-              <div className="vision-app-icon safari">
-                <span>◉</span>
-              </div>
-
-              <div className="vision-app-icon photos">
-                <span>✿</span>
-              </div>
-
-              <div className="vision-app-icon spatial">
-                <span>◈</span>
-              </div>
-
-              <div className="vision-app-icon app-store">
-                <span>A</span>
-              </div>
-
-              <div className="vision-app-icon mail">
-                <span>✉</span>
-              </div>
-
-              <div className="vision-app-icon messages">
-                <span>●</span>
-              </div>
-
-              <div className="vision-app-icon notes">
-                <span>▤</span>
-              </div>
-
-              <div className="vision-app-icon widgets">
-                <span>⊞</span>
-              </div>
-
+            <div className="vision-app-dock">
+              <div className="vision-dock-icon tv" title="Apple TV"> TV</div>
+              <div className="vision-dock-icon music" title="Apple Music">♫</div>
+              <div className="vision-dock-icon safari" title="Safari">🧭</div>
+              <div className="vision-dock-icon photos" title="Spatial Photos">✿</div>
+              <div className="vision-dock-icon spatial" title="Spatial Computing">◈</div>
+              <div className="vision-dock-icon store" title="App Store">A</div>
+              <div className="vision-dock-icon messages" title="Messages">💬</div>
             </div>
-
           </div>
-
         </div>
 
-        {/* Bottom Apple-style text */}
-        <div className="vision-video-content">
-          <h2>
-            Spatial experiences<br />
-            that feel incredibly real.
-          </h2>
-
+        <div className="vision-video-caption">
+          <h3>Spatial experiences that feel breathtakingly real.</h3>
           <p>
-            Explore, create, work, and connect<br />
-            in an entirely new way.
+            An infinite canvas that transforms how you use the apps you love.
+            Arrange them anywhere and scale them to the perfect size.
           </p>
-
-          <button className="vision-learn-button">
-            Learn more
-            <span>›</span>
-          </button>
         </div>
       </section>
 
-      {/* ==================================================
-    TAKE A CLOSER LOOK
-================================================== */}
-
-      <section className="vision-closer-look">
-
+      {/* =========================================
+          TAKE A CLOSER LOOK (DYNAMIC CAROUSEL)
+      ========================================= */}
+      <section className="vision-closer-look-section">
         <div className="vision-closer-look-header">
-
-          <h2>
-            Take a closer look.
-          </h2>
-
-        </div>
-
-
-        <div className="vision-closer-look-scroll">
-
-          <div className="vision-closer-look-track">
-
-            {visionCloserLook.map((item) => (
-
-              <article
-                className="vision-closer-look-card"
-                key={item.id}
-              >
-
-                <div className="vision-closer-look-image">
-
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                  />
-
-                </div>
-
-
-                <div className="vision-closer-look-content">
-
-                  <p>
-                    {item.title}
-                  </p>
-
-                  {item.description && (
-                    <p className="vision-closer-look-description">
-                      {item.description}
-                    </p>
-                  )}
-
-                </div>
-
-              </article>
-
-            ))}
-
+          <div>
+            <span className="section-eyebrow">Hardware Design</span>
+            <h2>Take a closer look.</h2>
           </div>
 
+          <div className="vision-carousel-nav">
+            <button
+              type="button"
+              onClick={() => scrollCloserLook(-1)}
+              aria-label="Scroll to previous card"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollCloserLook(1)}
+              aria-label="Scroll to next card"
+            >
+              ›
+            </button>
+          </div>
         </div>
 
+        <div className="vision-closer-look-viewport" ref={closerLookScrollRef}>
+          <div className="vision-closer-look-track">
+            {closerLookItems.map((item, index) => (
+              <article className="vision-closer-look-card" key={item.id || index}>
+                <div className="vision-closer-look-media">
+                  <img
+                    src={getCloserLookImage(item, index)}
+                    alt={item.title}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = localCloserLookImages[index % localCloserLookImages.length];
+                    }}
+                  />
+                </div>
+
+                <div className="vision-closer-look-details">
+                  <span className="card-index">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{item.title}</h3>
+                  {item.description && (
+                    <p>{item.description}</p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section className="vision-video-section">
-        <div className="vision-video-container">
-
-          {/* Vision Pro Video */}
-          <video
-            ref={videoRef}
-            className="vision-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src="/videos/vision-pro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-
-          {/* Play / Pause Button */}
-          <button
-            className="vision-video-control"
-            onClick={toggleVideo}
-            aria-label={isPlaying ? "Pause video" : "Play video"}
-          >
-            {isPlaying ? (
-              <span className="pause-icon">
-                <span></span>
-                <span></span>
-              </span>
-            ) : (
-              <span className="play-icon"></span>
-            )}
-          </button>
-
-          {/* Floating visionOS UI */}
-          <div className="vision-os-overlay">
-
-            {/* Left floating control pill */}
-            <div className="vision-control-pill">
-              <div className="vision-control-dot"></div>
-              <div className="vision-control-line"></div>
-              <div className="vision-control-dot"></div>
-            </div>
-
-            {/* App Icons */}
-            <div className="vision-app-grid">
-
-              <div className="vision-app-icon apple-tv">
-                <span></span>
-                <small>TV</small>
-              </div>
-
-              <div className="vision-app-icon music">
-                <span>♫</span>
-              </div>
-
-              <div className="vision-app-icon safari">
-                <span>◉</span>
-              </div>
-
-              <div className="vision-app-icon photos">
-                <span>✿</span>
-              </div>
-
-              <div className="vision-app-icon spatial">
-                <span>◈</span>
-              </div>
-
-              <div className="vision-app-icon app-store">
-                <span>A</span>
-              </div>
-
-              <div className="vision-app-icon mail">
-                <span>✉</span>
-              </div>
-
-              <div className="vision-app-icon messages">
-                <span>●</span>
-              </div>
-
-              <div className="vision-app-icon notes">
-                <span>▤</span>
-              </div>
-
-              <div className="vision-app-icon widgets">
-                <span>⊞</span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Bottom Apple-style text */}
-        <div className="vision-video-content">
-          <h2>
-            Spatial experiences<br />
-            that feel incredibly real.
-          </h2>
-
+      {/* =========================================
+          DEEP-DIVE TECHNOLOGY EXPLORER
+      ========================================= */}
+      <section className="vision-tech-section" id="technology">
+        <div className="vision-tech-header">
+          <span className="section-eyebrow">Groundbreaking Architecture</span>
+          <h2>Innovation you can see, hear, and feel.</h2>
           <p>
-            Explore, create, work, and connect<br />
-            in an entirely new way.
+            Spatial experiences on Apple Vision Pro are only possible through revolutionary custom Apple silicon and cutting-edge sensor arrays.
           </p>
-
-          <button className="vision-learn-button">
-            Learn more
-            <span>›</span>
-          </button>
-        </div>
-      </section>
-
-      {/* ==================================================
-    TAKE A CLOSER LOOK
-================================================== */}
-
-      <section className="vision-closer-look">
-
-        <div className="vision-closer-look-header">
-
-          <h2>
-            Take a closer look.
-          </h2>
-
         </div>
 
+        {/* 3 Key Spec Badges */}
+        <div className="vision-stats-grid">
+          <div className="vision-stat-card">
+            <strong>120Hz</strong>
+            <span>ProMotion Refresh</span>
+            <small>Silky-smooth visual fidelity</small>
+          </div>
 
-        <div className="vision-closer-look-scroll">
+          <div className="vision-stat-card">
+            <strong>23 Million</strong>
+            <span>Micro-OLED Pixels</span>
+            <small>More pixels than a 4K TV to each eye</small>
+          </div>
 
-          <div className="vision-closer-look-track">
+          <div className="vision-stat-card">
+            <strong>12ms</strong>
+            <span>Sensor Latency</span>
+            <small>Virtually lag-free real-time streaming</small>
+          </div>
+        </div>
 
-            {visionCloserLook.map((item) => (
-
-              <article
-                className="vision-closer-look-card"
-                key={item.id}
+        {/* Interactive Feature Deep Dive */}
+        <div className="vision-tech-explorer">
+          {/* Tabs */}
+          <div className="vision-tech-tabs">
+            {techFeatures.map((feature, idx) => (
+              <button
+                key={feature.id}
+                type="button"
+                className={`vision-tech-tab ${activeTechIndex === idx ? "active" : ""}`}
+                onClick={() => setActiveTechIndex(idx)}
               >
-
-                <div className="vision-closer-look-image">
-
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                  />
-
-                </div>
-
-
-                <div className="vision-closer-look-content">
-
-                  <p>
-                    {item.title}
-                  </p>
-
-                  {item.description && (
-                    <p className="vision-closer-look-description">
-                      {item.description}
-                    </p>
-                  )}
-
-                </div>
-
-              </article>
-
+                <span className="tab-eyebrow">{feature.eyebrow}</span>
+                <span className="tab-title">{feature.title}</span>
+              </button>
             ))}
-
           </div>
 
-        </div>
-
-      </section>
-
-      <section className="vision-video-section">
-        <div className="vision-video-container">
-
-          {/* Vision Pro Video */}
-          <video
-            ref={videoRef}
-            className="vision-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src="/videos/vision-pro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-
-          {/* Play / Pause Button */}
-          <button
-            className="vision-video-control"
-            onClick={toggleVideo}
-            aria-label={isPlaying ? "Pause video" : "Play video"}
-          >
-            {isPlaying ? (
-              <span className="pause-icon">
-                <span></span>
-                <span></span>
-              </span>
-            ) : (
-              <span className="play-icon"></span>
-            )}
-          </button>
-
-          {/* Floating visionOS UI */}
-          <div className="vision-os-overlay">
-
-            {/* Left floating control pill */}
-            <div className="vision-control-pill">
-              <div className="vision-control-dot"></div>
-              <div className="vision-control-line"></div>
-              <div className="vision-control-dot"></div>
+          {/* Active Feature Showcase */}
+          <div className="vision-tech-display">
+            <div className="vision-tech-display-image">
+              <img
+                src={techFeatures[activeTechIndex].imageSrc}
+                alt={techFeatures[activeTechIndex].title}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = visionPro5;
+                }}
+              />
+              <div className="vision-stat-bubble">
+                <strong>{techFeatures[activeTechIndex].stat}</strong>
+                <span>{techFeatures[activeTechIndex].statLabel}</span>
+              </div>
             </div>
 
-            {/* App Icons */}
-            <div className="vision-app-grid">
-
-              <div className="vision-app-icon apple-tv">
-                <span></span>
-                <small>TV</small>
-              </div>
-
-              <div className="vision-app-icon music">
-                <span>♫</span>
-              </div>
-
-              <div className="vision-app-icon safari">
-                <span>◉</span>
-              </div>
-
-              <div className="vision-app-icon photos">
-                <span>✿</span>
-              </div>
-
-              <div className="vision-app-icon spatial">
-                <span>◈</span>
-              </div>
-
-              <div className="vision-app-icon app-store">
-                <span>A</span>
-              </div>
-
-              <div className="vision-app-icon mail">
-                <span>✉</span>
-              </div>
-
-              <div className="vision-app-icon messages">
-                <span>●</span>
-              </div>
-
-              <div className="vision-app-icon notes">
-                <span>▤</span>
-              </div>
-
-              <div className="vision-app-icon widgets">
-                <span>⊞</span>
-              </div>
-
+            <div className="vision-tech-display-content">
+              <span className="active-eyebrow">{techFeatures[activeTechIndex].eyebrow}</span>
+              <h3>{techFeatures[activeTechIndex].title}</h3>
+              <p>{techFeatures[activeTechIndex].description}</p>
             </div>
-
           </div>
-
-        </div>
-
-        {/* Bottom Apple-style text */}
-        <div className="vision-video-content">
-          <h2>
-            Spatial experiences<br />
-            that feel incredibly real.
-          </h2>
-
-          <p>
-            Explore, create, work, and connect<br />
-            in an entirely new way.
-          </p>
-
-          <button className="vision-learn-button">
-            Learn more
-            <span>›</span>
-          </button>
         </div>
       </section>
 
-      {/* ==================================================
-    TAKE A CLOSER LOOK
-================================================== */}
-
-      <section className="vision-closer-look">
-
-        <div className="vision-closer-look-header">
-
-          <h2>
-            Take a closer look.
-          </h2>
-
+      {/* =========================================
+          SPATIAL EXPERIENCES SHOWCASE
+      ========================================= */}
+      <section className="vision-experiences-section" id="experiences">
+        <div className="vision-experiences-header">
+          <span className="section-eyebrow">Designed for Immersion</span>
+          <h2>Spatial computing for everyday life.</h2>
         </div>
 
-
-        <div className="vision-closer-look-scroll">
-
-          <div className="vision-closer-look-track">
-
-            {visionCloserLook.map((item) => (
-
-              <article
-                className="vision-closer-look-card"
-                key={item.id}
-              >
-
-                <div className="vision-closer-look-image">
-
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                  />
-
-                </div>
-
-
-                <div className="vision-closer-look-content">
-
-                  <p>
-                    {item.title}
-                  </p>
-
-                  {item.description && (
-                    <p className="vision-closer-look-description">
-                      {item.description}
-                    </p>
-                  )}
-
-                </div>
-
-              </article>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <section className="vision-video-section">
-        <div className="vision-video-container">
-
-          {/* Vision Pro Video */}
-          <video
-            ref={videoRef}
-            className="vision-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src="/videos/vision-pro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-
-          {/* Play / Pause Button */}
-          <button
-            className="vision-video-control"
-            onClick={toggleVideo}
-            aria-label={isPlaying ? "Pause video" : "Play video"}
-          >
-            {isPlaying ? (
-              <span className="pause-icon">
-                <span></span>
-                <span></span>
-              </span>
-            ) : (
-              <span className="play-icon"></span>
-            )}
-          </button>
-
-          {/* Floating visionOS UI */}
-          <div className="vision-os-overlay">
-
-            {/* Left floating control pill */}
-            <div className="vision-control-pill">
-              <div className="vision-control-dot"></div>
-              <div className="vision-control-line"></div>
-              <div className="vision-control-dot"></div>
-            </div>
-
-            {/* App Icons */}
-            <div className="vision-app-grid">
-
-              <div className="vision-app-icon apple-tv">
-                <span></span>
-                <small>TV</small>
-              </div>
-
-              <div className="vision-app-icon music">
-                <span>♫</span>
-              </div>
-
-              <div className="vision-app-icon safari">
-                <span>◉</span>
-              </div>
-
-              <div className="vision-app-icon photos">
-                <span>✿</span>
-              </div>
-
-              <div className="vision-app-icon spatial">
-                <span>◈</span>
-              </div>
-
-              <div className="vision-app-icon app-store">
-                <span>A</span>
-              </div>
-
-              <div className="vision-app-icon mail">
-                <span>✉</span>
-              </div>
-
-              <div className="vision-app-icon messages">
-                <span>●</span>
-              </div>
-
-              <div className="vision-app-icon notes">
-                <span>▤</span>
-              </div>
-
-              <div className="vision-app-icon widgets">
-                <span>⊞</span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Bottom Apple-style text */}
-        <div className="vision-video-content">
-          <h2>
-            Spatial experiences<br />
-            that feel incredibly real.
-          </h2>
-
-          <p>
-            Explore, create, work, and connect<br />
-            in an entirely new way.
-          </p>
-
-          <button className="vision-learn-button">
-            Learn more
-            <span>›</span>
-          </button>
-        </div>
-      </section>
-
-      {/* ==================================================
-    TAKE A CLOSER LOOK
-================================================== */}
-
-      <section className="vision-closer-look">
-
-        <div className="vision-closer-look-header">
-
-          <h2>
-            Take a closer look.
-          </h2>
-
-        </div>
-
-
-        <div className="vision-closer-look-scroll">
-
-          <div className="vision-closer-look-track">
-
-            {visionCloserLook.map((item) => (
-
-              <article
-                className="vision-closer-look-card"
-                key={item.id}
-              >
-
-                <div className="vision-closer-look-image">
-
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                  />
-
-                </div>
-
-
-                <div className="vision-closer-look-content">
-
-                  <p>
-                    {item.title}
-                  </p>
-
-                  {item.description && (
-                    <p className="vision-closer-look-description">
-                      {item.description}
-                    </p>
-                  )}
-
-                </div>
-
-              </article>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <section className="vision-video-section">
-        <div className="vision-video-container">
-
-          {/* Vision Pro Video */}
-          <video
-            ref={videoRef}
-            className="vision-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src="/videos/vision-pro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-
-          {/* Play / Pause Button */}
-          <button
-            className="vision-video-control"
-            onClick={toggleVideo}
-            aria-label={isPlaying ? "Pause video" : "Play video"}
-          >
-            {isPlaying ? (
-              <span className="pause-icon">
-                <span></span>
-                <span></span>
-              </span>
-            ) : (
-              <span className="play-icon"></span>
-            )}
-          </button>
-
-          {/* Floating visionOS UI */}
-          <div className="vision-os-overlay">
-
-            {/* Left floating control pill */}
-            <div className="vision-control-pill">
-              <div className="vision-control-dot"></div>
-              <div className="vision-control-line"></div>
-              <div className="vision-control-dot"></div>
-            </div>
-
-            {/* App Icons */}
-            <div className="vision-app-grid">
-
-              <div className="vision-app-icon apple-tv">
-                <span></span>
-                <small>TV</small>
-              </div>
-
-              <div className="vision-app-icon music">
-                <span>♫</span>
-              </div>
-
-              <div className="vision-app-icon safari">
-                <span>◉</span>
-              </div>
-
-              <div className="vision-app-icon photos">
-                <span>✿</span>
-              </div>
-
-              <div className="vision-app-icon spatial">
-                <span>◈</span>
-              </div>
-
-              <div className="vision-app-icon app-store">
-                <span>A</span>
-              </div>
-
-              <div className="vision-app-icon mail">
-                <span>✉</span>
-              </div>
-
-              <div className="vision-app-icon messages">
-                <span>●</span>
-              </div>
-
-              <div className="vision-app-icon notes">
-                <span>▤</span>
-              </div>
-
-              <div className="vision-app-icon widgets">
-                <span>⊞</span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Bottom Apple-style text */}
-        <div className="vision-video-content">
-          <h2>
-            Spatial experiences<br />
-            that feel incredibly real.
-          </h2>
-
-          <p>
-            Explore, create, work, and connect<br />
-            in an entirely new way.
-          </p>
-
-          <button className="vision-learn-button">
-            Learn more
-            <span>›</span>
-          </button>
-        </div>
-      </section>
-
-      {/* ==================================================
-    TAKE A CLOSER LOOK
-================================================== */}
-
-      <section className="vision-closer-look">
-
-        <div className="vision-closer-look-header">
-
-          <h2>
-            Take a closer look.
-          </h2>
-
-        </div>
-
-
-        <div className="vision-closer-look-scroll">
-
-          <div className="vision-closer-look-track">
-
-            {visionCloserLook.map((item) => (
-
-              <article
-                className="vision-closer-look-card"
-                key={item.id}
-              >
-
-                <div className="vision-closer-look-image">
-
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                  />
-
-                </div>
-
-
-                <div className="vision-closer-look-content">
-
-                  <p>
-                    {item.title}
-                  </p>
-
-                  {item.description && (
-                    <p className="vision-closer-look-description">
-                      {item.description}
-                    </p>
-                  )}
-
-                </div>
-
-              </article>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <section className="vision-video-section">
-        <div className="vision-video-container">
-
-          {/* Vision Pro Video */}
-          <video
-            ref={videoRef}
-            className="vision-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src="/videos/vision-pro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-
-          {/* Play / Pause Button */}
-          <button
-            className="vision-video-control"
-            onClick={toggleVideo}
-            aria-label={isPlaying ? "Pause video" : "Play video"}
-          >
-            {isPlaying ? (
-              <span className="pause-icon">
-                <span></span>
-                <span></span>
-              </span>
-            ) : (
-              <span className="play-icon"></span>
-            )}
-          </button>
-
-          {/* Floating visionOS UI */}
-          <div className="vision-os-overlay">
-
-            {/* Left floating control pill */}
-            <div className="vision-control-pill">
-              <div className="vision-control-dot"></div>
-              <div className="vision-control-line"></div>
-              <div className="vision-control-dot"></div>
-            </div>
-
-            {/* App Icons */}
-            <div className="vision-app-grid">
-
-              <div className="vision-app-icon apple-tv">
-                <span></span>
-                <small>TV</small>
-              </div>
-
-              <div className="vision-app-icon music">
-                <span>♫</span>
-              </div>
-
-              <div className="vision-app-icon safari">
-                <span>◉</span>
-              </div>
-
-              <div className="vision-app-icon photos">
-                <span>✿</span>
-              </div>
-
-              <div className="vision-app-icon spatial">
-                <span>◈</span>
-              </div>
-
-              <div className="vision-app-icon app-store">
-                <span>A</span>
-              </div>
-
-              <div className="vision-app-icon mail">
-                <span>✉</span>
-              </div>
-
-              <div className="vision-app-icon messages">
-                <span>●</span>
-              </div>
-
-              <div className="vision-app-icon notes">
-                <span>▤</span>
-              </div>
-
-              <div className="vision-app-icon widgets">
-                <span>⊞</span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Bottom Apple-style text */}
-        <div className="vision-video-content">
-          <h2>
-            Spatial experiences<br />
-            that feel incredibly real.
-          </h2>
-
-          <p>
-            Explore, create, work, and connect<br />
-            in an entirely new way.
-          </p>
-
-          <button className="vision-learn-button">
-            Learn more
-            <span>›</span>
-          </button>
-        </div>
-      </section>
-
-      {/* ==================================================
-    TAKE A CLOSER LOOK
-================================================== */}
-
-      <section className="vision-closer-look">
-
-        <div className="vision-closer-look-header">
-
-          <h2>
-            Take a closer look.
-          </h2>
-
-        </div>
-
-
-        <div className="vision-closer-look-scroll">
-
-          <div className="vision-closer-look-track">
-
-            {visionCloserLook.map((item) => (
-
-              <article
-                className="vision-closer-look-card"
-                key={item.id}
-              >
-
-                <div className="vision-closer-look-image">
-
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                  />
-
-                </div>
-
-
-                <div className="vision-closer-look-content">
-
-                  <p>
-                    {item.title}
-                  </p>
-
-                  {item.description && (
-                    <p className="vision-closer-look-description">
-                      {item.description}
-                    </p>
-                  )}
-
-                </div>
-
-              </article>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* ==================================================
-   {/* ==================================================
-    VISION PRO TECHNOLOGY FEATURES
-================================================== */}
-
-      <section className="vision-features-section">
-
-        <div className="vision-features-container">
-
-          {visionData.map((item, index) => (
-            <div className="vision-feature-item" key={item.id}>
-
-              {/* Feature Number */}
-              <div className="vision-feature-number">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-
-              {/* Text */}
-              <div className="vision-feature-text">
-
-                <h2>
-                  {item.title}
-                </h2>
-
-                <div className="vision-feature-description">
-                  {item.description}
-                </div>
-
-              </div>
-
-              {/* Image */}
-              <div className="vision-feature-image">
-
-                <img
-                  src={item.imageSrc}
-                  alt={item.alt}
-                />
-
-              </div>
-
-            </div>
+        {/* Experience Selector Pills */}
+        <div className="vision-exp-pills">
+          {spatialExperiences.map((exp, idx) => (
+            <button
+              key={exp.id}
+              type="button"
+              className={`vision-exp-pill ${activeExpIndex === idx ? "active" : ""}`}
+              onClick={() => setActiveExpIndex(idx)}
+            >
+              {exp.category}
+            </button>
           ))}
-
         </div>
 
-      </section>
+        {/* Active Experience Card */}
+        <div className="vision-exp-showcase">
+          <div className="vision-exp-image">
+            <img
+              src={spatialExperiences[activeExpIndex].image}
+              alt={spatialExperiences[activeExpIndex].title}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = visionPro6;
+              }}
+            />
+          </div>
 
-      {/* ==================================================
-    VISION PRO TECHNOLOGY GALLERY
-================================================== */}
+          <div className="vision-exp-info">
+            <span className="exp-cat">{spatialExperiences[activeExpIndex].category}</span>
+            <h3>{spatialExperiences[activeExpIndex].title}</h3>
+            <p>{spatialExperiences[activeExpIndex].description}</p>
 
-      <section className="vision-tech-gallery">
-
-        {/* Heading */}
-        <div className="vision-tech-gallery-header">
-
-          <h2>
-            Innovation you can see, hear, and feel.
-          </h2>
-
-          <p>
-            Pushing boundaries from the inside out. Spatial experiences
-            on Apple Vision Pro are only possible through groundbreaking
-            Apple technology.
-          </p>
-
-        </div>
-
-
-        {/* Stats */}
-        <div className="vision-tech-stats">
-
-          {stats.map((stat, index) => (
-            <div
-              className="vision-tech-stat"
-              key={index}
-            >
-
-              <span className="vision-tech-stat-label">
-                {stat.label}
-              </span>
-
-              <strong className="vision-tech-stat-value">
-                {stat.value}
-              </strong>
-
-              <span className="vision-tech-stat-detail">
-                {stat.detail}
-              </span>
-
+            <div className="exp-tags">
+              {spatialExperiences[activeExpIndex].tags.map((tag) => (
+                <span className="exp-tag" key={tag}>{tag}</span>
+              ))}
             </div>
-          ))}
-
-        </div>
-
-
-        {/* Gallery */}
-        <div className="vision-tech-gallery-wrapper">
-
-          <div
-            ref={galleryScrollRef}
-            className="vision-tech-gallery-scroll"
-          >
-
-            {galleryCards.map((card) => (
-
-              <article
-                key={card.id}
-                className={
-                  card.type === "large-feature"
-                    ? "vision-tech-card vision-tech-card-large"
-                    : "vision-tech-card vision-tech-card-small"
-                }
-              >
-
-                <img
-                  src={card.imageSrc}
-                  alt={card.title}
-                />
-
-                <div className="vision-tech-card-overlay">
-                  <h3>{card.title}</h3>
-                </div>
-
-              </article>
-
-            ))}
-
-          </div>
-
-
-          {/* Navigation */}
-          <div className="vision-tech-gallery-controls">
-
-            <button
-              type="button"
-              onClick={() => handleGalleryScroll("left")}
-              aria-label="Previous"
-            >
-              ←
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleGalleryScroll("right")}
-              aria-label="Next"
-            >
-              →
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <section className="vision-values-section">
-        {/* Header */}
-        <div className="vision-values-header">
-          <h2>Designed to make a difference.</h2>
-
-          <p>
-            <strong>Our values lead the way.</strong> Apple Vision Pro was
-            designed to help protect your privacy and keep you in control of
-            your data. Its built-in accessibility features are designed to
-            work the way you do.
-          </p>
-        </div>
-
-        {/* Video Cards */}
-        <div className="vision-values-carousel">
-          <div
-            ref={mediaScrollRef}
-            className="vision-values-scroll"
-          >
-            {visionMediaCards.map((card) => (
-              <article
-                key={card.id}
-                className="vision-value-card"
-              >
-                <video
-                  src={card.videoSrc}
-                  poster={card.posterSrc}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="vision-value-video"
-                />
-
-                <div className="vision-value-overlay">
-                  <span>{card.badge}</span>
-
-                  <h3>{card.title}</h3>
-
-                  <p>{card.subtitle}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          {/* Arrows */}
-          <div className="vision-values-controls">
-            <button
-              type="button"
-              onClick={() => handleMediaScroll("left")}
-              aria-label="Scroll left"
-            >
-              ←
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleMediaScroll("right")}
-              aria-label="Scroll right"
-            >
-              →
-            </button>
           </div>
         </div>
       </section>
-    </>
+
+      {/* =========================================
+          LINEUP & ACCESSORIES CATALOG
+      ========================================= */}
+      <section className="vision-lineup-section">
+        <div className="vision-lineup-header">
+          <span className="section-eyebrow">Explore the Catalog</span>
+          <h2>Apple Vision Pro & Accessories</h2>
+          <Link to="/store" className="lineup-all-link">
+            Shop all in Apple Store <span>›</span>
+          </Link>
+        </div>
+
+        <div className="vision-lineup-grid">
+          {visionProducts.length > 0 ? (
+            visionProducts.map((product) => (
+              <article className="vision-product-card" key={product.id}>
+                <div className="vision-product-image">
+                  <img
+                    src={product.image_url || visionImage}
+                    alt={product.title}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = visionPro1;
+                    }}
+                  />
+                </div>
+
+                <div className="vision-product-details">
+                  {product.badge_text && (
+                    <span className="vision-product-badge">{product.badge_text}</span>
+                  )}
+                  <h3>{product.title}</h3>
+                  <p className="vision-product-desc">{product.description}</p>
+
+                  <div className="vision-product-pricing">
+                    <p className="price-upfront">
+                      From ${Number(product.price_upfront).toLocaleString()}
+                    </p>
+                    {product.price_monthly && (
+                      <p className="price-monthly">
+                        or ${Number(product.price_monthly).toFixed(2)}/mo. for 12 mo.*
+                      </p>
+                    )}
+                  </div>
+
+                  <Link to={product.buy_link || "/store"} className="vision-product-buy">
+                    {product.buy_text || "Buy"} <span>›</span>
+                  </Link>
+                </div>
+              </article>
+            ))
+          ) : (
+            <div className="vision-product-card featured">
+              <div className="vision-product-image">
+                <img src={visionImage} alt="Apple Vision Pro" />
+              </div>
+              <div className="vision-product-details">
+                <span className="vision-product-badge">New M5 Chip</span>
+                <h3>Apple Vision Pro</h3>
+                <p className="vision-product-desc">
+                  The revolutionary spatial computer that transforms how you work, watch, and connect.
+                </p>
+                <div className="vision-product-pricing">
+                  <p className="price-upfront">From $3,499</p>
+                  <p className="price-monthly">or $291.58/mo. for 12 mo.* at 0% APR</p>
+                </div>
+                <Link to="/store" className="vision-product-buy">
+                  Buy <span>›</span>
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* =========================================
+          WHY APPLE IS THE BEST PLACE TO BUY
+      ========================================= */}
+      <section className="vision-why-apple">
+        <div className="vision-why-header">
+          <h2>Why Apple is the best place to buy Apple Vision Pro.</h2>
+        </div>
+
+        <div className="vision-benefits-grid">
+          <div className="vision-benefit-card">
+            <div className="benefit-icon">👓</div>
+            <h3>Book a free demo.</h3>
+            <p>
+              Experience Apple Vision Pro firsthand in an Apple Store with a 30-minute one-on-one session.
+            </p>
+            <Link to="/store" className="benefit-link">Book now ›</Link>
+          </div>
+
+          <div className="vision-benefit-card">
+            <div className="benefit-icon">💳</div>
+            <h3>Pay 0% APR over 12 months.</h3>
+            <p>
+              Choose Apple Card Monthly Installments to pay over time with 0% interest and 3% Daily Cash back.
+            </p>
+            <Link to="/store" className="benefit-link">Learn more ›</Link>
+          </div>
+
+          <div className="vision-benefit-card">
+            <div className="benefit-icon">📦</div>
+            <h3>Free delivery & setup.</h3>
+            <p>
+              Get free two-hour delivery or easy in-store pickup with a personalized fitting session.
+            </p>
+            <Link to="/store" className="benefit-link">Find a store ›</Link>
+          </div>
+
+          <div className="vision-benefit-card">
+            <div className="benefit-icon">🔄</div>
+            <h3>Apple Trade In.</h3>
+            <p>
+              Trade in your eligible Mac, iPad, or iPhone for instant credit toward Apple Vision Pro.
+            </p>
+            <Link to="/store" className="benefit-link">Get an estimate ›</Link>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 };
 
 export default Vision;
-

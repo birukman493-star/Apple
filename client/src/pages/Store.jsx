@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import placeholder from '../constants/placeholder';
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext.jsx";
 import "./Store.css";
+
 
 const categories = [
   { name: "Mac", path: "/mac", icon: "💻" },
@@ -14,6 +17,20 @@ const categories = [
 ];
 
 function Store() {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+  const [toastItem, setToastItem] = useState(null);
+
+  const handleBuyProduct = (product, directCheckout = false) => {
+    addToCart(product, 1);
+    if (directCheckout) {
+      navigate("/checkout");
+    } else {
+      setToastItem(product.title || product.name || "Product");
+      setTimeout(() => setToastItem(null), 3500);
+    }
+  };
+
   const [products, setProducts] = useState([]);
   const [accessories, setAccessories] = useState([]);
 
@@ -123,6 +140,58 @@ function Store() {
   return (
     <main className="store-page">
 
+      {/* Added to Bag Toast Notification */}
+      {toastItem && (
+        <div style={{
+          position: "fixed",
+          top: "60px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid #d2d2d7",
+          boxShadow: "0 8px 30px rgba(0, 0, 0, 0.12)",
+          padding: "14px 24px",
+          borderRadius: "980px",
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+          zIndex: 9999,
+          animation: "slideDown 0.25s ease"
+        }}>
+          <span style={{ fontSize: "14px", color: "#1d1d1f", fontWeight: 600 }}>
+            ✓ Added <strong>{toastItem}</strong> to your Bag.
+          </span>
+          <Link
+            to="/bag"
+            style={{
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "#0071e3",
+              textDecoration: "none",
+              borderRight: "1px solid #d2d2d7",
+              paddingRight: "12px"
+            }}
+          >
+            Review Bag
+          </Link>
+          <Link
+            to="/checkout"
+            style={{
+              fontSize: "13px",
+              fontWeight: 600,
+              backgroundColor: "#0071e3",
+              color: "#ffffff",
+              padding: "6px 14px",
+              borderRadius: "980px",
+              textDecoration: "none"
+            }}
+          >
+            Check Out
+          </Link>
+        </div>
+      )}
+
       {/* =========================
           STORE HEADER
       ========================= */}
@@ -173,7 +242,6 @@ function Store() {
         </div>
       </section>
 
-
       {/* =========================
           THE LATEST
       ========================= */}
@@ -200,42 +268,73 @@ function Store() {
 
         {!loading && !error && (
           <div className="latest-carousel">
-            {products.map((product) => (
-              <article
-                className="latest-card"
-                key={product.id}
-              >
-                <div className="latest-card-image">
-                  <img
-                    src={product.image_url}
-                    alt={product.title}
-                  />
-                </div>
+            {products.length > 0
+              ? products.map((product) => (
+                  <article
+                    className="latest-card"
+                    key={product.id}
+                  >
+                    <div className="latest-card-image">
+                      <img
+                        src={product.image_url}
+                        alt={product.title}
+                        onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
+                      />
+                    </div>
 
-                <div className="latest-card-content">
-                  {product.badge_text && (
-                    <p className="latest-badge">
-                      {product.badge_text}
-                    </p>
-                  )}
+                    <div className="latest-card-content">
+                      {product.badge_text && (
+                        <p className="latest-badge">
+                          {product.badge_text}
+                        </p>
+                      )}
 
-                  <h3>{product.title}</h3>
+                      <h3>{product.title}</h3>
 
-                  <p className="latest-description">
-                    {product.description}
-                  </p>
+                      <p className="latest-description">
+                        {product.description}
+                      </p>
 
-                  {product.price_upfront && (
-                    <p className="latest-price">
-                      From $
-                      {Number(
-                        product.price_upfront
-                      ).toLocaleString()}
-                    </p>
-                  )}
-                </div>
-              </article>
-            ))}
+                      {product.price_upfront && (
+                        <p className="latest-price">
+                          From $
+                          {Number(
+                            product.price_upfront
+                          ).toLocaleString()}
+                        </p>
+                      )}
+
+                      <div className="latest-card-actions" style={{ marginTop: "16px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                        <button
+                          type="button"
+                          onClick={() => handleBuyProduct(product, true)}
+                          className="sr-btn sr-btn--primary"
+                          style={{ fontSize: "13px", padding: "8px 16px", cursor: "pointer", border: "none", borderRadius: "980px", background: "#0071e3", color: "#fff", fontWeight: 600 }}
+                        >
+                          Buy Now
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleBuyProduct(product, false)}
+                          style={{ fontSize: "13px", padding: "8px 14px", cursor: "pointer", border: "1px solid #d2d2d7", borderRadius: "980px", background: "#f5f5f7", color: "#1d1d1f", fontWeight: 600 }}
+                        >
+                          Add to Bag
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))
+              : Array.from({ length: 4 }).map((_, i) => (
+                  <article className="latest-card" key={`placeholder-${i}`}>
+                    <div className="latest-card-image">
+                      <img src={placeholder} alt="Placeholder" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
+                    <div className="latest-card-content">
+                      <h3>Coming Soon</h3>
+                      <p style={{ color: "#94a3b8" }}>Product details will appear here.</p>
+                    </div>
+                  </article>
+                ))}
           </div>
         )}
       </section>
@@ -289,6 +388,7 @@ function Store() {
                   <img
                     src={product.image_url}
                     alt={product.title}
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
                 </div>
 
@@ -309,6 +409,16 @@ function Store() {
                       ).toFixed(2)}
                     </p>
                   )}
+
+                  <div style={{ marginTop: "12px" }}>
+                    <button
+                      type="button"
+                      onClick={() => handleBuyProduct(product, false)}
+                      style={{ fontSize: "12px", padding: "6px 14px", cursor: "pointer", border: "none", borderRadius: "980px", background: "#0071e3", color: "#fff", fontWeight: 600 }}
+                    >
+                      + Add to Bag
+                    </button>
+                  </div>
                 </div>
               </article>
             ))}
@@ -369,6 +479,7 @@ function Store() {
                     src={card.image_url}
                     alt={card.title}
                     className="help-card-image"
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
                 )}
               </article>
@@ -407,17 +518,17 @@ function Store() {
             {differenceCards.map((card) => (
               <article
                 key={card.id}
-                className={`difference-card ${
-                  card.card_size === "large"
-                    ? "difference-card-large"
-                    : ""
-                }`}
+                className={`difference-card ${card.card_size === "large"
+                  ? "difference-card-large"
+                  : ""
+                  }`}
               >
                 {card.icon_url && (
                   <img
                     src={card.icon_url}
                     alt=""
                     className="difference-icon"
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
                 )}
 
@@ -442,6 +553,7 @@ function Store() {
                     src={card.image_url}
                     alt={card.title}
                     className="difference-image"
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
                 )}
               </article>
@@ -484,11 +596,10 @@ function Store() {
             {soundCards.map((card) => (
               <article
                 key={card.id}
-                className={`sound-card ${
-                  card.card_size === "large"
-                    ? "sound-card-large"
-                    : ""
-                }`}
+                className={`sound-card ${card.card_size === "large"
+                  ? "sound-card-large"
+                  : ""
+                  }`}
               >
                 <div className="sound-content">
                   {card.label && (
@@ -511,6 +622,7 @@ function Store() {
                     src={card.image_url}
                     alt={card.title}
                     className="sound-image"
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
                 )}
 
@@ -588,6 +700,7 @@ function Store() {
                     src={card.image_url}
                     alt={card.title}
                     className="experience-image"
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
                 )}
               </article>
@@ -653,6 +766,7 @@ function Store() {
                     src={card.image_url}
                     alt={card.title}
                     className="savings-image"
+                    onError={(e) => { e.target.onerror = null; e.target.src = placeholder; }}
                   />
                 )}
               </article>
@@ -710,7 +824,6 @@ function Store() {
 
         </div>
       </section>
-
     </main>
   );
 }

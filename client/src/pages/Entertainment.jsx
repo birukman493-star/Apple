@@ -2,6 +2,7 @@ import React from 'react'
 import {useState, useRef} from 'react'
 
 import './Entertainment.css'
+import SectionRenderer from '../components/SectionRenderer'
 import appleLogo from '../assets/applelog.png'
 import video from '../assets/entertainment1.mp4'
 import video1 from '../assets/entertainment2.mp4'
@@ -18,6 +19,8 @@ import audio4 from '../assets/audio4.jpg'
 import audio5 from '../assets/audio5.jpg'
 import audio6 from '../assets/audio6.jpg'
 import video2 from '../assets/video2.mp4'
+import fitnessHero from '../assets/fitness_hero.jpg'
+import newsMagazines from '../assets/news_magazines.jpg'
 
 // =========================
 // ENTERTAINMENT SUB NAV
@@ -624,6 +627,262 @@ const togglePlay = () => {
       </section>
 
 
+{/* =================================================
+    APPLE FITNESS+ SECTION
+    ================================================= */}
+
+<section className="entertainment-service-hero" id="apple-fitness">
+  <div className="entertainment-service-hero-card entertainment-fitness-card">
+    <img
+      src={fitnessHero}
+      alt="Apple Fitness+"
+      className="entertainment-service-hero-bg"
+    />
+    <div className="entertainment-foundation-overlay"></div>
+    <div className="entertainment-foundation-content">
+      <div className="entertainment-foundation-info">
+        <div className="entertainment-foundation-badges">
+          <div className="entertainment-fitness-badge">
+            <span className="entertainment-fitness-ring">&#9711;</span>
+            <strong>Apple Fitness+</strong>
+          </div>
+          <div className="entertainment-foundation-badge">
+            Bundle with One
+          </div>
+        </div>
+        <h2>
+          From Strength to Meditation,{' '}<br/>
+          there's something for everyone.
+        </h2>
+      </div>
+      <div className="entertainment-foundation-actions">
+        <button className="entertainment-foundation-free">
+          Try it free⁴
+        </button>
+        <button className="entertainment-foundation-learn">
+          Learn more
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* FITNESS WORKOUT CAROUSEL */}
+<section className="entertainment-music" id="apple-fitness-workouts">
+  <div className="entertainment-music-track">
+    {[...musicItems, ...musicItems].map((item, index) => (
+      <div
+        className="entertainment-music-card entertainment-fitness-workout-card"
+        key={`fitness-${item.id}-${index}`}
+      >
+        <div className="entertainment-music-image-wrapper">
+          <img
+            src={item.img}
+            alt={item.title}
+            className="entertainment-music-image"
+          />
+          <span className="entertainment-fitness-workout-badge">
+            Fitness+
+          </span>
+          <div className="entertainment-music-overlay">
+            <button
+              type="button"
+              className="entertainment-music-listen"
+            >
+              Work out
+              <span>▶</span>
+            </button>
+          </div>
+        </div>
+        <div className="entertainment-music-info">
+          <h4>{item.title}</h4>
+          <p>{item.subtitle}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+{/* =================================================
+    APPLE NEWS+ SECTION
+    ================================================= */}
+
+<section className="entertainment-news-section" id="apple-news">
+  <div className="entertainment-news-header">
+    <div className="entertainment-news-badge-row">
+      <div className="entertainment-news-service-badge">
+        <span className="entertainment-news-icon">&#128240;</span>
+        <strong>Apple News+</strong>
+      </div>
+      <div className="entertainment-news-bundle-badge">
+        Bundle with One
+      </div>
+    </div>
+    <div className="entertainment-news-content">
+      <h2>
+        Hundreds of magazines<br/>
+        and leading newspapers.<br/>
+        One subscription.
+      </h2>
+      <div className="entertainment-foundation-actions entertainment-news-actions">
+        <button className="entertainment-foundation-free entertainment-news-free">
+          Try it free⁵
+        </button>
+        <button className="entertainment-foundation-learn entertainment-news-learn">
+          Learn more
+        </button>
+      </div>
+    </div>
+  </div>
+  <div className="entertainment-news-magazines">
+    <img
+      src={newsMagazines}
+      alt="Apple News+ magazines"
+      className="entertainment-news-magazines-img"
+    />
+  </div>
+</section>
+
+{/* =================================================
+    APPLE PODCASTS SECTION
+    ================================================= */}
+
+<section className="entertainment-podcasts-section" id="apple-podcasts">
+  <div className="entertainment-foundation-card entertainment-podcasts-card">
+    <div className="entertainment-podcasts-header">
+      <div className="entertainment-podcasts-badge-row">
+        <div className="entertainment-podcasts-service-badge">
+          <span className="entertainment-podcasts-icon">&#127911;</span>
+          <strong>Apple Podcasts</strong>
+        </div>
+      </div>
+      <h2>Your favourite podcasts,<br/>all in one place.</h2>
+      <div className="entertainment-foundation-actions">
+        <button className="entertainment-foundation-free">
+          Open the app
+        </button>
+        <button className="entertainment-foundation-learn">
+          Learn more
+        </button>
+      </div>
+    </div>
+  </div>
+  <div className="entertainment-music entertainment-podcasts-list">
+    <div className="entertainment-music-track">
+      {[
+        { id: 'p1', title: 'Good Hang with Amy Poehler', subtitle: 'The Ringer', img: audio1 },
+        { id: 'p2', title: 'Forty Eight Hours', subtitle: 'True Crime Weekly', img: audio2 },
+        { id: 'p3', title: 'The Dylan Gemelli Podcast', subtitle: 'Dylan Gemelli', img: audio3 },
+        { id: 'p4', title: 'Betrayal Season 6', subtitle: 'iHeart Podcasts', img: audio4 },
+        { id: 'p5', title: 'Love Trapped', subtitle: 'Owens V. Echard', img: audio5 },
+        { id: 'p6', title: 'Unblinded with Sean', subtitle: 'Glass Podcasts', img: audio6 },
+      ].concat([
+        { id: 'p7', title: 'Good Hang with Amy Poehler', subtitle: 'The Ringer', img: audio1 },
+        { id: 'p8', title: 'Forty Eight Hours', subtitle: 'True Crime Weekly', img: audio2 },
+        { id: 'p9', title: 'The Dylan Gemelli Podcast', subtitle: 'Dylan Gemelli', img: audio3 },
+      ]).map((item, index) => (
+        <div
+          className="entertainment-music-card"
+          key={`podcast-${item.id}-${index}`}
+        >
+          <div className="entertainment-music-image-wrapper">
+            <img
+              src={item.img}
+              alt={item.title}
+              className="entertainment-music-image"
+            />
+            <span className="entertainment-podcasts-badge">
+              Podcasts
+            </span>
+            <div className="entertainment-music-overlay">
+              <button
+                type="button"
+                className="entertainment-music-listen"
+              >
+                Listen now
+                <span>▶</span>
+              </button>
+            </div>
+          </div>
+          <div className="entertainment-music-info">
+            <h4>{item.title}</h4>
+            <p>{item.subtitle}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+{/* =================================================
+    APPLE BOOKS SECTION
+    ================================================= */}
+
+<section className="entertainment-books-section" id="apple-books">
+  <div className="entertainment-books-header">
+    <div className="entertainment-books-badge-row">
+      <div className="entertainment-books-service-badge">
+        <span className="entertainment-books-icon">&#128214;</span>
+        <strong>Apple Books</strong>
+      </div>
+    </div>
+    <h2>Read, listen, discover.<br/>All in one place.</h2>
+    <div className="entertainment-foundation-actions entertainment-books-actions">
+      <button className="entertainment-books-primary">
+        Open the app
+      </button>
+      <button className="entertainment-foundation-learn entertainment-books-learn">
+        Learn more
+      </button>
+    </div>
+  </div>
+  <div className="entertainment-music entertainment-books-carousel">
+    <div className="entertainment-music-track">
+      {[
+        { id: 'b1', title: 'Peck &amp; Peck', subtitle: 'Abby Jimenez', img: audio1 },
+        { id: 'b2', title: 'A Married Little Christmas', subtitle: 'Fiction', img: audio2 },
+        { id: 'b3', title: 'Unsettled', subtitle: 'Barbara Kingsolver', img: audio3 },
+        { id: 'b4', title: 'A Beautiful Mind', subtitle: 'Biography', img: audio4 },
+        { id: 'b5', title: 'Small Mercies', subtitle: 'Dennis Lehane', img: audio5 },
+        { id: 'b6', title: 'The Ocean at the End of the Lane', subtitle: 'Neil Gaiman', img: audio6 },
+      ].concat([
+        { id: 'b7', title: 'Peck &amp; Peck', subtitle: 'Abby Jimenez', img: audio1 },
+        { id: 'b8', title: 'A Married Little Christmas', subtitle: 'Fiction', img: audio2 },
+        { id: 'b9', title: 'Unsettled', subtitle: 'Barbara Kingsolver', img: audio3 },
+      ]).map((item, index) => (
+        <div
+          className="entertainment-music-card entertainment-book-card"
+          key={`book-${item.id}-${index}`}
+        >
+          <div className="entertainment-music-image-wrapper entertainment-book-image-wrapper">
+            <img
+              src={item.img}
+              alt={item.title}
+              className="entertainment-music-image"
+            />
+            <span className="entertainment-books-badge">
+              Books
+            </span>
+            <div className="entertainment-music-overlay">
+              <button
+                type="button"
+                className="entertainment-music-listen"
+              >
+                Read now
+                <span>&#8594;</span>
+              </button>
+            </div>
+          </div>
+          <div className="entertainment-music-info">
+            <h4>{item.title}</h4>
+            <p>{item.subtitle}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
 {/* HORIZONTAL APPLE MUSIC / GAMES CAROUSEL */}
 
 <section className="watch-horizontal-section">
@@ -931,7 +1190,7 @@ const togglePlay = () => {
   </div>
 </section>
 
-
+      <SectionRenderer category="Entertainment" />
 
     </div>
   )
